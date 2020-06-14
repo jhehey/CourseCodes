@@ -1,0 +1,90 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "api-build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/CourseCodesAPI/CourseCodesAPI.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "api-publish",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"publish",
+				"${workspaceFolder}/CourseCodesAPI/CourseCodesAPI.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "api-watch",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"watch",
+				"-p",
+				"${workspaceFolder}/CourseCodesAPI/CourseCodesAPI.csproj",
+				"run",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "test-build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/CourseCodesAPI.Tests/CourseCodesAPI.Tests.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "test-publish",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"publish",
+				"${workspaceFolder}/CourseCodesAPI.Tests/CourseCodesAPI.Tests.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "test-watch",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"watch",
+				"-p",
+				"${workspaceFolder}/CourseCodesAPI.Tests/CourseCodesAPI.Tests.csproj",
+				"run",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "test-run",
+			"command": "dotnet",
+			"type": "shell",
+			"args": [
+				"test"
+			],
+			"problemMatcher": "$msCompile"
+		}
+	]
+}
