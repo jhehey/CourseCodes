@@ -11,5 +11,4 @@
 		"**/*.csproj": true
 	},
 	"editor.detectIndentation": false,
-	"dotnet-test-explorer.testProjectPath": "**/*.Tests"
 }

@@ -36,7 +36,7 @@
 			"name": ".NET Core Launch (console)",
 			"type": "coreclr",
 			"request": "launch",
-			"preLaunchTask": "tests-build",
+			"preLaunchTask": "test-build",
 			// If you have changed target frameworks, make sure to update the program path.
 			"program": "${workspaceFolder}/CourseCodesAPI.Tests/bin/Debug/netcoreapp3.1/CourseCodesAPI.Tests.dll",
 			"args": [],
