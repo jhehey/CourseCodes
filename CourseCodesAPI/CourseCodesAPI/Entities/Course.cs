@@ -8,8 +8,10 @@ namespace CourseCodesAPI.Entities
 		public Guid Id { get; set; }
 		public string Title { get; set; }
 		public string Description { get; set; }
-		public string JoinCode { get; set; }
 		public DateTime DateCreated { get; set; }
+
+		// A Course has a JoinCode
+		public JoinCode JoinCode { get; set; }
 
 		// A Course has an Instructor
 		public Guid InstructorId { get; set; }
