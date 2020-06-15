@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CourseCodesAPI.Controllers
 {
 	[ApiController]
-	[Route ("api/courses/{courseId}/joincodes")]
+	[Route ("api/joincodes")]
 	public class JoinCodesController : ControllerBase
 	{
 		private readonly CourseCodesContext _context;
@@ -40,13 +40,12 @@ namespace CourseCodesAPI.Controllers
 			return Ok (_mapper.Map<JoinCodeDto> (joinCode));
 		}
 
-		// Post without body - TODO: Content-Length: 0
 		[HttpPost]
-		public async Task<ActionResult<JoinCodeDto>> CreateJoinCode ([FromRoute] Guid courseId)
+		public async Task<ActionResult<JoinCodeDto>> CreateJoinCode ([FromBody] JoinCodeForCreationDto joinCodeToCreate)
 		{
 			// TODO: JoinCodeForCreationDto - Add Password?
 			// check if courses exists
-			var course = await _context.Courses.FindAsync (courseId);
+			var course = await _context.Courses.FindAsync (joinCodeToCreate.CourseId);
 			if (course == null) return NotFound ();
 
 			// generate join code
@@ -58,6 +57,9 @@ namespace CourseCodesAPI.Controllers
 					CourseId = course.Id
 			};
 
+			// TODO: instead of add, update the joincode for the course if one already exists
+			// because only 1 join code is available for the course.
+			// when the instructor creates a new code, the other code is now invalid and replace by new one
 			// save join code
 			_context.JoinCodes.Add (joinCode);
 			await _context.SaveChangesAsync ();
