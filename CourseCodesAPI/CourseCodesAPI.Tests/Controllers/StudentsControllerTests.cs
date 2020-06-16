@@ -1,47 +1,110 @@
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoBogus;
 using CourseCodesAPI.Models;
+using CourseCodesAPI.Tests.Helpers;
 using FluentAssertions;
+using Flurl;
+using Flurl.Http;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 
 namespace CourseCodesAPI.Tests.Controllers
 {
-	public class StudentsControllerTests : IntegrationTest
+	public class StudentsControllerTests : BaseTest
 	{
 		[Fact]
-		public async Task CreateStudent_ValidParameters_ReturnsCreatedAt ()
+		public async Task CreateStudent_ShouldReturnCreatedResource ()
 		{
 			// Arrange
-			StudentForCreationDto studentToCreate = new StudentForCreationDto ()
-			{
-				FirstName = "fname1",
-					LastName = "lname1",
-					Email = "email1",
-			};
-			var studentJson = JsonSerializer.Serialize (studentToCreate);
+			var fakeStudent = AutoFaker.Generate<StudentForCreationDto> ();
 
 			// Act
-			var response = await TestClient.PostAsync ("https://localhost:5001/api/students",
-				new StringContent (studentJson, Encoding.UTF8, "application/json")
-			);
-
-			var content = await response.Content.ReadAsStringAsync ();
-			var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-			StudentDto studentDto = JsonSerializer.Deserialize<StudentDto> (content, options);
-			Guid locationStudentId = new Guid (response.Headers.Location.Segments.LastOrDefault ());
+			var response = await Routes.Students.PostJsonAsync (fakeStudent);
+			var studentDto = await response.GetJsonAsync<StudentDto> ();
+			var studentId = response.GetGuidFromLocation ();
 
 			// Assert
 			response.StatusCode
 				.Should ().Be (StatusCodes.Status201Created);
-			locationStudentId
-				.Should ().Be (studentDto.Id, "Location uri must return the student Id");
+			response
+				.ShouldBeContentTypeJson ();
+
+			studentId
+				.Should ().NotBeEmpty ();
+			studentDto
+				.Should ().NotBeNull ();
+			studentDto.Id
+				.Should ().Be (studentId);
 		}
 
+		[Fact]
+		public async Task GetStudentById_ShouldReturnStudentWhenStudentIsCreated ()
+		{
+			// Arrange
+			var fakeStudent = AutoFaker.Generate<StudentForCreationDto> ();
+			var createResponse = await Routes.Students.PostJsonAsync (fakeStudent);
+			var studentId = createResponse.GetGuidFromLocation ();
+
+			// Act
+			var response = await Routes.Students.Slash (studentId).GetAsync ();
+			var studentDto = await response.GetJsonAsync<StudentDto> ();
+
+			// Assert
+			response.StatusCode
+				.Should ().Be (StatusCodes.Status200OK);
+			response
+				.ShouldBeContentTypeJson ();
+
+			studentId
+				.Should ().NotBeEmpty ();
+			studentDto
+				.Should ().NotBeNull ();
+			studentDto.Id
+				.Should ().Be (studentId);
+		}
+
+		[Fact]
+		public async Task GetStudents_ShouldBeEmpty ()
+		{
+			// Arrange
+
+			// Act
+			var response = await Routes.Students.GetAsync ();
+			var students = await response.GetJsonAsync<IEnumerable<StudentDto>> ();
+
+			// Assert
+			response.StatusCode
+				.Should ().Be (StatusCodes.Status200OK);
+			response
+				.ShouldBeContentTypeJson ();
+
+			students
+				.Should ().BeEmpty ();
+		}
+
+		[Fact]
+		public async Task GetStudents_ShouldNotBeEmptyWhenStudentIsCreated ()
+		{
+			// Arrange
+			var fakeStudent = AutoFaker.Generate<StudentForCreationDto> ();
+			var createResponse = await Routes.Students.PostJsonAsync (fakeStudent);
+			var studentId = createResponse.GetGuidFromLocation ();
+
+			// Act
+			var response = await Routes.Students.GetAsync ();
+			var students = await response.GetJsonAsync<IEnumerable<StudentDto>> ();
+
+			// Assert
+			response.StatusCode
+				.Should ().Be (StatusCodes.Status200OK);
+			response
+				.ShouldBeContentTypeJson ();
+
+			students
+				.Should ().NotBeEmpty ().And
+				.Contain (s => s.Id == studentId);
+		}
 	}
 }

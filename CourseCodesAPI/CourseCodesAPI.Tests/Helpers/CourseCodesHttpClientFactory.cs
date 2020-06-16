@@ -1,23 +1,19 @@
 using System.Net;
 using System.Net.Http;
 using CourseCodesAPI.Contexts;
+using Flurl.Http.Configuration;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Xunit.Abstractions;
 
-namespace CourseCodesAPI.Tests
+namespace CourseCodesAPI.Tests.Helpers
 {
-	public class IntegrationTest
+	public class CourseCodesHttpClientFactory : DefaultHttpClientFactory
 	{
-		protected readonly HttpClient TestClient;
-		protected readonly ITestOutputHelper output;
-
-		public IntegrationTest (ITestOutputHelper output)
+		// override to customize how HttpClient is created/configured
+		public override HttpClient CreateHttpClient (HttpMessageHandler handler)
 		{
-			this.output = output;
-
 			var appFactory = new WebApplicationFactory<Startup> ()
 				.WithWebHostBuilder (builder =>
 				{
@@ -31,7 +27,7 @@ namespace CourseCodesAPI.Tests
 					});
 				});
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-			TestClient = appFactory.CreateClient ();
+			return appFactory.CreateClient ();
 		}
 	}
 }
