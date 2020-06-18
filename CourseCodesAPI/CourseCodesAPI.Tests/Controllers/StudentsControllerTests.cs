@@ -66,25 +66,6 @@ namespace CourseCodesAPI.Tests.Controllers
 		}
 
 		[Fact]
-		public async Task GetStudents_ShouldBeEmpty ()
-		{
-			// Arrange
-
-			// Act
-			var response = await Routes.Students.GetAsync ();
-			var students = await response.GetJsonAsync<IEnumerable<StudentDto>> ();
-
-			// Assert
-			response.StatusCode
-				.Should ().Be (StatusCodes.Status200OK);
-			response
-				.ShouldBeContentTypeJson ();
-
-			students
-				.Should ().BeEmpty ();
-		}
-
-		[Fact]
 		public async Task GetStudents_ShouldNotBeEmptyWhenStudentIsCreated ()
 		{
 			// Arrange

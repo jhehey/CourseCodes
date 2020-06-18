@@ -21,7 +21,7 @@ namespace CourseCodesAPI.Tests
 		{
 			// string getById = Routes.Students.GetById (new Guid ());
 
-			var response = await Routes.Students.GetAsync ();
+			var response = await Routes.Instructors.GetAsync ();
 			response.EnsureSuccessStatusCode ();
 			var content = await response.Content.ReadAsStringAsync ();
 		}
@@ -29,7 +29,7 @@ namespace CourseCodesAPI.Tests
 		[Fact]
 		public async Task Flurl_TryHttpTest_Test ()
 		{
-			HttpResponseMessage response = await Routes.Students.GetAsync ();
+			HttpResponseMessage response = await Routes.Instructors.GetAsync ();
 			IEnumerable<StudentDto> students = await response.GetJsonAsync<IEnumerable<StudentDto>> ();
 		}
 
@@ -44,7 +44,7 @@ namespace CourseCodesAPI.Tests
 			};
 
 			// POST- Ensure status 201 created
-			HttpResponseMessage response = await Routes.Students.PostJsonAsync (student);
+			HttpResponseMessage response = await Routes.Instructors.PostJsonAsync (student);
 
 			// make sure this is json
 			// make sure not empty, kase may cinreate
