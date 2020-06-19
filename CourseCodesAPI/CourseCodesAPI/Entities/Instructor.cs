@@ -7,7 +7,8 @@ namespace CourseCodesAPI.Entities
 	{
 		public Guid Id { get; set; }
 
-		// An Instructor owns an Account
+		// An Instructor owns an
+		public Guid AccountId { get; set; }
 		public Account Account { get; set; }
 
 		// An Instructor has a Collection of Courses

@@ -22,7 +22,7 @@ namespace CourseCodesAPI.Contexts
 				.HasKey (s => s.Id);
 			// a Student owns an Account
 			builder.Entity<Student> ()
-				.OwnsOne (s => s.Account);
+				.HasOne (s => s.Account);
 
 			// Instructor
 			// Primary Key
@@ -30,7 +30,7 @@ namespace CourseCodesAPI.Contexts
 				.HasKey (i => i.Id);
 			// an Instructor owns an Account
 			builder.Entity<Instructor> ()
-				.OwnsOne (i => i.Account);
+				.HasOne (i => i.Account);
 
 			// Course
 			// Primary Key
