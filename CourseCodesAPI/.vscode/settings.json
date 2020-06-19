@@ -7,7 +7,7 @@
 		"**/.DS_Store": true,
 		"**/bin/": true,
 		"**/obj/": true,
-		"**/appsettings*": true,
+		"**/appsettings*": false,
 		"**/*.csproj": true
 	},
 	"editor.detectIndentation": false,

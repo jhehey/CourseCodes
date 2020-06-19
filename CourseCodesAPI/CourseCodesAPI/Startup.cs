@@ -31,7 +31,13 @@ namespace CourseCodesAPI
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices (IServiceCollection services)
 		{
-			services.AddDbContextPool<CourseCodesContext> (opt => opt.UseInMemoryDatabase ("CourseCodesDb"));
+			// In memory database
+			// services.AddDbContextPool<CourseCodesContext> (opt => opt.UseInMemoryDatabase ("CourseCodesDb"));
+
+			// postgresql database
+			services.AddDbContextPool<CourseCodesContext> (opt =>
+				opt.UseNpgsql (Configuration.GetConnectionString ("CourseCodesConnection"))
+			);
 			services.AddAutoMapper (AppDomain.CurrentDomain.GetAssemblies ());
 			services.AddControllers (
 				setupAction => { setupAction.ReturnHttpNotAcceptable = true; }
