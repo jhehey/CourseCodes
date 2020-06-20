@@ -34,7 +34,7 @@ namespace CourseCodesAPI.Controllers
 		[HttpGet ("{studentId:guid}")]
 		public async Task<ActionResult<StudentDto>> GetStudent ([FromRoute] Guid studentId)
 		{
-			var student = await _context.Students.FindAsync (studentId);
+			var student = await _context.Students.Include (s => s.Account).FirstOrDefaultAsync (s => s.Id == studentId);
 			if (student == null) return NotFound ();
 			return Ok (_mapper.Map<StudentDto> (student));
 		}

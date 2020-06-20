@@ -63,6 +63,7 @@ namespace CourseCodesAPI.Tests.Controllers
 				.Should ().NotBeNull ();
 			studentDto.Id
 				.Should ().Be (studentId);
+
 		}
 
 		[Fact]
