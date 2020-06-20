@@ -15,11 +15,19 @@ namespace CourseCodesAPI.Tests.Controllers
 {
 	public class InstructorsControllerTests : BaseTest
 	{
+		protected AutoFaker<InstructorForCreationDto> CreateFaker { get; set; }
+
+		public InstructorsControllerTests ()
+		{
+			CreateFaker = new AutoFaker<InstructorForCreationDto> ();
+			CreateFaker.RuleFor (dto => dto.PasswordHash, fake => fake.Random.Hash ());
+		}
+
 		[Fact]
 		public async Task CreateInstructor_ShouldReturnCreatedResource ()
 		{
 			// Arrange
-			var fakeInstructor = AutoFaker.Generate<InstructorForCreationDto> ();
+			var fakeInstructor = CreateFaker.Generate ();
 
 			// Act
 			var response = await Routes.Instructors.PostJsonAsync (fakeInstructor);
@@ -42,7 +50,7 @@ namespace CourseCodesAPI.Tests.Controllers
 		public async Task GetInstructorById_ShouldReturnInstructorWhenInstructorIsCreated ()
 		{
 			// Arrange
-			var fakeInstructor = AutoFaker.Generate<InstructorForCreationDto> ();
+			var fakeInstructor = CreateFaker.Generate ();
 			var createResponse = await Routes.Instructors.PostJsonAsync (fakeInstructor);
 			var instructorId = createResponse.GetGuidFromLocation ();
 
@@ -66,7 +74,7 @@ namespace CourseCodesAPI.Tests.Controllers
 		public async Task GetInstructor_ShouldNotBeEmptyWhenInstructorIsCreated ()
 		{
 			// Arrange
-			var fakeInstructor = AutoFaker.Generate<InstructorForCreationDto> ();
+			var fakeInstructor = CreateFaker.Generate ();
 			var createResponse = await Routes.Instructors.PostJsonAsync (fakeInstructor);
 			var instructorId = createResponse.GetGuidFromLocation ();
 
