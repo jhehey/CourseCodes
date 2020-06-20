@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -6,7 +6,6 @@ import {
 	Avatar,
 	Button,
 	CssBaseline,
-	TextField,
 	FormControlLabel,
 	Checkbox,
 	Link,
@@ -63,7 +62,10 @@ const SignUp = () => {
 	const classes = useStyles();
 
 	// React Hook Form
-	const { register, handleSubmit, control, errors } = useForm({ mode: 'onChange' });
+	const { register, handleSubmit, control, errors } = useForm({
+		mode: 'onChange',
+		reValidateMode: 'onChange',
+	});
 
 	// TODO: send request to server
 	const onSubmit = (data) => console.log(data);
@@ -99,13 +101,20 @@ const SignUp = () => {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<InputLabel id="accountTypeLabel">Type</InputLabel>
+								<InputLabel
+									id="accountTypeLabel"
+									style={{ marginLeft: errors.accountType ? '1rem' : '0rem' }}
+									error={!!errors.accountType}
+								>
+									Type
+								</InputLabel>
 
 								<Controller
 									as={
 										<Select
 											error={!!errors.accountType}
-											labelId="accountTypeLabel"
+											variant={errors.accountType ? 'outlined' : 'standard'}
+											label="Type"
 											id="accountType"
 										>
 											<MenuItem value={'student'}>Student</MenuItem>
@@ -118,7 +127,10 @@ const SignUp = () => {
 									defaultValue=""
 								/>
 
-								<FormHelperText>
+								<FormHelperText
+									style={{ marginLeft: errors.accountType ? '1rem' : '0rem' }}
+									error={!!errors.accountType}
+								>
 									{errors.accountType
 										? errors.accountType.message
 										: 'Select the type of account you want to create'}
@@ -143,7 +155,7 @@ const SignUp = () => {
 					</Button>
 					<Grid container justify="flex-end">
 						<Grid item>
-							<Link href="#" variant="body2">
+							<Link href="/signin" variant="body2">
 								Already have an account? Sign in
 							</Link>
 						</Grid>
