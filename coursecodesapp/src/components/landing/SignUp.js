@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -14,7 +14,16 @@ import {
 	Box,
 	Typography,
 	Container,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+	FormHelperText,
 } from '@material-ui/core';
+
+import { useForm, Controller } from 'react-hook-form';
+
+import EmailTextField from '../common/EmailTextField';
 
 function Copyright() {
 	return (
@@ -49,8 +58,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SignUp() {
+const SignUp = () => {
 	const classes = useStyles();
+
+	const onSubmit = (data) => console.log(data);
+
+	const { register, handleSubmit, control, errors } = useForm({ mode: 'onChange' });
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -62,10 +75,13 @@ export default function SignUp() {
 				<Typography component="h1" variant="h5">
 					Sign up
 				</Typography>
-				<form className={classes.form} noValidate>
+				<form className={classes.form} noValidate onSubmit={handleSubmit(onSubmit)}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} sm={6}>
 							<TextField
+								inputRef={register({ required: 'This field is required' })}
+								error={!!errors.firstName}
+								helperText={errors.firstName ? errors.firstName.message : ''}
 								autoComplete="fname"
 								name="firstName"
 								variant="outlined"
@@ -78,6 +94,9 @@ export default function SignUp() {
 						</Grid>
 						<Grid item xs={12} sm={6}>
 							<TextField
+								inputRef={register({ required: 'This field is required' })}
+								error={!!errors.lastName}
+								helperText={errors.lastName ? errors.lastName.message : ''}
 								variant="outlined"
 								required
 								fullWidth
@@ -88,18 +107,13 @@ export default function SignUp() {
 							/>
 						</Grid>
 						<Grid item xs={12}>
-							<TextField
-								variant="outlined"
-								required
-								fullWidth
-								id="email"
-								label="Email Address"
-								name="email"
-								autoComplete="email"
-							/>
+							<EmailTextField name="email" register={register} error={errors.email} />
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								inputRef={register({ required: 'This field is required' })}
+								error={!!errors.password}
+								helperText={errors.password ? errors.password.message : ''}
 								variant="outlined"
 								required
 								fullWidth
@@ -109,6 +123,34 @@ export default function SignUp() {
 								id="password"
 								autoComplete="current-password"
 							/>
+						</Grid>
+						<Grid item xs={12}>
+							<FormControl fullWidth>
+								<InputLabel id="accountTypeLabel">Type</InputLabel>
+
+								<Controller
+									as={
+										<Select
+											error={!!errors.accountType}
+											labelId="accountTypeLabel"
+											id="accountType"
+										>
+											<MenuItem value={'student'}>Student</MenuItem>
+											<MenuItem value={'instructor'}>Instructor</MenuItem>
+										</Select>
+									}
+									name="accountType"
+									rules={{ required: 'This field is required' }}
+									control={control}
+									defaultValue=""
+								/>
+
+								<FormHelperText>
+									{errors.accountType
+										? errors.accountType.message
+										: 'Select the type of account you want to create'}
+								</FormHelperText>
+							</FormControl>
 						</Grid>
 						<Grid item xs={12}>
 							<FormControlLabel
@@ -140,4 +182,6 @@ export default function SignUp() {
 			</Box>
 		</Container>
 	);
-}
+};
+
+export default SignUp;
