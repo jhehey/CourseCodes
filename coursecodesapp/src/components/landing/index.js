@@ -1,5 +1,6 @@
 import Navbar from './Navbar';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+import HomePage from './HomePage';
 
-export { Navbar, SignIn, SignUp };
+export { HomePage, Navbar, SignIn, SignUp };

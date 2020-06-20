@@ -1,18 +1,13 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Box } from '@material-ui/core/';
-
-// import Navbar from './Navbar';
-// import SignIn from './SignIn';
-// import SignUp from './SignUp';
-
 import { Navbar, SignIn, SignUp } from './';
 
 const HomePage = () => {
 	return (
 		<>
 			<Navbar />
-			<Box mt={12}>
+			<Box mt={15} mb={5}>
 				<Switch>
 					<Route path="/about">
 						<div>
