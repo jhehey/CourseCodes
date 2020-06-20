@@ -24,6 +24,7 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 
 import EmailTextField from '../common/EmailTextField';
+import RequiredTextField from '../common/RequiredTextField';
 
 function Copyright() {
 	return (
@@ -61,9 +62,11 @@ const useStyles = makeStyles((theme) => ({
 const SignUp = () => {
 	const classes = useStyles();
 
-	const onSubmit = (data) => console.log(data);
-
+	// React Hook Form
 	const { register, handleSubmit, control, errors } = useForm({ mode: 'onChange' });
+
+	// TODO: send request to server
+	const onSubmit = (data) => console.log(data);
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -78,50 +81,20 @@ const SignUp = () => {
 				<form className={classes.form} noValidate onSubmit={handleSubmit(onSubmit)}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} sm={6}>
-							<TextField
-								inputRef={register({ required: 'This field is required' })}
-								error={!!errors.firstName}
-								helperText={errors.firstName ? errors.firstName.message : ''}
-								autoComplete="fname"
-								name="firstName"
-								variant="outlined"
-								required
-								fullWidth
-								id="firstName"
-								label="First Name"
-								autoFocus
-							/>
+							<RequiredTextField name="firstName" register={register} error={errors.firstName} />
 						</Grid>
 						<Grid item xs={12} sm={6}>
-							<TextField
-								inputRef={register({ required: 'This field is required' })}
-								error={!!errors.lastName}
-								helperText={errors.lastName ? errors.lastName.message : ''}
-								variant="outlined"
-								required
-								fullWidth
-								id="lastName"
-								label="Last Name"
-								name="lastName"
-								autoComplete="lname"
-							/>
+							<RequiredTextField name="lastName" register={register} error={errors.lastName} />
 						</Grid>
 						<Grid item xs={12}>
 							<EmailTextField name="email" register={register} error={errors.email} />
 						</Grid>
 						<Grid item xs={12}>
-							<TextField
-								inputRef={register({ required: 'This field is required' })}
-								error={!!errors.password}
-								helperText={errors.password ? errors.password.message : ''}
-								variant="outlined"
-								required
-								fullWidth
+							<RequiredTextField
 								name="password"
-								label="Password"
+								register={register}
+								error={errors.password}
 								type="password"
-								id="password"
-								autoComplete="current-password"
 							/>
 						</Grid>
 						<Grid item xs={12}>

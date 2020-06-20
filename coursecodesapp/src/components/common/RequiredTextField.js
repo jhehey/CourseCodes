@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import { toSentenceCase } from '../../utils/stringUtils';
 
-const RequiredTextField = ({ id = '', name, register, error }) => {
+const RequiredTextField = ({ name, register, error, id = '', type = 'text' }) => {
 	return (
 		<TextField
 			id={id ? id : name}
@@ -16,6 +16,7 @@ const RequiredTextField = ({ id = '', name, register, error }) => {
 			fullWidth
 			autoFocus
 			required
+			type={type}
 		/>
 	);
 };
