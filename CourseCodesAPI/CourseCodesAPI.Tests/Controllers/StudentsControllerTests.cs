@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoBogus;
 using CourseCodesAPI.Models;
@@ -26,17 +27,15 @@ namespace CourseCodesAPI.Tests.Controllers
 			var studentId = response.GetGuidFromLocation ();
 
 			// Assert
-			response.StatusCode
-				.Should ().Be (StatusCodes.Status201Created);
-			response
-				.ShouldBeContentTypeJson ();
+			response.StatusCode.Should ().Be (StatusCodes.Status201Created);
+			response.ShouldBeContentTypeJson ();
 
-			studentId
-				.Should ().NotBeEmpty ();
-			studentDto
-				.Should ().NotBeNull ();
-			studentDto.Id
-				.Should ().Be (studentId);
+			studentId.Should ().NotBeEmpty ();
+			studentDto.Should ().NotBeNull ();
+			studentDto.Id.Should ().Be (studentId);
+
+			studentDto.FullName.Should ().NotBeNullOrEmpty ();
+			studentDto.Email.Should ().NotBeNullOrEmpty ();
 		}
 
 		[Fact]
@@ -57,13 +56,12 @@ namespace CourseCodesAPI.Tests.Controllers
 			response
 				.ShouldBeContentTypeJson ();
 
-			studentId
-				.Should ().NotBeEmpty ();
-			studentDto
-				.Should ().NotBeNull ();
-			studentDto.Id
-				.Should ().Be (studentId);
+			studentId.Should ().NotBeEmpty ();
+			studentDto.Should ().NotBeNull ();
+			studentDto.Id.Should ().Be (studentId);
 
+			studentDto.FullName.Should ().NotBeNullOrEmpty ();
+			studentDto.Email.Should ().NotBeNullOrEmpty ();
 		}
 
 		[Fact]
@@ -79,14 +77,14 @@ namespace CourseCodesAPI.Tests.Controllers
 			var students = await response.GetJsonAsync<IEnumerable<StudentDto>> ();
 
 			// Assert
-			response.StatusCode
-				.Should ().Be (StatusCodes.Status200OK);
-			response
-				.ShouldBeContentTypeJson ();
+			response.StatusCode.Should ().Be (StatusCodes.Status200OK);
+			response.ShouldBeContentTypeJson ();
 
-			students
-				.Should ().NotBeEmpty ().And
+			students.Should ().NotBeEmpty ().And
 				.Contain (s => s.Id == studentId);
+
+			students.Select (s => s.FullName).Should ().NotBeNullOrEmpty ();
+			students.Select (s => s.Email).Should ().NotBeNullOrEmpty ();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoBogus;
 using CourseCodesAPI.Models;
@@ -26,17 +27,15 @@ namespace CourseCodesAPI.Tests.Controllers
 			var instructorId = response.GetGuidFromLocation ();
 
 			// Assert
-			response.StatusCode
-				.Should ().Be (StatusCodes.Status201Created);
-			response
-				.ShouldBeContentTypeJson ();
+			response.StatusCode.Should ().Be (StatusCodes.Status201Created);
+			response.ShouldBeContentTypeJson ();
 
-			instructorId
-				.Should ().NotBeEmpty ();
-			instructorDto
-				.Should ().NotBeNull ();
-			instructorDto.Id
-				.Should ().Be (instructorId);
+			instructorId.Should ().NotBeEmpty ();
+			instructorDto.Should ().NotBeNull ();
+			instructorDto.Id.Should ().Be (instructorId);
+
+			instructorDto.FullName.Should ().NotBeNullOrEmpty ();
+			instructorDto.Email.Should ().NotBeNullOrEmpty ();
 		}
 
 		[Fact]
@@ -52,17 +51,15 @@ namespace CourseCodesAPI.Tests.Controllers
 			var instructorDto = await response.GetJsonAsync<InstructorDto> ();
 
 			// Assert
-			response.StatusCode
-				.Should ().Be (StatusCodes.Status200OK);
-			response
-				.ShouldBeContentTypeJson ();
+			response.StatusCode.Should ().Be (StatusCodes.Status200OK);
+			response.ShouldBeContentTypeJson ();
 
-			instructorId
-				.Should ().NotBeEmpty ();
-			instructorDto
-				.Should ().NotBeNull ();
-			instructorDto.Id
-				.Should ().Be (instructorId);
+			instructorId.Should ().NotBeEmpty ();
+			instructorDto.Should ().NotBeNull ();
+			instructorDto.Id.Should ().Be (instructorId);
+
+			instructorDto.FullName.Should ().NotBeNullOrEmpty ();
+			instructorDto.Email.Should ().NotBeNullOrEmpty ();
 		}
 
 		[Fact]
@@ -78,14 +75,14 @@ namespace CourseCodesAPI.Tests.Controllers
 			var instructors = await response.GetJsonAsync<IEnumerable<InstructorDto>> ();
 
 			// Assert
-			response.StatusCode
-				.Should ().Be (StatusCodes.Status200OK);
-			response
-				.ShouldBeContentTypeJson ();
+			response.StatusCode.Should ().Be (StatusCodes.Status200OK);
+			response.ShouldBeContentTypeJson ();
 
-			instructors
-				.Should ().NotBeEmpty ().And
+			instructors.Should ().NotBeEmpty ().And
 				.Contain (s => s.Id == instructorId);
+
+			instructors.Select (s => s.FullName).Should ().NotBeNullOrEmpty ();
+			instructors.Select (s => s.Email).Should ().NotBeNullOrEmpty ();
 		}
 	}
 }
