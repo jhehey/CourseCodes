@@ -1,0 +1,17 @@
+version: '3.0'
+
+services:
+  webapp:
+    container_name: coursecodesapp
+    build:
+      context: ./coursecodesapp
+      dockerfile: Dockerfile
+    volumes:
+      - './coursecodesapp:/app'
+      - '/app/node_modules'
+    ports:
+      - '3000:3000'
+    environment:
+      - PORT=3000
+      - CHOKIDAR_USEPOLLING=true
+    tty: true
