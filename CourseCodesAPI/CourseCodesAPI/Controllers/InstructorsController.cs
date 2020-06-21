@@ -47,7 +47,8 @@ namespace CourseCodesAPI.Controllers
 			// map
 			var instructor = _mapper.Map<Instructor> (instructorToCreate);
 
-			// add date registered
+			// add role and date registered
+			instructor.Account.AccountRole = Role.Instructor;
 			instructor.Account.DateRegistered = DateTime.Now;
 
 			// save

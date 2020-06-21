@@ -8,6 +8,7 @@ namespace CourseCodesAPI.Contexts
 		public CourseCodesContext (DbContextOptions<CourseCodesContext> options) : base (options) { }
 
 		// TODO: Add DbSets
+		public DbSet<Account> Accounts { get; set; }
 		public DbSet<Student> Students { get; set; }
 		public DbSet<Instructor> Instructors { get; set; }
 		public DbSet<Course> Courses { get; set; }
@@ -16,6 +17,11 @@ namespace CourseCodesAPI.Contexts
 
 		protected override void OnModelCreating (ModelBuilder builder)
 		{
+			// Account
+			// Primary Key
+			builder.Entity<Account> ()
+				.HasKey (a => a.Id);
+
 			// Student
 			// Primary Key
 			builder.Entity<Student> ()

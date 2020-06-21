@@ -10,6 +10,7 @@ namespace CourseCodesAPI.Entities
 		public string LastName { get; set; }
 		public string Email { get; set; }
 		public string PasswordHash { get; set; }
+		public Role AccountRole { get; set; }
 		public DateTime DateRegistered { get; set; }
 	}
 }

@@ -45,7 +45,8 @@ namespace CourseCodesAPI.Controllers
 			// map dto to entity
 			var student = _mapper.Map<Student> (studentToCreate);
 
-			// add date registered
+			// add role and date registered
+			student.Account.AccountRole = Role.Student;
 			student.Account.DateRegistered = DateTime.Now;
 
 			// save

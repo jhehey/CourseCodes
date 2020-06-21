@@ -21,6 +21,8 @@ namespace CourseCodesAPI
 {
 	public class Startup
 	{
+		private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 		public Startup (IConfiguration configuration)
 		{
 			Configuration = configuration;
@@ -38,7 +40,20 @@ namespace CourseCodesAPI
 			services.AddDbContextPool<CourseCodesContext> (opt =>
 				opt.UseNpgsql (Configuration.GetConnectionString ("CourseCodesConnection"))
 			);
+
+			// auto mapper
 			services.AddAutoMapper (AppDomain.CurrentDomain.GetAssemblies ());
+
+			// cors
+			services.AddCors (options =>
+			{
+				options.AddPolicy (name: MyAllowSpecificOrigins, builder =>
+				{
+					builder.WithOrigins ("http://localhost:3000");
+				});
+			});
+
+			// controllers and formatters
 			services.AddControllers (
 				setupAction => { setupAction.ReturnHttpNotAcceptable = true; }
 			).AddXmlDataContractSerializerFormatters ();
@@ -68,6 +83,8 @@ namespace CourseCodesAPI
 			app.UseHttpsRedirection ();
 
 			app.UseRouting ();
+
+			app.UseCors (MyAllowSpecificOrigins);
 
 			app.UseAuthorization ();
 

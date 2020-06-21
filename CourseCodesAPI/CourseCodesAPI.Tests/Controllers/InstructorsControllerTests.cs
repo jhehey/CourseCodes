@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoBogus;
+using CourseCodesAPI.Entities;
 using CourseCodesAPI.Models;
 using CourseCodesAPI.Tests.Helpers;
 using FluentAssertions;
@@ -91,6 +93,35 @@ namespace CourseCodesAPI.Tests.Controllers
 
 			instructors.Select (s => s.FullName).Should ().NotBeNullOrEmpty ();
 			instructors.Select (s => s.Email).Should ().NotBeNullOrEmpty ();
+		}
+
+		[Fact]
+		public async Task SignInAccountForInstructor_ShouldReturnAccountDto ()
+		{
+			// Arrange
+			var fakeInstructor = CreateFaker.Generate ();
+			var createResponse = await Routes.Instructors.PostJsonAsync (fakeInstructor);
+			var studentId = createResponse.GetGuidFromLocation ();
+
+			var accountToSignIn = new AccountForSignInDto ()
+			{
+				Email = fakeInstructor.Email,
+					PasswordHash = fakeInstructor.PasswordHash
+			};
+
+			// Act
+			var response = await Routes.Accounts.PostJsonAsync (accountToSignIn);
+			var account = await response.GetJsonAsync<AccountDto> ();
+
+			// Assert
+			response.StatusCode.Should ().Be (StatusCodes.Status200OK);
+			response.ShouldBeContentTypeJson ();
+
+			account.Should ().NotBeNull ();
+			account.Id.Should ().NotBeEmpty ().And.Should ().NotBe (Guid.Empty);
+			account.FullName.Should ().NotBeNullOrEmpty ();
+			account.Email.Should ().NotBeNullOrEmpty ();
+			account.AccountRole.Should ().Be (Role.Instructor);
 		}
 	}
 }
