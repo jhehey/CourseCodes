@@ -1,7 +1,9 @@
 import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+
+// material
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-
 import {
 	Avatar,
 	Button,
@@ -20,23 +22,14 @@ import {
 	FormHelperText,
 } from '@material-ui/core';
 
-import { useForm, Controller } from 'react-hook-form';
+// api
+import { AccountsApi } from '../../api';
+import HttpStatusCodes from 'http-status-codes';
 
+// common
 import EmailTextField from '../common/EmailTextField';
 import RequiredTextField from '../common/RequiredTextField';
-
-function Copyright() {
-	return (
-		<Typography variant="body2" color="textSecondary" align="center">
-			{'Copyright © '}
-			<Link color="inherit" href="https://material-ui.com/">
-				Your Website
-			</Link>{' '}
-			{new Date().getFullYear()}
-			{'.'}
-		</Typography>
-	);
-}
+import Copyright from '../common/CopyRight';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -68,7 +61,12 @@ const SignUp = () => {
 	});
 
 	// TODO: send request to server
-	const onSubmit = (data) => console.log(data);
+	const onSubmit = (signUpDetails) => {
+		(async () => {
+			const { data, status, error } = await AccountsApi.signUp(signUpDetails);
+			console.log('after submit', data, status, error);
+		})();
+	};
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -102,9 +100,9 @@ const SignUp = () => {
 						<Grid item xs={12}>
 							<FormControl fullWidth>
 								<InputLabel
-									id="accountTypeLabel"
-									style={{ marginLeft: errors.accountType ? '1rem' : '0rem' }}
-									error={!!errors.accountType}
+									id="accountRoleLabel"
+									style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }}
+									error={!!errors.accountRole}
 								>
 									Type
 								</InputLabel>
@@ -112,27 +110,27 @@ const SignUp = () => {
 								<Controller
 									as={
 										<Select
-											error={!!errors.accountType}
-											variant={errors.accountType ? 'outlined' : 'standard'}
+											error={!!errors.accountRole}
+											variant={errors.accountRole ? 'outlined' : 'standard'}
 											label="Type"
-											id="accountType"
+											id="accountRole"
 										>
-											<MenuItem value={'student'}>Student</MenuItem>
-											<MenuItem value={'instructor'}>Instructor</MenuItem>
+											<MenuItem value={0}>Student</MenuItem>
+											<MenuItem value={1}>Instructor</MenuItem>
 										</Select>
 									}
-									name="accountType"
+									name="accountRole"
 									rules={{ required: 'This field is required' }}
 									control={control}
 									defaultValue=""
 								/>
 
 								<FormHelperText
-									style={{ marginLeft: errors.accountType ? '1rem' : '0rem' }}
-									error={!!errors.accountType}
+									style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }}
+									error={!!errors.accountRole}
 								>
-									{errors.accountType
-										? errors.accountType.message
+									{errors.accountRole
+										? errors.accountRole.message
 										: 'Select the type of account you want to create'}
 								</FormHelperText>
 							</FormControl>

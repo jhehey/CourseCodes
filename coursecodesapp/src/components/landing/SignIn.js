@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
+
+// material
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-
 import {
 	Avatar,
 	Button,
@@ -15,23 +18,15 @@ import {
 	Container,
 } from '@material-ui/core';
 
-import { useForm } from 'react-hook-form';
+// api
+import { AccountsApi } from '../../api';
+import HttpStatusCodes from 'http-status-codes';
 
+// common
 import EmailTextField from '../common/EmailTextField';
 import RequiredTextField from '../common/RequiredTextField';
-
-function Copyright() {
-	return (
-		<Typography variant="body2" color="textSecondary" align="center">
-			{'Copyright © '}
-			<Link color="inherit" href="https://material-ui.com/">
-				Your Website
-			</Link>{' '}
-			{new Date().getFullYear()}
-			{'.'}
-		</Typography>
-	);
-}
+import SnackAlert from '../common/SnackAlert';
+import Copyright from '../common/CopyRight';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -56,6 +51,13 @@ const useStyles = makeStyles((theme) => ({
 const SignIn = () => {
 	const classes = useStyles();
 
+	const [signInError, setSignInError] = useState(false);
+
+	const history = useHistory();
+	const handleLogin = () => {
+		history.replace('/about');
+	};
+
 	// React Hook Form
 	const { register, handleSubmit, errors } = useForm({
 		mode: 'onSubmit',
@@ -63,7 +65,19 @@ const SignIn = () => {
 	});
 
 	// TODO: send request to server
-	const onSubmit = (data) => console.log(data);
+	const onSubmit = (signInDetails) => {
+		(async () => {
+			const { data: account, status } = await AccountsApi.signIn(signInDetails);
+
+			// TODO: Add account to state?
+			if (status === HttpStatusCodes.OK && account) {
+				console.log({ msg: 'Account Found', account });
+				handleLogin();
+			} else if (status === HttpStatusCodes.NOT_FOUND) {
+				setSignInError(true);
+			}
+		})();
+	};
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -127,6 +141,13 @@ const SignIn = () => {
 			<Box mt={8}>
 				<Copyright />
 			</Box>
+
+			<SnackAlert
+				open={signInError}
+				setOpen={setSignInError}
+				severity="error"
+				message="Invalid Username/Password"
+			/>
 		</Container>
 	);
 };
