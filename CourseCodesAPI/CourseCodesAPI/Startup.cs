@@ -5,6 +5,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using CourseCodesAPI.Contexts;
+using CourseCodesAPI.Filters;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -49,14 +51,26 @@ namespace CourseCodesAPI
 			{
 				options.AddPolicy (name: MyAllowSpecificOrigins, builder =>
 				{
-					builder.WithOrigins ("http://localhost:3000");
+					builder.WithOrigins ("http://localhost:3000")
+						.AllowAnyHeader ()
+						.AllowAnyMethod ();
 				});
 			});
 
-			// controllers and formatters
+			// controllers
 			services.AddControllers (
-				setupAction => { setupAction.ReturnHttpNotAcceptable = true; }
-			).AddXmlDataContractSerializerFormatters ();
+					options =>
+					{
+						options.ReturnHttpNotAcceptable = true;
+						options.Filters.Add (new ModelStateFilter ()); // action filter
+					}
+				)
+				.AddFluentValidation (options =>
+				{
+					options.RegisterValidatorsFromAssemblyContaining<Startup> ();
+				})
+				.AddXmlDataContractSerializerFormatters (); // formatter
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

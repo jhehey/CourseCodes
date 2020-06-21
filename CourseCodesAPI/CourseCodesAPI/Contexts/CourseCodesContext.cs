@@ -21,6 +21,15 @@ namespace CourseCodesAPI.Contexts
 			// Primary Key
 			builder.Entity<Account> ()
 				.HasKey (a => a.Id);
+			// Properties
+			builder.Entity<Account> ()
+				.Property (a => a.FirstName).IsRequired ().HasMaxLength (50);
+			builder.Entity<Account> ()
+				.Property (a => a.LastName).IsRequired ().HasMaxLength (50);
+			builder.Entity<Account> ()
+				.Property (a => a.Email).IsRequired ().HasMaxLength (255);
+			builder.Entity<Account> ()
+				.Property (a => a.PasswordHash).IsRequired ().HasMaxLength (100);
 
 			// Student
 			// Primary Key
@@ -47,6 +56,13 @@ namespace CourseCodesAPI.Contexts
 				.HasOne (c => c.Instructor)
 				.WithMany (i => i.Courses)
 				.HasForeignKey (c => c.InstructorId);
+			// Properties
+			builder.Entity<Course> ()
+				.Property (c => c.Title).IsRequired ().HasMaxLength (100);
+			builder.Entity<Course> ()
+				.Property (c => c.Description).IsRequired ().HasMaxLength (500);
+			builder.Entity<Course> ()
+				.Property (c => c.InstructorId).IsRequired ();
 
 			// StudentCourse (join entity)
 			// Composite Key
@@ -60,6 +76,11 @@ namespace CourseCodesAPI.Contexts
 				.HasOne (sc => sc.Course)
 				.WithMany (c => c.StudentCourses)
 				.HasForeignKey (sc => sc.CourseId);
+			// Properties
+			builder.Entity<StudentCourse> ()
+				.Property (sc => sc.StudentId).IsRequired ();
+			builder.Entity<StudentCourse> ()
+				.Property (sc => sc.CourseId).IsRequired ();
 
 			// JoinCode
 			// Primary Key
@@ -70,6 +91,12 @@ namespace CourseCodesAPI.Contexts
 				.HasOne (jc => jc.Course)
 				.WithOne (c => c.JoinCode)
 				.HasForeignKey<JoinCode> (jc => jc.CourseId);
+			// Properties
+			builder.Entity<JoinCode> ()
+				.Property (jc => jc.Code).HasMaxLength (6);
+			builder.Entity<JoinCode> ()
+				.Property (jc => jc.PasswordHash).HasMaxLength (100);
+
 		}
 	}
 }

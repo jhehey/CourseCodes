@@ -22,7 +22,8 @@ namespace CourseCodesAPI.Tests.Controllers
 		public StudentsControllerTests ()
 		{
 			CreateFaker = new AutoFaker<StudentForCreationDto> ();
-			CreateFaker.RuleFor (dto => dto.PasswordHash, fake => fake.Random.Hash ());
+			CreateFaker.RuleFor (dto => dto.PasswordHash, fake => fake.Random.Hash (64));
+			CreateFaker.RuleFor (dto => dto.AccountRole, fake => Role.Student);
 		}
 
 		[Fact]
@@ -46,6 +47,7 @@ namespace CourseCodesAPI.Tests.Controllers
 
 			studentDto.FullName.Should ().NotBeNullOrEmpty ();
 			studentDto.Email.Should ().NotBeNullOrEmpty ();
+			studentDto.AccountRole.Should ().Be (Role.Student);
 		}
 
 		[Fact]
@@ -72,6 +74,7 @@ namespace CourseCodesAPI.Tests.Controllers
 
 			studentDto.FullName.Should ().NotBeNullOrEmpty ();
 			studentDto.Email.Should ().NotBeNullOrEmpty ();
+			studentDto.AccountRole.Should ().Be (Role.Student);
 		}
 
 		[Fact]
@@ -95,6 +98,7 @@ namespace CourseCodesAPI.Tests.Controllers
 
 			students.Select (s => s.FullName).Should ().NotBeNullOrEmpty ();
 			students.Select (s => s.Email).Should ().NotBeNullOrEmpty ();
+			students.Should ().OnlyContain (s => s.AccountRole == Role.Student);
 		}
 
 		[Fact]

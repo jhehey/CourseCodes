@@ -3,15 +3,17 @@ using System;
 using CourseCodesAPI.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CourseCodesAPI.Migrations
 {
     [DbContext(typeof(CourseCodesContext))]
-    partial class CourseCodesContextModelSnapshot : ModelSnapshot
+    [Migration("20200621130410_ValidationAndConstraintsMigration")]
+    partial class ValidationAndConstraintsMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +31,7 @@ namespace CourseCodesAPI.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateRegistered")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
@@ -63,6 +66,7 @@ namespace CourseCodesAPI.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
@@ -154,6 +158,7 @@ namespace CourseCodesAPI.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateJoined")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone");
 
                     b.HasKey("StudentId", "CourseId");

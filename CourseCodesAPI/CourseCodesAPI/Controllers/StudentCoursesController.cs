@@ -63,7 +63,6 @@ namespace CourseCodesAPI.Controllers
 			// if we map it to a student course entity, and it successfully saved to db and gets
 			// student and course info, no need to find course and student. just check if it exist
 			var studentCourse = _mapper.Map<StudentCourse> (studentCourseToCreate);
-			studentCourse.DateJoined = DateTime.Now;
 
 			// save the studentCourse
 			_context.StudentCourses.Add (studentCourse);

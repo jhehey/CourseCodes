@@ -22,7 +22,8 @@ namespace CourseCodesAPI.Tests.Controllers
 		public InstructorsControllerTests ()
 		{
 			CreateFaker = new AutoFaker<InstructorForCreationDto> ();
-			CreateFaker.RuleFor (dto => dto.PasswordHash, fake => fake.Random.Hash ());
+			CreateFaker.RuleFor (dto => dto.PasswordHash, fake => fake.Random.Hash (64));
+			CreateFaker.RuleFor (dto => dto.AccountRole, fake => Role.Instructor);
 		}
 
 		[Fact]
@@ -46,6 +47,7 @@ namespace CourseCodesAPI.Tests.Controllers
 
 			instructorDto.FullName.Should ().NotBeNullOrEmpty ();
 			instructorDto.Email.Should ().NotBeNullOrEmpty ();
+			instructorDto.AccountRole.Should ().Be (Role.Instructor);
 		}
 
 		[Fact]
@@ -70,6 +72,7 @@ namespace CourseCodesAPI.Tests.Controllers
 
 			instructorDto.FullName.Should ().NotBeNullOrEmpty ();
 			instructorDto.Email.Should ().NotBeNullOrEmpty ();
+			instructorDto.AccountRole.Should ().Be (Role.Instructor);
 		}
 
 		[Fact]
@@ -93,6 +96,7 @@ namespace CourseCodesAPI.Tests.Controllers
 
 			instructors.Select (s => s.FullName).Should ().NotBeNullOrEmpty ();
 			instructors.Select (s => s.Email).Should ().NotBeNullOrEmpty ();
+			instructors.Should ().OnlyContain (s => s.AccountRole == Role.Instructor);
 		}
 
 		[Fact]

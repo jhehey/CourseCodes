@@ -19,5 +19,10 @@ namespace CourseCodesAPI.Entities
 
 		// A Course has a Collection of StudentCourses (Course has many Students)
 		public ICollection<StudentCourse> StudentCourses { get; set; }
+
+		public Course ()
+		{
+			DateCreated = DateTime.UtcNow;
+		}
 	}
 }

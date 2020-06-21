@@ -3,15 +3,17 @@ using System;
 using CourseCodesAPI.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CourseCodesAPI.Migrations
 {
     [DbContext(typeof(CourseCodesContext))]
-    partial class CourseCodesContextModelSnapshot : ModelSnapshot
+    [Migration("20200621134034_DefaultDateGeneratedOnAddMigration")]
+    partial class DefaultDateGeneratedOnAddMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,7 +31,9 @@ namespace CourseCodesAPI.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateRegistered")
-                        .HasColumnType("timestamp without time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -63,7 +67,9 @@ namespace CourseCodesAPI.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp without time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -154,7 +160,9 @@ namespace CourseCodesAPI.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateJoined")
-                        .HasColumnType("timestamp without time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("StudentId", "CourseId");
 

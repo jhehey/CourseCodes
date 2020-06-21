@@ -15,5 +15,10 @@ namespace CourseCodesAPI.Entities
 
 		// Date when the Student joined the Course
 		public DateTime DateJoined { get; set; }
+
+		public StudentCourse ()
+		{
+			DateJoined = DateTime.UtcNow;
+		}
 	}
 }

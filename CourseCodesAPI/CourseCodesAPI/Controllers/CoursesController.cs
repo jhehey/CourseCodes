@@ -53,8 +53,6 @@ namespace CourseCodesAPI.Controllers
 
 			// map dto to entity
 			var course = _mapper.Map<Course> (courseToCreate);
-			course.DateCreated = DateTime.Now;
-			course.Instructor = instructor;
 
 			// save the course
 			_context.Courses.Add (course);

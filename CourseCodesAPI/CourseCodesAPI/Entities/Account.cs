@@ -12,5 +12,10 @@ namespace CourseCodesAPI.Entities
 		public string PasswordHash { get; set; }
 		public Role AccountRole { get; set; }
 		public DateTime DateRegistered { get; set; }
+
+		public Account ()
+		{
+			DateRegistered = DateTime.UtcNow;
+		}
 	}
 }
