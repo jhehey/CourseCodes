@@ -19,6 +19,14 @@ export const alert = (state = { vertical: 'bottom', horizontal: 'center' }, acti
 				vertical: action.vertical,
 				horizontal: action.horizontal,
 			};
+		case alertConstants.INFO:
+			return {
+				open: true,
+				severity: 'info',
+				message: action.message,
+				vertical: action.vertical,
+				horizontal: action.horizontal,
+			};
 		case alertConstants.CLEAR:
 			return { ...state, open: false };
 		default:

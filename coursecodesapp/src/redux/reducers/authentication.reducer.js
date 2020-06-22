@@ -1,7 +1,7 @@
 import { userConstants } from '../constants';
 
 // TODO: INITIAL STATE, GET FROM LOCALSTORAGE
-const initialState = {};
+const initialState = { loggedIn: false, account: null };
 
 export const authentication = (state = initialState, action) => {
 	switch (action.type) {
@@ -17,6 +17,7 @@ export const authentication = (state = initialState, action) => {
 			};
 		case userConstants.SIGNIN_FAILURE:
 			return {
+				loggedIn: false,
 				error: action.error,
 			};
 		case userConstants.LOGOUT:

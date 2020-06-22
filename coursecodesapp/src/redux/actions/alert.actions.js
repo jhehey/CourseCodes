@@ -8,6 +8,10 @@ const error = ({ message, vertical = 'bottom', horizontal = 'center' }) => {
 	return { type: alertConstants.ERROR, message, vertical, horizontal };
 };
 
+const info = ({ message, vertical = 'bottom', horizontal = 'center' }) => {
+	return { type: alertConstants.INFO, message, vertical, horizontal };
+};
+
 const clear = () => {
 	return { type: alertConstants.CLEAR };
 };
@@ -15,5 +19,6 @@ const clear = () => {
 export const alertActions = {
 	success,
 	error,
+	info,
 	clear,
 };

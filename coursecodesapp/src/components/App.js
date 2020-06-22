@@ -1,61 +1,60 @@
-// import React, { useEffect } from 'react';
-// import { connect } from 'react-redux';
-// import { alertActions } from '../redux/actions';
-
-// import { HomePage } from './landing';
-
-// // TODO: Dito icheck kung sino ung user na authenticated
-// function App({ alert, paError }) {
-// 	useEffect(() => {
-// 		paError('Tite mo error');
-// 	}, [paError]);
-
-// 	return (
-// 		<div className="App">
-// 			{alert && console.log('ALERT TITE', alert)}
-// 			<HomePage />
-// 		</div>
-// 	);
-// }
-
-// const mapStateToProps = (state) => ({
-// 	alert: state.alert,
-// });
-
-// const mapDispatchToProps = (dispatch) => ({
-// 	paError: (message) => {
-// 		dispatch(alertActions.error(message));
-// 	},
-// });
-
-// const connectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
-// export { connectedApp as App };
-
 import React from 'react';
 import { HomePage } from './landing';
 import { AlertPopup } from './common';
 
-import { useDispatch } from 'react-redux';
-import { alertActions } from '../redux/actions';
+import { useSelector } from 'react-redux';
+import { AccountRoles } from '../helpers';
 
-// TODO: Dito icheck kung sino ung user na authenticated
+const StudentHome = () => {
+	console.log('STUDENT HOME');
+	return (
+		<div>
+			<h1>HELLO STUDENT</h1>
+		</div>
+	);
+};
+
+const InstructorHome = () => {
+	console.log('INSTRUCTOR HOME');
+	return (
+		<div>
+			<h1>HELLO Instructor</h1>
+		</div>
+	);
+};
+
+const getHomepage = (loggedIn, account) => {
+	console.log('GET HOMEPAGE');
+	console.log(loggedIn, account);
+	console.log(!loggedIn, !account, !loggedIn || !account);
+
+	if (!loggedIn || !account) {
+		console.log(' HOME PAGE');
+		return <HomePage />;
+	}
+
+	// loggedIn is true, account is not null/undefined
+	if (account.accountRole === AccountRoles.Student) {
+		return <StudentHome />;
+	}
+	if (account.accountRole === AccountRoles.Instructor) {
+		return <InstructorHome />;
+	}
+
+	// Invalid Account Role, just show homepage
+	console.log(' HOME PAGE');
+	return <HomePage />;
+};
+
 export const App = () => {
-	const dispatch = useDispatch();
-
-	const ayNaclick = (e) => {
-		dispatch(alertActions.error({ message: 'tite', vertical: 'bottom' }));
-	};
-
-	const ayNaclickYungIsa = (e) => {
-		dispatch(alertActions.success({ message: 'pepe', vertical: 'top' }));
-	};
+	// get the authentication details
+	const { loggedIn, account } = useSelector((state) => state.authentication);
+	console.log(loggedIn, account);
 
 	return (
 		<div className="App">
 			<AlertPopup />
-			<HomePage />
-			<button onClick={ayNaclick}>click mo nga sige ano ha</button>
-			<button onClick={ayNaclickYungIsa}>click mo nga ulet ako yamete</button>
+			{getHomepage(loggedIn, account)}
 		</div>
 	);
 };

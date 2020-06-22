@@ -17,18 +17,26 @@ const signIn = (signInDetails) => {
 
 	return async (dispatch) => {
 		dispatch(signInRequest(signInDetails.email));
+		dispatch(alertActions.info({ message: 'Signing In...' }));
 
-		const { data: account, success } = await AccountApi.signIn(signInDetails);
+		const { data: account, success, status, error } = await AccountApi.signIn(signInDetails);
 
-		// TODO: Yung status palitan ng success lng. sa Api ihandle ung success
-		if (success) {
-			// TODO: Save this to localStorage
-			dispatch(signInSuccess(account));
-			dispatch(alertActions.success({ message: 'Successfully Logged In ' + account.email }));
-		} else {
-			dispatch(signInFailure({ message: 'Invalid Username/Password' }));
-			dispatch(alertActions.error({ message: 'Invalid Username/Password' }));
-		}
+		setTimeout(() => {
+			// TODO: Yung status palitan ng success lng. sa Api ihandle ung success
+			if (success) {
+				// TODO: Save this to localStorage
+				dispatch(signInSuccess(account));
+				dispatch(alertActions.success({ message: 'Successfully Logged In ' + account.email }));
+			} else {
+				console.log(status, error.message);
+				if (error.message === 'Network Error') {
+					dispatch(alertActions.error({ message: 'There was a problem connecting to the server' }));
+				} else {
+					dispatch(signInFailure({ message: 'Invalid Username/Password' }));
+					dispatch(alertActions.error({ message: 'Invalid Username/Password' }));
+				}
+			}
+		}, 500);
 	};
 };
 
