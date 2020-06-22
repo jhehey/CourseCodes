@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 
-const NotFoundPage = () => {
+export const NotFoundPage = () => {
 	return (
 		<div id="notfound">
 			<div className="notfound">
@@ -10,12 +10,9 @@ const NotFoundPage = () => {
 				</div>
 				<h2>Oops! Nothing was found</h2>
 				<p>
-					The page you are looking for might have been removed had its name changed or is
-					temporarily unavailable. <a href="/">Return to homepage</a>
+					The page you are looking for might have been removed had its name changed or is temporarily unavailable. <a href="/">Return to homepage</a>
 				</p>
 			</div>
 		</div>
 	);
 };
-
-export default NotFoundPage;

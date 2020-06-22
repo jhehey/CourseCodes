@@ -1,6 +1,5 @@
-import Navbar from './Navbar';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import HomePage from './HomePage';
-
-export { HomePage, Navbar, SignIn, SignUp };
+export * from './About';
+export * from './HomePage';
+export * from './Navbar';
+export * from './SignIn';
+export * from './SignUp';

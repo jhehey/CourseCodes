@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Navbar = () => {
+export const Navbar = () => {
 	const classes = useStyles();
 
 	return (
@@ -65,5 +65,3 @@ const Navbar = () => {
 		</>
 	);
 };
-
-export default Navbar;
