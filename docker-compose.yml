@@ -1,0 +1,51 @@
+version: '3.0'
+
+services:
+  webapp:
+    container_name: coursecodesapp
+    build:
+      context: ./coursecodesapp
+      dockerfile: Dockerfile
+    volumes:
+      - './coursecodesapp:/app'
+      - '/app/node_modules'
+    ports:
+      - '3000:3000'
+    environment:
+      - PORT=3000
+      - CHOKIDAR_USEPOLLING=true
+    tty: true
+  api:
+    container_name: coursecodesapi
+    build:
+      context: ./CourseCodesAPI/CourseCodesAPI
+      dockerfile: Dockerfile
+    ports:
+      - '5000:80'
+      - '5001:443'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=bGMGyYLQDe5UejmYcdwQgXpjrLrs8W5qYRhmJkdGKPUspsw2JMW7FXZ8VxhF3wkpuTfPDRHHgEu4VrM4cKwGHGM998rmBzAzEx6vzQ6Hj2TaLVgPrUjc6QM46wFmTMJv
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/CourseCodesAPI.pfx
+      - ConnectionStrings__CourseCodesConnection=User ID =postgres;Password=S2MognJhsZUnwY8LY8neenn2yUKmXMyLD5QTH9mFWhU;Server=db;Port=5432;Database=CourseCodesDB;Integrated
+        Security=true;Pooling=true;
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    links:
+      - db
+  db:
+    container_name: coursecodesdb
+    image: postgres:latest
+    expose:
+      - '5432'
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=S2MognJhsZUnwY8LY8neenn2yUKmXMyLD5QTH9mFWhU
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+volumes:
+  database_data:
+    driver: local
