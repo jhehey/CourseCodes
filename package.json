@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@material-ui/core": "^4.10.2",
+    "react-parallax": "^3.0.3",
+    "react-scroll": "^1.7.16"
+  }
+}
