@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CourseCodesAPI.Contexts;
 using CourseCodesAPI.Filters;
-using CourseCodesAPI.Services;
-using CourseCodesAPI.Services.RemoteCodeExecution;
+using CourseCodesAPI.Services.CodeExecutionService;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -74,11 +73,17 @@ namespace CourseCodesAPI
 				})
 				.AddXmlDataContractSerializerFormatters (); // formatter
 
+			// NEW:
+			services.AddSingleton<IContainerFileSystemService, ContainerFileSystemService> ();
+			services.AddSingleton<ICodeExecutionService, CodeExecutionService> ();
+
+			// TODO: DELETE - TODELETE
+
 			// SourceCodeService: for saving sourcecodes and handling file system for container runners
-			services.AddSingleton<ISourceCodeService, SourceCodeService> ();
+			// services.AddSingleton<ISourceCodeService, SourceCodeService> ();
 
 			// CodeExecutionService: the service is the same for all requests (singleton)
-			services.AddSingleton<ICodeExecutionService, CodeExecutionService> ();
+			// services.AddSingleton<ICodeExecutionService, CodeExecutionService> ();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -115,24 +120,33 @@ namespace CourseCodesAPI
 				endpoints.MapControllers ();
 			});
 
-			// CodeExecutionService: register shutdown function
 			var codeExecutionService = app.ApplicationServices.GetRequiredService<ICodeExecutionService> ();
 			var hostLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime> ();
 			hostLifetime.ApplicationStarted.Register (async () =>
 			{
-				await codeExecutionService.StartupContainerRunners ();
+				await codeExecutionService.StartContainerRunnersAsync ();
 			});
-			hostLifetime.ApplicationStopping.Register (() =>
-			{
-				try
-				{
-					codeExecutionService.StopContainerRunners ().Wait ();
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine ($"There was a problem stopping the container runners {e.Message}");
-				}
-			});
+
+			// TODO: DELETE - TODELETE
+			// CodeExecutionService: register shutdown function
+			// var codeExecutionService = app.ApplicationServices.GetRequiredService<ICodeExecutionService> ();
+			// var hostLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime> ();
+			// hostLifetime.ApplicationStarted.Register (async () =>
+			// {
+			// 	await codeExecutionService.StartupContainerRunners ();
+			// });
+			// hostLifetime.ApplicationStopping.Register (() =>
+			// {
+			// 	try
+			// 	{
+			// 		codeExecutionService.StopContainerRunners ().Wait ();
+			// 	}
+			// 	catch (Exception e)
+			// 	{
+			// 		Console.WriteLine ($"There was a problem stopping the container runners {e.Message}");
+			// 	}
+			// });
+
 		}
 	}
 }

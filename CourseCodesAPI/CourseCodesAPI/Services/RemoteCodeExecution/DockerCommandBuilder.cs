@@ -52,11 +52,24 @@ namespace CourseCodesAPI.Services.RemoteCodeExecution
 		public DockerCommandBuilder ExecuteCpp (DockerExecuteCppArgs args)
 		{
 			// TODO: Get input and redirect to stdin?
-			string command = $@"exec -t {
+			string command = $@"exec -it {
 				args.ContainerName
 				} /bin/sh -c ""cd '{args.SourceCodesDirectory}/{args.SolutionName}' && g++ --static './{
 					args.Filename
 					}' -o '{args.ProgramName}' && './{args.ProgramName}'""";
+
+			commands.Add (command);
+			return this;
+		}
+
+		public DockerCommandBuilder ExecuteCppStdin (DockerExecuteCppArgs args)
+		{
+			// TODO: Get input and redirect to stdin?
+			string command = $@"docker exec -t {
+				args.ContainerName
+				} /bin/sh -c \""cd '{args.SourceCodesDirectory}/{args.SolutionName}' && g++ --static './{
+					args.Filename
+					}' -o '{args.ProgramName}' && cat input.txt | './{args.ProgramName}'\""";
 
 			commands.Add (command);
 			return this;

@@ -83,6 +83,31 @@ namespace CourseCodesAPI.Services.RemoteCodeExecution
 			return result.StandardOutput;
 		}
 
+		public async Task<string> ExecuteWithStdin (SourceCodeInfo sourceCodeInfo)
+		{
+			string command = new DockerCommandBuilder ()
+				.ExecuteCppStdin (new DockerExecuteCppArgs ()
+				{
+					ContainerName = ContainerName,
+						SourceCodesDirectory = "/tmp/data",
+						SolutionName = $"{sourceCodeInfo.SolutionName}",
+						Filename = sourceCodeInfo.Filename,
+						ProgramName = sourceCodeInfo.ProgramName,
+				})
+				.Build (true);
+
+			var result = await Cli.Wrap ("powershell")
+				.WithArguments (command)
+				.ExecuteBufferedAsync ();
+
+			Console.WriteLine ("result.StandardError");
+			Console.WriteLine (result.StandardError);
+			Console.WriteLine ("result.StandardOutput");
+			Console.WriteLine (result.StandardOutput);
+
+			return result.StandardOutput;
+		}
+
 		public static async Task<string> Stop (string containerNames)
 		{
 			string command = new DockerCommandBuilder ()

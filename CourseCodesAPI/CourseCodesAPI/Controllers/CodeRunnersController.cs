@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using CourseCodesAPI.Contexts;
-using CourseCodesAPI.Services;
-using CourseCodesAPI.Services.RemoteCodeExecution;
+using CourseCodesAPI.Helpers;
+using CourseCodesAPI.Models;
+using CourseCodesAPI.Services.CodeExecutionService;
+using CourseCodesAPI.Services.CodeExecutionService.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseCodesAPI.Controllers
@@ -29,27 +33,59 @@ namespace CourseCodesAPI.Controllers
 		}
 
 		[HttpPost ("run")]
-		public async Task<ActionResult> Run ([FromBody] string encodedSourceCode)
+		public async Task<ActionResult> Run ([FromBody] ProblemSolutionForTransferDto problemSolutionForTransfer)
 		{
-			// Decode
-			var decodedSourceCode = Encoding.UTF8.GetString (Convert.FromBase64String (encodedSourceCode));
+			CodeExecutionRequest codeExecutionRequest = new CodeExecutionRequest ()
+			{
+				SourceCode = problemSolutionForTransfer.EncodedSourceCode.FromBase64ToString (),
+					TestCases = problemSolutionForTransfer.TestCases.Select (x => new TestCaseRequest ()
+					{
+						SampleInput = x.SampleInput,
+							ExpectedOutput = x.ExpectedOutput
+					}).ToList ()
+			};
 
-			// Compile and run, then get the result
-			var result = await _codeExecutionService.CompileAndRun (decodedSourceCode);
+			var results = await _codeExecutionService.ExecuteAsync (codeExecutionRequest);
 
-			return Ok (result);
-
-			// Pass to code execution service
-			// _codeExecutionService.ExecuteTask ()
-			// get result
-
-			// var sourceCodeInfo = await _sourceCodeService.SaveSourceCode (decodedSourceCode);
-
-			// Execute Task(taskModel);
-
-			// TODO: Catch errors when no available is found
-			// var result = await _codeExecutionService.ExecuteTask (sourceCodeInfo);
-			// return Ok (result + sourceCodeInfo.SolutionName + sourceCodeInfo.Filename);
+			return Ok (results);
 		}
+
+		// [HttpPost ("run1")]
+		// public async Task<ActionResult> Run1 ([FromBody] ProblemSolutionForTransferDto problemSolutionForTransfer)
+		// {
+		// 	// // Decode
+		// 	// var decodedSourceCode = problemSolutionForTransfer.EncodedSourceCode.FromBase64ToString ();
+		// 	// List<string> inputList = problemSolutionForTransfer.TestCases.Select (x => x.SampleInput).ToList ();
+
+		// 	// ProblemSolutionForExecutionDto problemSolution = new ProblemSolutionForExecutionDto ()
+		// 	// {
+		// 	// 	SourceCode = decodedSourceCode,
+		// 	// 		InputList = inputList
+		// 	// };
+
+		// 	var problemSolution = _mapper.Map<ProblemSolutionForExecutionDto> (problemSolutionForTransfer);
+
+		// 	// Compile and run, then get the result
+		// 	// TODO: pass the sample input
+		// 	var results = await _codeExecutionService.CompileAndRun (problemSolution);
+
+		// 	// TODO: get the results
+		// 	// TODO: CodeAssertionService? Assert each test case expected output with the real output
+
+		// 	return Ok (results);
+		// }
+
+		// [HttpPost ("run2")]
+		// public async Task<ActionResult> Run2 ([FromBody] string encodedSourceCode)
+		// {
+		// 	// Decode
+		// 	var decodedSourceCode = Encoding.UTF8.GetString (Convert.FromBase64String (encodedSourceCode));
+
+		// 	// Compile and run, then get the result
+		// 	var result = await _codeExecutionService.CompileAndRun (decodedSourceCode);
+
+		// 	return Ok (result);
+		// }
+
 	}
 }

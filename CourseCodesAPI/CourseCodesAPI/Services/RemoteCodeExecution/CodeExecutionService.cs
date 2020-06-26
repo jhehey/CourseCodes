@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CourseCodesAPI.Models;
 
 namespace CourseCodesAPI.Services.RemoteCodeExecution
 {
@@ -11,7 +12,7 @@ namespace CourseCodesAPI.Services.RemoteCodeExecution
 		public Stack<ContainerRunner> availableRunners { get; set; }
 		public List<ContainerRunner> busyRunners { get; set; }
 		public List<Task> RunningTasks { get; set; }
-		public int MaxContainerRunners = 5;
+		public int MaxContainerRunners = 1;
 		private readonly ISourceCodeService _sourceCodeService;
 
 		public CodeExecutionService (ISourceCodeService sourceCodeService)
@@ -90,6 +91,33 @@ namespace CourseCodesAPI.Services.RemoteCodeExecution
 			availableRunners.Push (containerRunner);
 
 			return result;
+		}
+
+		public async Task<List<ExecutionResultDto>> CompileAndRun (ProblemSolutionForExecutionDto problemSolution)
+		{
+			if (availableRunners.Count <= 0)
+			{
+				Console.WriteLine ("There are no available container runners to execute, please wait");
+				return null;
+			}
+
+			// get available runner first
+			var containerRunner = availableRunners.Pop ();
+			busyRunners.Add (containerRunner);
+
+			// save the code inside the container's source code directory
+			var sourceCodeInfo = await _sourceCodeService.SaveSourceCode (problemSolution.SourceCode, containerRunner.SourceCodesDirectory);
+
+			//
+
+			// execute and get the result
+			var result = await containerRunner.ExecuteWithStdin (sourceCodeInfo);
+
+			// runner finished executing, its available again
+			busyRunners.Remove (containerRunner);
+			availableRunners.Push (containerRunner);
+
+			return null;
 		}
 	}
 }
