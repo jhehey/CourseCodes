@@ -24,7 +24,7 @@ export const AlertPopup = () => {
 	};
 
 	return (
-		<Snackbar open={open} TransitionComponent={Slide} onClose={handleCloseAlert} anchorOrigin={{ vertical, horizontal }}>
+		<Snackbar open={open} TransitionComponent={Slide} onClose={handleCloseAlert} autoHideDuration={3000} anchorOrigin={{ vertical, horizontal }}>
 			<Alert className={classes.alert} onClose={handleCloseAlert} severity={severity} variant="filled">
 				{message}
 			</Alert>

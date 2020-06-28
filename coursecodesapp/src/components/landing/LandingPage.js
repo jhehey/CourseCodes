@@ -1,28 +1,21 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Box } from '@material-ui/core/';
-import { Navbar, SignIn, SignUp, About } from './';
+import { Navbar, SignIn, SignUp, About, Home } from '.';
 import { NotFoundPage } from '../common';
-
-const Home = () => {
-	return (
-		<div>
-			<h1>Home</h1>
-		</div>
-	);
-};
 
 const getRouteComponents = (routes) => {
 	return routes.map(({ path, component }, key) => <Route exact path={path} component={component} key={key} />);
 };
 
-export const HomePage = () => {
+export const LandingPage = () => {
 	const routes = [
 		{ path: '/', component: Home },
 		{ path: '/about', component: About },
 		{ path: '/signin', component: SignIn },
 		{ path: '/signup', component: SignUp },
 	];
+
 	return (
 		<>
 			<Navbar />

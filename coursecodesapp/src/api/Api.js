@@ -1,5 +1,7 @@
 import { ApiHelpers } from './ApiHelpers';
 
+// TODO: when there is network error. dispatch alert with network error or something
+
 const call = async (request) => {
 	let result = { data: null, status: null, error: null };
 	try {

@@ -1,60 +1,50 @@
 import React from 'react';
-import { HomePage } from './landing';
-import { AlertPopup } from './common';
-
 import { useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
+import { LandingPage } from './landing';
+import { AlertPopup } from './common';
+import { StudentHome } from './student';
+import { InstructorHome } from './instructor';
 import { AccountRoles } from '../helpers';
 
-const StudentHome = () => {
-	console.log('STUDENT HOME');
-	return (
-		<div>
-			<h1>HELLO STUDENT</h1>
-		</div>
-	);
-};
-
-const InstructorHome = () => {
-	console.log('INSTRUCTOR HOME');
-	return (
-		<div>
-			<h1>HELLO Instructor</h1>
-		</div>
-	);
-};
-
-const getHomepage = (loggedIn, account) => {
-	console.log('GET HOMEPAGE');
-	console.log(loggedIn, account);
-	console.log(!loggedIn, !account, !loggedIn || !account);
-
-	if (!loggedIn || !account) {
-		console.log(' HOME PAGE');
-		return <HomePage />;
+const getHomepage = (signedIn, account) => {
+	if (!signedIn || !account) {
+		return <LandingPage />;
 	}
 
-	// loggedIn is true, account is not null/undefined
+	// signedIn is true, account is not null/undefined
 	if (account.accountRole === AccountRoles.Student) {
-		return <StudentHome />;
+		return (
+			<>
+				<Redirect to="/" />
+				<StudentHome />
+			</>
+		);
 	}
 	if (account.accountRole === AccountRoles.Instructor) {
-		return <InstructorHome />;
+		return (
+			<>
+				<Redirect to="/" />
+				<InstructorHome />
+			</>
+		);
 	}
 
 	// Invalid Account Role, just show homepage
-	console.log(' HOME PAGE');
-	return <HomePage />;
+	return <LandingPage />;
 };
 
 export const App = () => {
 	// get the authentication details
-	const { loggedIn, account } = useSelector((state) => state.authentication);
-	console.log(loggedIn, account);
+	const { signedIn, account } = useSelector((state) => state.authentication);
+	console.log({ signedIn, account });
+	const HomePage = getHomepage(signedIn, account);
 
 	return (
 		<div className="App">
 			<AlertPopup />
-			{getHomepage(loggedIn, account)}
+			{HomePage}
 		</div>
 	);
 };

@@ -5,8 +5,9 @@ import { EmailTextField, RequiredTextField, CopyRight } from '../common';
 
 import { useForm } from 'react-hook-form';
 import { useStyles } from './useStyles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { userActions } from '../../redux/actions';
+import { Redirect } from 'react-router-dom';
 
 export const SignIn = () => {
 	const classes = useStyles();
@@ -23,7 +24,11 @@ export const SignIn = () => {
 		dispatch(userActions.signIn(signInDetails));
 	};
 
-	return (
+	const { signedIn } = useSelector((state) => state.authentication);
+
+	return signedIn ? (
+		<Redirect to="/" />
+	) : (
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
 			<div className={classes.paper}>
@@ -36,7 +41,7 @@ export const SignIn = () => {
 				<form className={classes.signInForm} noValidate onSubmit={handleSubmit(onSubmit)}>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<EmailTextField name="email" register={register} error={errors.email} />
+							<EmailTextField name="email" register={register} error={errors.email} autoFocus={true} />
 						</Grid>
 						<Grid item xs={12}>
 							<RequiredTextField name="password" register={register} error={errors.password} type="password" />

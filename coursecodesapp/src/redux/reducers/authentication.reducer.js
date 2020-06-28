@@ -1,35 +1,33 @@
 import { userConstants } from '../constants';
+import { keys, storage } from '../../storage';
 
-// TODO: INITIAL STATE, GET FROM LOCALSTORAGE
-const initialState = { loggedIn: false, account: null };
+// Get the authenticated account from storage if there is any
+const initialState = storage.get(keys.Authentication) || { signedIn: false, account: null };
 
 export const authentication = (state = initialState, action) => {
 	switch (action.type) {
-		case userConstants.SIGNIN_REQUEST:
-			return {
-				loggingIn: true,
-				email: action.email,
-			};
 		case userConstants.SIGNIN_SUCCESS:
 			return {
-				loggedIn: true,
+				signedIn: true,
 				account: action.account,
 			};
 		case userConstants.SIGNIN_FAILURE:
 			return {
-				loggedIn: false,
-				error: action.error,
+				signedIn: false,
+				account: null,
 			};
 		case userConstants.LOGOUT:
-			return {};
+			return {
+				signedIn: false,
+				account: null,
+			};
 		case userConstants.SIGNUP_SUCCESS:
 			return {
 				signedUp: true,
-				account: action.account,
 			};
 		case userConstants.SIGNUP_FAILURE:
 			return {
-				error: action.error,
+				signedUp: false,
 			};
 		default:
 			return state;

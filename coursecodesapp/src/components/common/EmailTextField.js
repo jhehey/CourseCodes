@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import { stringHelpers } from '../../helpers';
 
-export const EmailTextField = ({ id = '', name, register, error }) => {
+export const EmailTextField = ({ name, register, error, id = '', autoFocus = false }) => {
 	return (
 		<TextField
 			id={id ? id : name}
@@ -20,6 +20,7 @@ export const EmailTextField = ({ id = '', name, register, error }) => {
 			autoComplete="off"
 			variant="outlined"
 			fullWidth
+			autoFocus={autoFocus}
 			required
 		/>
 	);

@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import { stringHelpers } from '../../helpers';
 
-export const RequiredTextField = ({ name, register, error, id = '', type = 'text' }) => {
+export const RequiredTextField = ({ name, register, error, id = '', type = 'text', autoFocus = false }) => {
 	return (
 		<TextField
 			id={id ? id : name}
@@ -14,7 +14,7 @@ export const RequiredTextField = ({ name, register, error, id = '', type = 'text
 			autoComplete="fname"
 			variant="outlined"
 			fullWidth
-			autoFocus
+			autoFocus={autoFocus}
 			required
 			type={type}
 		/>
