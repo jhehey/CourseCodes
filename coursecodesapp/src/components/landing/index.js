@@ -1,6 +1,4 @@
 export * from './About';
-export * from './Home';
-export * from './LandingPage';
-export * from './Navbar';
+export * from './LandingHome';
 export * from './SignIn';
 export * from './SignUp';

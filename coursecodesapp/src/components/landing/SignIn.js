@@ -5,9 +5,8 @@ import { EmailTextField, RequiredTextField, CopyRight } from '../common';
 
 import { useForm } from 'react-hook-form';
 import { useStyles } from './useStyles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { userActions } from '../../redux/actions';
-import { Redirect } from 'react-router-dom';
 
 export const SignIn = () => {
 	const classes = useStyles();
@@ -24,11 +23,7 @@ export const SignIn = () => {
 		dispatch(userActions.signIn(signInDetails));
 	};
 
-	const { signedIn } = useSelector((state) => state.authentication);
-
-	return signedIn ? (
-		<Redirect to="/" />
-	) : (
+	return (
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
 			<div className={classes.paper}>

@@ -1,12 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
-import { LandingPage } from './landing';
-import { AlertPopup } from './common';
-import { StudentHome } from './student';
-import { InstructorHome } from './instructor';
 import { AccountRoles } from '../helpers';
+
+import { AlertPopup } from './common';
+import { LandingPage, StudentPage, InstructorPage } from './common';
 
 const getHomepage = (signedIn, account) => {
 	if (!signedIn || !account) {
@@ -15,20 +13,10 @@ const getHomepage = (signedIn, account) => {
 
 	// signedIn is true, account is not null/undefined
 	if (account.accountRole === AccountRoles.Student) {
-		return (
-			<>
-				<Redirect to="/" />
-				<StudentHome />
-			</>
-		);
+		return <StudentPage />;
 	}
 	if (account.accountRole === AccountRoles.Instructor) {
-		return (
-			<>
-				<Redirect to="/" />
-				<InstructorHome />
-			</>
-		);
+		return <InstructorPage />;
 	}
 
 	// Invalid Account Role, just show homepage
@@ -38,7 +26,6 @@ const getHomepage = (signedIn, account) => {
 export const App = () => {
 	// get the authentication details
 	const { signedIn, account } = useSelector((state) => state.authentication);
-	console.log({ signedIn, account });
 	const HomePage = getHomepage(signedIn, account);
 
 	return (

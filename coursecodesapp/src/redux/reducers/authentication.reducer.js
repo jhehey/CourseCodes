@@ -10,11 +10,16 @@ export const authentication = (state = initialState, action) => {
 			return {
 				signedIn: true,
 				account: action.account,
+				signInRedirect: true,
 			};
 		case userConstants.SIGNIN_FAILURE:
 			return {
 				signedIn: false,
 				account: null,
+			};
+		case userConstants.SIGNIN_FINISHED:
+			return {
+				signInRedirect: false,
 			};
 		case userConstants.LOGOUT:
 			return {

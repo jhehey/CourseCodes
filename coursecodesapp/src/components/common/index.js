@@ -4,3 +4,5 @@ export * from './CopyRight';
 export * from './EmailTextField';
 export * from './RequiredTextField';
 export * from './Logout';
+export * from './Navbar';
+export * from './BasePage';

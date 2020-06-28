@@ -1,6 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Button, CssBaseline, Toolbar, Typography, Link } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { Logout } from './';
 
 const useStyles = makeStyles((theme) => ({
 	'@global': {
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export const Navbar = () => {
+export const Navbar = ({ routes, signedIn }) => {
 	const classes = useStyles();
 
 	return (
@@ -47,19 +49,26 @@ export const Navbar = () => {
 						CourseCodes
 					</Typography>
 					<nav>
-						<Link variant="button" color="textPrimary" href="/" className={classes.link}>
-							Home
-						</Link>
-						<Link variant="button" color="textPrimary" href="/about" className={classes.link}>
-							About
-						</Link>
+						{routes
+							.filter((route) => route.isLink)
+							.map(({ path, value }, key) => (
+								<Link key={key} variant="button" color="textPrimary" href={path} className={classes.link}>
+									{value}
+								</Link>
+							))}
 					</nav>
-					<Button href="/signin" color="primary" variant="outlined" className={classes.link}>
-						Sign In
-					</Button>
-					<Button href="/signup" color="primary" variant="contained" className={classes.link}>
-						Sign Up
-					</Button>
+					{signedIn ? (
+						<Logout className={classes.link} />
+					) : (
+						<>
+							<Button href="/signin" color="primary" variant="outlined" className={classes.link}>
+								Sign In
+							</Button>
+							<Button href="/signup" color="primary" variant="contained" className={classes.link}>
+								Sign Up
+							</Button>
+						</>
+					)}
 				</Toolbar>
 			</AppBar>
 		</>
