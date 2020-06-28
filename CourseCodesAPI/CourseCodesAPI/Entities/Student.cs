@@ -12,6 +12,6 @@ namespace CourseCodesAPI.Entities
 		public Account Account { get; set; }
 
 		// A Student has a Collection of StudentCourses (Student has many Courses)
-		public ICollection<StudentCourse> StudentCourses { get; set; }
+		public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse> ();
 	}
 }

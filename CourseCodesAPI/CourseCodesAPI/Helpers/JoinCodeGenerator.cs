@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace CourseCodesAPI.Helpers
 {
@@ -9,10 +10,7 @@ namespace CourseCodesAPI.Helpers
 
 		public static string Generate (int length)
 		{
-			Random random = new Random ();
-			return new String (Enumerable.Range (1, length)
-				.Select (a => chars[random.Next (chars.Length)])
-				.ToArray ());
+			return new string (Enumerable.Range (1, length).Select (_ => chars[RandomNumberGenerator.GetInt32 (chars.Length)]).ToArray ());
 		}
 	}
 }

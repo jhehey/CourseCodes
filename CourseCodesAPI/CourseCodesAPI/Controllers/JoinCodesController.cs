@@ -52,7 +52,7 @@ namespace CourseCodesAPI.Controllers
 			// TODO: Generate join code
 			JoinCode joinCode = new JoinCode ()
 			{
-				Code = "696969",
+				Code = JoinCodeGenerator.Generate (6),
 					DateExpires = DateTime.Now,
 					CourseId = course.Id
 			};

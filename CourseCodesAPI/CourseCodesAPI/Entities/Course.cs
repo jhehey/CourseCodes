@@ -18,7 +18,10 @@ namespace CourseCodesAPI.Entities
 		public Instructor Instructor { get; set; }
 
 		// A Course has a Collection of StudentCourses (Course has many Students)
-		public ICollection<StudentCourse> StudentCourses { get; set; }
+		public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse> ();
+
+		// A Course has a Collection of Topics (Course has many Topics)
+		public ICollection<Topic> Topics { get; set; } = new List<Topic> ();
 
 		public Course ()
 		{

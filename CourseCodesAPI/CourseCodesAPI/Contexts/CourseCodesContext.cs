@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using CourseCodesAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ namespace CourseCodesAPI.Contexts
 		public DbSet<Course> Courses { get; set; }
 		public DbSet<StudentCourse> StudentCourses { get; set; }
 		public DbSet<JoinCode> JoinCodes { get; set; }
+		public DbSet<Topic> Topics { get; set; }
 
 		protected override void OnModelCreating (ModelBuilder builder)
 		{
@@ -96,6 +98,20 @@ namespace CourseCodesAPI.Contexts
 				.Property (jc => jc.Code).HasMaxLength (6);
 			builder.Entity<JoinCode> ()
 				.Property (jc => jc.PasswordHash).HasMaxLength (100);
+
+			// Topic
+			// Primary Key
+			builder.Entity<Topic> ()
+				.HasKey (t => t.Id);
+			builder.Entity<Topic> ()
+				.HasOne (t => t.Course)
+				.WithMany (c => c.Topics)
+				.HasForeignKey (t => t.CourseId);
+			// Properties
+			builder.Entity<Topic> ()
+				.Property (t => t.Title).IsRequired ().HasMaxLength (100);
+			builder.Entity<Topic> ()
+				.Property (t => t.Description).HasMaxLength (500);
 
 		}
 	}

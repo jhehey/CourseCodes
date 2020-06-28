@@ -53,6 +53,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 
 		public async Task<CodeExecutionResult> ExecuteAsync (CodeExecutionRequest request)
 		{
+			// TODO: OPTIMIZE MEEEEEEEEEEEE
 			if (AvailableContainers.Count <= 0)
 			{
 				Console.WriteLine ("There are no available contianer runners, try again later");
@@ -111,6 +112,8 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 				// execute given sample input
 				var runResult = await containerRunner.RunAsync (solutionInfo, i);
 
+				Console.WriteLine ($"TestCase {i}: {runResult.RunTime.TotalSeconds}s");
+
 				if (runResult.ExitCode == 0)
 				{
 					// program ran successfully
@@ -118,14 +121,8 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 
 					// check the outputs if it passed
 					// TODO: Convert yung mga Newline to same format
-					if (testResult.ExpectedOutput.Equals (testResult.ActualOutput))
-					{
-						testResult.Status = TestCaseStatus.Passed;
-					}
-					else
-					{
-						testResult.Status = TestCaseStatus.Failed;
-					}
+					testResult.Status = testResult.ExpectedOutput.Equals (testResult.ActualOutput) ?
+						TestCaseStatus.Passed : TestCaseStatus.Failed;
 				}
 				else
 				{
@@ -139,7 +136,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			BusyContainers.Remove (containerRunner);
 			AvailableContainers.Push (containerRunner);
 
-			// Cleanup - just delete the whole solution directory recursively
+			// TODO: Cleanup - just delete the whole solution directory recursively
 
 			// return code execution result
 			return new CodeExecutionResult ()

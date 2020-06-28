@@ -163,6 +163,31 @@ namespace CourseCodesAPI.Migrations
                     b.ToTable("StudentCourses");
                 });
 
+            modelBuilder.Entity("CourseCodesAPI.Entities.Topic", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("character varying(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("Topics");
+                });
+
             modelBuilder.Entity("CourseCodesAPI.Entities.Course", b =>
                 {
                     b.HasOne("CourseCodesAPI.Entities.Instructor", "Instructor")
@@ -210,6 +235,15 @@ namespace CourseCodesAPI.Migrations
                     b.HasOne("CourseCodesAPI.Entities.Student", "Student")
                         .WithMany("StudentCourses")
                         .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CourseCodesAPI.Entities.Topic", b =>
+                {
+                    b.HasOne("CourseCodesAPI.Entities.Course", "Course")
+                        .WithMany("Topics")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

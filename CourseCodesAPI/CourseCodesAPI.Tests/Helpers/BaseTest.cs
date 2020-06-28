@@ -1,5 +1,6 @@
 using AutoBogus;
 using AutoBogus.Conventions;
+using CourseCodesAPI.Models;
 using Flurl.Http;
 
 namespace CourseCodesAPI.Tests.Helpers
@@ -13,10 +14,11 @@ namespace CourseCodesAPI.Tests.Helpers
 				settings.HttpClientFactory = new CourseCodesHttpClientFactory ();
 			});
 
-			AutoFaker.Configure (builder =>
-			{
-				builder.WithConventions ();
-			});
+			// AutoFaker.Configure (builder =>
+			// {
+			// 	builder.WithConventions ();
+			// 	builder.WithSkip<CourseForCreationDto> (course => course.InstructorId);
+			// });
 		}
 	}
 }

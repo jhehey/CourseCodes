@@ -1,4 +1,6 @@
 using System;
+using Flurl;
+
 namespace CourseCodesAPI.Tests.Helpers
 {
 	public static class Routes
@@ -10,5 +12,10 @@ namespace CourseCodesAPI.Tests.Helpers
 		public static string Instructors = $"{baseUrl}/instructors";
 		public static string Courses = $"{baseUrl}/courses";
 		public static string JoinCodes = $"{baseUrl}/joincodes";
+
+		public static string Topics (this string baseUrl)
+		{
+			return Url.Combine (baseUrl, "/topics");
+		}
 	}
 }

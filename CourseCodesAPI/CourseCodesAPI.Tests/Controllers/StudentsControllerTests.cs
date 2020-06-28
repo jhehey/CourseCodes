@@ -17,20 +17,20 @@ namespace CourseCodesAPI.Tests.Controllers
 {
 	public class StudentsControllerTests : BaseTest
 	{
-		protected AutoFaker<StudentForCreationDto> CreateFaker { get; set; }
+		protected AutoFaker<StudentForCreationDto> StudentFaker { get; set; }
+		protected Repository repository { get; set; }
 
 		public StudentsControllerTests ()
 		{
-			CreateFaker = new AutoFaker<StudentForCreationDto> ();
-			CreateFaker.RuleFor (dto => dto.PasswordHash, fake => fake.Random.Hash (64));
-			CreateFaker.RuleFor (dto => dto.AccountRole, fake => Role.Student);
+			repository = new Repository ();
+			StudentFaker = repository.StudentFaker;
 		}
 
 		[Fact]
-		public async Task CreateStudent_ShouldReturnCreatedResource ()
+		public async Task CreateStudent ()
 		{
 			// Arrange
-			var fakeStudent = CreateFaker.Generate ();
+			var fakeStudent = StudentFaker.Generate ();
 
 			// Act
 			var response = await Routes.Students.PostJsonAsync (fakeStudent);
@@ -51,26 +51,22 @@ namespace CourseCodesAPI.Tests.Controllers
 		}
 
 		[Fact]
-		public async Task GetStudentById_ShouldReturnStudentWhenStudentIsCreated ()
+		public async Task GetStudentById ()
 		{
 			// Arrange
-			var fakeStudent = CreateFaker.Generate ();
-			var createResponse = await Routes.Students.PostJsonAsync (fakeStudent);
-			var studentId = createResponse.GetGuidFromLocation ();
+			var student = (await repository.GetStudents (1)).FirstOrDefault ();
 
 			// Act
-			var response = await Routes.Students.Slash (studentId).GetAsync ();
+			var response = await Routes.Students.Slash (student.Id).GetAsync ();
 			var studentDto = await response.GetJsonAsync<StudentDto> ();
 
 			// Assert
-			response.StatusCode
-				.Should ().Be (StatusCodes.Status200OK);
-			response
-				.ShouldBeContentTypeJson ();
+			response.StatusCode.Should ().Be (StatusCodes.Status200OK);
+			response.ShouldBeContentTypeJson ();
 
-			studentId.Should ().NotBeEmpty ();
+			student.Id.Should ().NotBeEmpty ();
 			studentDto.Should ().NotBeNull ();
-			studentDto.Id.Should ().Be (studentId);
+			studentDto.Id.Should ().Be (student.Id);
 
 			studentDto.FullName.Should ().NotBeNullOrEmpty ();
 			studentDto.Email.Should ().NotBeNullOrEmpty ();
@@ -78,12 +74,10 @@ namespace CourseCodesAPI.Tests.Controllers
 		}
 
 		[Fact]
-		public async Task GetStudents_ShouldNotBeEmptyWhenStudentIsCreated ()
+		public async Task GetStudents ()
 		{
 			// Arrange
-			var fakeStudent = CreateFaker.Generate ();
-			var createResponse = await Routes.Students.PostJsonAsync (fakeStudent);
-			var studentId = createResponse.GetGuidFromLocation ();
+			var student = (await repository.GetStudents (1)).FirstOrDefault ();
 
 			// Act
 			var response = await Routes.Students.GetAsync ();
@@ -94,7 +88,7 @@ namespace CourseCodesAPI.Tests.Controllers
 			response.ShouldBeContentTypeJson ();
 
 			students.Should ().NotBeEmpty ().And
-				.Contain (s => s.Id == studentId);
+				.Contain (s => s.Id == student.Id);
 
 			students.Select (s => s.FullName).Should ().NotBeNullOrEmpty ();
 			students.Select (s => s.Email).Should ().NotBeNullOrEmpty ();
@@ -102,10 +96,10 @@ namespace CourseCodesAPI.Tests.Controllers
 		}
 
 		[Fact]
-		public async Task SignInAccountForStudent_ShouldReturnAccountDto ()
+		public async Task SignInAccountForStudent ()
 		{
 			// Arrange
-			var fakeStudent = CreateFaker.Generate ();
+			var fakeStudent = StudentFaker.Generate ();
 			var createResponse = await Routes.Students.PostJsonAsync (fakeStudent);
 			var studentId = createResponse.GetGuidFromLocation ();
 

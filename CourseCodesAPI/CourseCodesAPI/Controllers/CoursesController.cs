@@ -31,7 +31,7 @@ namespace CourseCodesAPI.Controllers
 		public async Task<ActionResult<IEnumerable<CourseDto>>> GetCourses ()
 		{
 			// TODO: Query params if we want to include instructor info
-			var courses = await _context.Courses.Include (c => c.Instructor).ToListAsync ();
+			var courses = await _context.Courses.ToListAsync ();
 			return Ok (_mapper.Map<IEnumerable<CourseDto>> (courses));
 		}
 
