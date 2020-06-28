@@ -49,7 +49,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 					await streamWriter.WriteAsync (content);
 				}
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				Console.WriteLine ($"{nameof(WriteFileAsync)}: There was a problem writing to file");
 			}
