@@ -1,6 +1,17 @@
 import React from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Avatar, Button, CssBaseline, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container } from '@material-ui/core';
+import {
+	Avatar,
+	Button,
+	CssBaseline,
+	FormControlLabel,
+	Checkbox,
+	Link,
+	Grid,
+	Box,
+	Typography,
+	Container,
+} from '@material-ui/core';
 import { EmailTextField, RequiredTextField, CopyRight } from '../common';
 
 import { useForm } from 'react-hook-form';
@@ -12,10 +23,7 @@ export const SignIn = () => {
 	const classes = useStyles();
 
 	// React Hook Form
-	const { register, handleSubmit, errors } = useForm({
-		mode: 'onSubmit',
-		reValidateMode: 'onChange',
-	});
+	const { register, handleSubmit, errors } = useForm();
 
 	// redux
 	const dispatch = useDispatch();

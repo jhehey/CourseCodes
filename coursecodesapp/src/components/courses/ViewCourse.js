@@ -25,8 +25,8 @@ export const ViewCourse = () => {
 					</Button>
 				</Grid>
 				<Grid item xs={12}>
-					<Button href="#" variant="contained" color="primary">
-						Create Topic
+					<Button href={`/courses/${courseId}/topics/create`} variant="contained" color="primary">
+						Create Problem Set
 					</Button>
 				</Grid>
 			</Grid>

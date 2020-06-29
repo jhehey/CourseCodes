@@ -21,10 +21,7 @@ export const CreateCourse = () => {
 	const { signedInstructor } = useSelector((state) => state.instructor);
 
 	// React Hook Form
-	const { register, handleSubmit, errors } = useForm({
-		mode: 'onSubmit',
-		reValidateMode: 'onChange',
-	});
+	const { register, handleSubmit, errors } = useForm();
 
 	// dispatch create course action with form details and instructor id
 	const dispatch = useDispatch();
@@ -45,7 +42,14 @@ export const CreateCourse = () => {
 				<h1>Title</h1>
 				<RequiredTextField name="title" register={register} error={errors.title} />
 				<h1>Description</h1>
-				<RequiredTextField name="description" register={register} error={errors.title} multiline={true} rows={6} rowsMax={6} />
+				<RequiredTextField
+					name="description"
+					register={register}
+					error={errors.title}
+					multiline={true}
+					rows={6}
+					rowsMax={6}
+				/>
 				<Button type="submit" variant="contained" color="secondary">
 					Create
 				</Button>

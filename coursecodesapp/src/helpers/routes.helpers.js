@@ -2,7 +2,8 @@ import React from 'react';
 import { SignIn, SignUp, About, LandingHome } from '../components/landing';
 import { StudentHome } from '../components/student';
 import { InstructorHome } from '../components/instructor';
-import { Courses, CreateCourse, ViewCourse } from '../components/courses';
+import { Courses, CreateCourse, ViewCourse, CreateTopic } from '../components/courses';
+import { Problems, CreateProblem } from '../components/problems';
 
 // TODO: create own component
 // const Courses = () => {
@@ -37,5 +38,8 @@ export const pageRoutes = {
 		{ path: '/students', component: Students, isLink: true, value: 'Students' },
 		{ path: '/courses/create', component: CreateCourse, isLink: false, value: 'Create Course' },
 		{ path: '/courses/:courseId', component: ViewCourse, isLink: false, value: 'View Course' },
+		{ path: '/courses/:courseId/topics/create', component: CreateTopic, isLink: false, value: 'Create Topic' },
+		{ path: '/problems', component: Problems, isLink: true, value: 'Problem' },
+		{ path: '/problems/create', component: CreateProblem, isLink: false, value: 'Problem' },
 	],
 };

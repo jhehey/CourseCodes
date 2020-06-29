@@ -1,6 +1,22 @@
 import React from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Avatar, Button, CssBaseline, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@material-ui/core';
+import {
+	Avatar,
+	Button,
+	CssBaseline,
+	FormControlLabel,
+	Checkbox,
+	Link,
+	Grid,
+	Box,
+	Typography,
+	Container,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+	FormHelperText,
+} from '@material-ui/core';
 import { EmailTextField, RequiredTextField, CopyRight } from '../common';
 
 import { useForm, Controller } from 'react-hook-form';
@@ -15,7 +31,6 @@ export const SignUp = () => {
 	// React Hook Form
 	const { register, handleSubmit, control, errors } = useForm({
 		mode: 'onChange',
-		reValidateMode: 'onChange',
 	});
 
 	// redux
@@ -53,13 +68,22 @@ export const SignUp = () => {
 						</Grid>
 						<Grid item xs={12}>
 							<FormControl fullWidth>
-								<InputLabel id="accountRoleLabel" style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }} error={!!errors.accountRole}>
+								<InputLabel
+									id="accountRoleLabel"
+									style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }}
+									error={!!errors.accountRole}
+								>
 									Type
 								</InputLabel>
 
 								<Controller
 									as={
-										<Select error={!!errors.accountRole} variant={errors.accountRole ? 'outlined' : 'standard'} label="Type" id="accountRole">
+										<Select
+											error={!!errors.accountRole}
+											variant={errors.accountRole ? 'outlined' : 'standard'}
+											label="Type"
+											id="accountRole"
+										>
 											<MenuItem value={0}>Student</MenuItem>
 											<MenuItem value={1}>Instructor</MenuItem>
 										</Select>
@@ -70,13 +94,19 @@ export const SignUp = () => {
 									defaultValue=""
 								/>
 
-								<FormHelperText style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }} error={!!errors.accountRole}>
+								<FormHelperText
+									style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }}
+									error={!!errors.accountRole}
+								>
 									{errors.accountRole ? errors.accountRole.message : 'Select the type of account you want to create'}
 								</FormHelperText>
 							</FormControl>
 						</Grid>
 						<Grid item xs={12}>
-							<FormControlLabel control={<Checkbox value="allowExtraEmails" color="primary" />} label="I want to receive inspiration, marketing promotions and updates via email." />
+							<FormControlLabel
+								control={<Checkbox value="allowExtraEmails" color="primary" />}
+								label="I want to receive inspiration, marketing promotions and updates via email."
+							/>
 						</Grid>
 					</Grid>
 					<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>

@@ -25,6 +25,7 @@ export const authentication = (state = initialState, action) => {
 			return {
 				signedIn: false,
 				account: null,
+				loggedOut: true,
 			};
 		case userConstants.SIGNUP_SUCCESS:
 			return {
