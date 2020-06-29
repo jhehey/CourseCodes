@@ -2,18 +2,12 @@ import React from 'react';
 import { SignIn, SignUp, About, LandingHome } from '../components/landing';
 import { StudentHome } from '../components/student';
 import { InstructorHome } from '../components/instructor';
+import { Courses, CreateCourse, ViewCourse } from '../components/courses';
 
 // TODO: create own component
-const Courses = () => {
-	return (
-		<div>
-			<h1>Common Courses</h1>
-			<h1>Common Courses</h1>
-			<h1>Common Courses</h1>
-			<h1>Common Courses</h1>
-		</div>
-	);
-};
+// const Courses = () => {
+// 	return <Courses />;
+// };
 
 const Students = () => {
 	return (
@@ -41,5 +35,7 @@ export const pageRoutes = {
 		{ path: '/', component: InstructorHome, isLink: true, value: 'Home' },
 		{ path: '/courses', component: Courses, isLink: true, value: 'Courses' },
 		{ path: '/students', component: Students, isLink: true, value: 'Students' },
+		{ path: '/courses/create', component: CreateCourse, isLink: false, value: 'Create Course' },
+		{ path: '/courses/:courseId', component: ViewCourse, isLink: false, value: 'View Course' },
 	],
 };

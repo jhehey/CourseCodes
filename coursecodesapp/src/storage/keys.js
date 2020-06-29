@@ -4,4 +4,8 @@ export const keys = {
 		key: 'AUTHENTICATION',
 		type: types.Local,
 	},
+	SignedInstructor: {
+		key: 'SIGNEDINSTRUCTOR',
+		type: types.Session,
+	},
 };

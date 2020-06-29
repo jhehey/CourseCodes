@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Button, CssBaseline, Toolbar, Typography, Link } from '@material-ui/core';
-import { useSelector } from 'react-redux';
 import { Logout } from './';
 
 const useStyles = makeStyles((theme) => ({

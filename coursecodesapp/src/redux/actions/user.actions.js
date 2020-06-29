@@ -9,6 +9,7 @@ const setAuthentication = (account) => {
 
 const removeAuthentication = () => {
 	storage.remove(keys.Authentication);
+	storage.remove(keys.SignedInstructor);
 };
 
 const signIn = (signInDetails) => {

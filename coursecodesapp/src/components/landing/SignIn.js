@@ -20,6 +20,7 @@ export const SignIn = () => {
 	// redux
 	const dispatch = useDispatch();
 	const onSubmit = (signInDetails) => {
+		// TODO: Pwede ata wala na yung dispatch dito?
 		dispatch(userActions.signIn(signInDetails));
 	};
 
