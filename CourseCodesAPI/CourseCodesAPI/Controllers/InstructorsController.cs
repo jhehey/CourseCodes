@@ -26,17 +26,27 @@ namespace CourseCodesAPI.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<InstructorDto>>> GetInstructors ()
+		public async Task<IActionResult> GetInstructors ([FromQuery] Guid accountId = default (Guid))
 		{
-			var instructors = await _context.Instructors.Include (i => i.Account).ToListAsync ();
-			return Ok (_mapper.Map<IEnumerable<InstructorDto>> (instructors));
+			if (accountId != default (Guid))
+			{
+				// Get by accountId
+				var instructor = await _context.Instructors.Include (i => i.Account).FirstOrDefaultAsync (i => i.AccountId == accountId);
+				if (instructor == null) return NotFound ();
+				return Ok (_mapper.Map<InstructorDto> (instructor));
+			}
+			else
+			{
+				// Get all
+				var instructors = await _context.Instructors.Include (i => i.Account).ToListAsync ();
+				return Ok (_mapper.Map<IEnumerable<InstructorDto>> (instructors));
+			}
 		}
 
 		[HttpGet ("{instructorId:guid}")]
 		public async Task<ActionResult<InstructorDto>> GetInstructor ([FromRoute] Guid instructorId)
 		{
-			var instructor = await _context.Instructors.Include (i => i.Account)
-				.FirstOrDefaultAsync (i => i.Id == instructorId);
+			var instructor = await _context.Instructors.Include (i => i.Account).FirstOrDefaultAsync (i => i.Id == instructorId);
 			if (instructor == null) return NotFound ();
 			return Ok (_mapper.Map<InstructorDto> (instructor));
 		}

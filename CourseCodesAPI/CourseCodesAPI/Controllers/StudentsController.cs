@@ -25,10 +25,21 @@ namespace CourseCodesAPI.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<StudentDto>>> GetStudents ()
+		public async Task<IActionResult> GetStudents ([FromQuery] Guid accountId = default (Guid))
 		{
-			var students = await _context.Students.Include (s => s.Account).ToListAsync ();
-			return Ok (_mapper.Map<IEnumerable<StudentDto>> (students));
+			if (accountId != default (Guid))
+			{
+				// Get by accountId
+				var student = await _context.Students.Include (i => i.Account).FirstOrDefaultAsync (i => i.AccountId == accountId);
+				if (student == null) return NotFound ();
+				return Ok (_mapper.Map<StudentDto> (student));
+			}
+			else
+			{
+				// Get all
+				var students = await _context.Students.Include (s => s.Account).ToListAsync ();
+				return Ok (_mapper.Map<IEnumerable<StudentDto>> (students));
+			}
 		}
 
 		[HttpGet ("{studentId:guid}")]

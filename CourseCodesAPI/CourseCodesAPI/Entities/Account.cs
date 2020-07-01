@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CourseCodesAPI.Entities
 {
@@ -12,6 +13,15 @@ namespace CourseCodesAPI.Entities
 		public string PasswordHash { get; set; }
 		public Role AccountRole { get; set; }
 		public DateTime DateRegistered { get; set; }
+
+		// An Account can be a Student
+		public Student Student { get; set; }
+
+		// An Account can be an Instructor
+		public Instructor Instructor { get; set; }
+
+		// An Account can create many Problems
+		public ICollection<Problem> Problems { get; set; } = new List<Problem> ();
 
 		public Account ()
 		{

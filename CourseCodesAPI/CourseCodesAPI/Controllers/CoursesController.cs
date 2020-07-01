@@ -28,10 +28,20 @@ namespace CourseCodesAPI.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<CourseDto>>> GetCourses ()
+		public async Task<ActionResult<IEnumerable<CourseDto>>> GetCourses ([FromQuery] Guid instructorId = default (Guid))
 		{
+			IEnumerable<Course> courses;
+			if (instructorId != default (Guid))
+			{
+				// Get courses by instructor Id
+				courses = await _context.Courses.Where (c => c.InstructorId == instructorId).ToListAsync ();
+			}
+			else
+			{
+				courses = await _context.Courses.ToListAsync ();
+			}
+
 			// TODO: Query params if we want to include instructor info
-			var courses = await _context.Courses.ToListAsync ();
 			return Ok (_mapper.Map<IEnumerable<CourseDto>> (courses));
 		}
 

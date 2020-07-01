@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CourseCodesAPI.Entities
 {
@@ -11,5 +12,8 @@ namespace CourseCodesAPI.Entities
 		// A Topic belongs to a Course
 		public Guid CourseId { get; set; }
 		public Course Course { get; set; }
+
+		// A Topic has a Collection of TopicProblems (Topic has many TopicProblems)
+		public ICollection<TopicProblem> TopicProblems { get; set; } = new List<TopicProblem> ();
 	}
 }
