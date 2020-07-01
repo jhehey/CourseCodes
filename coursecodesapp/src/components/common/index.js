@@ -6,3 +6,4 @@ export * from './RequiredTextField';
 export * from './Logout';
 export * from './Navbar';
 export * from './BasePage';
+export * from './ChipSelect';

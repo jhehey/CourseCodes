@@ -1,26 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RequiredTextField } from '../common';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Button, TextField, Grid } from '@material-ui/core';
+import { Container, Button, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { courseActions } from '../../redux/actions';
-import { Redirect } from 'react-router-dom';
-
-const TestCase = (key, register, name) => {
-	return (
-		<Grid container spacing={2} key={key}>
-			<Grid item xs={6}>
-				<h2>Sample Input</h2>
-				<RequiredTextField name={`${name}.sampleInput`} ref={register()} multiline={true} rows={4} />
-			</Grid>
-			<Grid item xs={6}>
-				<h2>Expected Output</h2>
-				<RequiredTextField name={`${name}.expectedOutput`} ref={register()} multiline={true} rows={4} />
-			</Grid>
-		</Grid>
-	);
-};
+import { ChipSelect } from '../common';
 
 const useStyles = makeStyles((theme) => ({
 	main: {
@@ -31,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const CreateProblem = () => {
 	const classes = useStyles();
-	const { signedInstructor } = useSelector((state) => state.instructor);
 
 	// React Hook Form
 	const { register, control, handleSubmit, errors } = useForm({
@@ -51,9 +35,34 @@ export const CreateProblem = () => {
 		remove(index);
 	};
 
-	const onSubmit = (problemDetails) => {
-		console.log(problemDetails);
+	// for selecteing courses to assign this problem to
+	const [assignedCourses, setAssignedCourses] = React.useState([]);
+	const handleAssignCourses = (event) => {
+		setAssignedCourses(event.target.value);
 	};
+
+	const dispatch = useDispatch();
+	const onSubmit = (problemDetails) => {
+		const assignedCourseIds = assignedCourses.map((course) => course.id);
+		const problemToCreate = {
+			...problemDetails,
+			assignedCourseIds,
+		};
+		console.log(problemToCreate);
+
+		// TODO: include courseId, or if belong to a topic? topicId
+		// const problemToCreate = {};
+		// dispatch(problemActions.createProblem(probl));
+	};
+
+	// TODO: move me. reused from Courses.js
+	const { signedInstructor } = useSelector((state) => state.instructor);
+	const courses = useSelector((state) => state.course?.courses);
+	useEffect(() => {
+		if (!courses) {
+			dispatch(courseActions.getCoursesByInstructorId(signedInstructor?.id));
+		}
+	}, [dispatch, signedInstructor, courses]);
 
 	return (
 		<Container maxWidth="md" className={classes.main}>
@@ -70,8 +79,15 @@ export const CreateProblem = () => {
 					rows={12}
 					rowsMax={12}
 				/>
-				<h1>Test Cases</h1>
+				<h1>Assign to courses</h1>
+				<ChipSelect
+					selectedItems={assignedCourses}
+					handleItemSelected={handleAssignCourses}
+					valueName="title"
+					items={courses}
+				/>
 
+				<h1>Test Cases</h1>
 				{fields.map((testCase, index) => (
 					<Grid container key={testCase.id}>
 						<Grid container>

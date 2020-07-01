@@ -5,6 +5,7 @@ const Routes = {
 	Students: `${baseUrl}/students`,
 	Instructors: `${baseUrl}/instructors`,
 	Courses: `${baseUrl}/courses`,
+	Problems: `${baseUrl}/problems`,
 };
 
 export default Routes;

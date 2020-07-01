@@ -15,7 +15,8 @@ export const CreateTopic = () => {
 	const classes = useStyles();
 
 	// React Hook Form
-	const { register, handleSubmit, errors } = useForm();
+	// handleSubmit
+	const { register, errors } = useForm();
 
 	return (
 		<Container maxWidth="sm" className={classes.main}>
