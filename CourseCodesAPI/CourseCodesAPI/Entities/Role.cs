@@ -2,7 +2,7 @@ namespace CourseCodesAPI.Entities
 {
 	public enum Role
 	{
-		Student,
+		Student = 1,
 		Instructor
 	}
 }

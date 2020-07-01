@@ -27,22 +27,8 @@ namespace CourseCodesAPI.Controllers
 				throw new System.ArgumentNullException (nameof (mapper));
 		}
 
-		[HttpGet ("{studentId:guid}/{courseId:guid}")]
-		public async Task<ActionResult<StudentCourseDto>> GetStudentCourse ([FromQuery] Guid studentId, [FromQuery] Guid courseId)
-		{
-			if (studentId == null || courseId == null) return NotFound ();
-
-			// find the StudentCourse w/ the composite key
-			var studentCourse = await _context.StudentCourses
-				.FirstOrDefaultAsync (sc => sc.StudentId == studentId && sc.CourseId == courseId);
-			if (studentCourse == null) return NotFound ();
-
-			// return dto
-			return Ok (_mapper.Map<StudentCourseDto> (studentCourse));
-		}
-
 		[HttpPost]
-		public async Task<ActionResult<StudentCourseDto>> CreateStudentCourse ([FromBody] StudentCourseForCreationDto studentCourseToCreate)
+		public async Task<ActionResult<StudentCourseResponse>> CreateStudentCourse ([FromBody] StudentCourseCreateRequest studentCourseToCreate)
 		{
 			// find the course w/ courseId
 			var course = await _context.Courses.FindAsync (studentCourseToCreate.CourseId);
@@ -68,8 +54,8 @@ namespace CourseCodesAPI.Controllers
 			_context.StudentCourses.Add (studentCourse);
 			await _context.SaveChangesAsync ();
 
-			// return dto
-			var studentCourseToReturn = _mapper.Map<StudentCourseDto> (studentCourse);
+			// return response
+			var studentCourseToReturn = _mapper.Map<StudentCourseResponse> (studentCourse);
 			return CreatedAtAction (nameof (GetStudentCourse), new
 				{
 					studentId = studentCourse.StudentId,
@@ -79,5 +65,18 @@ namespace CourseCodesAPI.Controllers
 			);
 		}
 
+		[HttpGet ("{studentId:guid}/{courseId:guid}")]
+		public async Task<ActionResult<StudentCourseResponse>> GetStudentCourse ([FromQuery] Guid studentId, [FromQuery] Guid courseId)
+		{
+			if (studentId == null || courseId == null) return NotFound ();
+
+			// find the StudentCourse w/ the composite key
+			var studentCourse = await _context.StudentCourses
+				.FirstOrDefaultAsync (sc => sc.StudentId == studentId && sc.CourseId == courseId);
+			if (studentCourse == null) return NotFound ();
+
+			// return response
+			return Ok (_mapper.Map<StudentCourseResponse> (studentCourse));
+		}
 	}
 }

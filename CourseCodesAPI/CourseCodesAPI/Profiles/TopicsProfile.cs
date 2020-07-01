@@ -8,9 +8,9 @@ namespace CourseCodesAPI.Profiles
 	{
 		public TopicsProfile ()
 		{
-			CreateMap<Topic, TopicDto> ();
+			CreateMap<TopicCreateRequest, Topic> ();
 
-			CreateMap<TopicForCreationDto, Topic> ();
+			CreateMap<Topic, TopicResponse> ();
 		}
 	}
 }

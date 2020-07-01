@@ -120,8 +120,8 @@ namespace CourseCodesAPI
 				endpoints.MapControllers ();
 			});
 
-			var codeExecutionService = app.ApplicationServices.GetRequiredService<ICodeExecutionService> ();
-			var hostLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime> ();
+			// var codeExecutionService = app.ApplicationServices.GetRequiredService<ICodeExecutionService> ();
+			// var hostLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime> ();
 			// hostLifetime.ApplicationStarted.Register (async () =>
 			// {
 			// 	await codeExecutionService.StartContainerRunnersAsync ();

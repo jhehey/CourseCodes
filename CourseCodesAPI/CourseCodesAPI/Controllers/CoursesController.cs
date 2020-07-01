@@ -27,51 +27,87 @@ namespace CourseCodesAPI.Controllers
 				throw new System.ArgumentNullException (nameof (mapper));
 		}
 
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<CourseDto>>> GetCourses ([FromQuery] Guid instructorId = default (Guid))
-		{
-			IEnumerable<Course> courses;
-			if (instructorId != default (Guid))
-			{
-				// Get courses by instructor Id
-				courses = await _context.Courses.Where (c => c.InstructorId == instructorId).ToListAsync ();
-			}
-			else
-			{
-				courses = await _context.Courses.ToListAsync ();
-			}
-
-			// TODO: Query params if we want to include instructor info
-			return Ok (_mapper.Map<IEnumerable<CourseDto>> (courses));
-		}
-
-		[HttpGet ("{courseId:guid}")]
-		public async Task<ActionResult<CourseDto>> GetCourse ([FromRoute] Guid courseId)
-		{
-			// TODO: Query params if we want to include instructor info
-			var course = await _context.Courses.FindAsync (courseId);
-			if (course == null) return NotFound ();
-			return Ok (_mapper.Map<CourseDto> (course));
-		}
-
 		[HttpPost]
-		public async Task<ActionResult<CourseDto>> CreateCourse ([FromBody] CourseForCreationDto courseToCreate)
+		public async Task<ActionResult<CourseResponse>> CreateCourse ([FromBody] CourseCreateRequest courseToCreate)
 		{
 			// find the instructor that wants to create the course
 			var instructor = await _context.Instructors.FindAsync (courseToCreate.InstructorId);
 			if (instructor == null) return NotFound ();
 
-			// map dto to entity
+			// map request to entity
 			var course = _mapper.Map<Course> (courseToCreate);
 
 			// save the course
 			_context.Courses.Add (course);
 			await _context.SaveChangesAsync ();
 
-			// return dto at location
-			var courseToReturn = _mapper.Map<CourseDto> (course);
+			// return response at location
+			var courseToReturn = _mapper.Map<CourseResponse> (course);
 
 			return CreatedAtAction (nameof (GetCourse), new { courseId = courseToReturn.Id }, courseToReturn);
 		}
+
+		[HttpGet ("{courseId:guid}")]
+		public async Task<ActionResult<CourseResponse>> GetCourse ([FromRoute] Guid courseId)
+		{
+			// TODO: Query params if we want to include instructor info
+			var course = await _context.Courses.FindAsync (courseId);
+			if (course == null) return NotFound ();
+			return Ok (_mapper.Map<CourseResponse> (course));
+		}
+
+		public async Task<ActionResult<IEnumerable<CourseResponse>>> GetCourses ()
+		{
+			var courses = await _context.Courses.ToListAsync ();
+			return Ok (_mapper.Map<IEnumerable<CourseResponse>> (courses));
+		}
+
+		// TODELETE
+		// [HttpGet]
+		// public async Task<ActionResult<IEnumerable<CourseDto>>> GetCourses ([FromQuery] Guid instructorId = default (Guid))
+		// {
+		// 	IEnumerable<Course> courses;
+		// 	if (instructorId != default (Guid))
+		// 	{
+		// 		// Get courses by instructor Id
+		// 		courses = await _context.Courses.Where (c => c.InstructorId == instructorId).ToListAsync ();
+		// 	}
+		// 	else
+		// 	{
+		// 		courses = await _context.Courses.ToListAsync ();
+		// 	}
+
+		// 	// TODO: Query params if we want to include instructor info
+		// 	return Ok (_mapper.Map<IEnumerable<CourseDto>> (courses));
+		// }
+
+		// [HttpGet ("{courseId:guid}")]
+		// public async Task<ActionResult<CourseDto>> GetCourse ([FromRoute] Guid courseId)
+		// {
+		// 	// TODO: Query params if we want to include instructor info
+		// 	var course = await _context.Courses.FindAsync (courseId);
+		// 	if (course == null) return NotFound ();
+		// 	return Ok (_mapper.Map<CourseDto> (course));
+		// }
+
+		// [HttpPost]
+		// public async Task<ActionResult<CourseDto>> CreateCourse ([FromBody] CourseForCreationDto courseToCreate)
+		// {
+		// 	// find the instructor that wants to create the course
+		// 	var instructor = await _context.Instructors.FindAsync (courseToCreate.InstructorId);
+		// 	if (instructor == null) return NotFound ();
+
+		// 	// map dto to entity
+		// 	var course = _mapper.Map<Course> (courseToCreate);
+
+		// 	// save the course
+		// 	_context.Courses.Add (course);
+		// 	await _context.SaveChangesAsync ();
+
+		// 	// return dto at location
+		// 	var courseToReturn = _mapper.Map<CourseDto> (course);
+
+		// 	return CreatedAtAction (nameof (GetCourse), new { courseId = courseToReturn.Id }, courseToReturn);
+		// }
 	}
 }

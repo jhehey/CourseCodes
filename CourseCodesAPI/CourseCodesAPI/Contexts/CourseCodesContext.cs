@@ -11,11 +11,16 @@ namespace CourseCodesAPI.Contexts
 		// TODO: Add DbSets
 		public DbSet<Account> Accounts { get; set; }
 		public DbSet<Student> Students { get; set; }
-		public DbSet<Instructor> Instructors { get; set; }
 		public DbSet<Course> Courses { get; set; }
-		public DbSet<StudentCourse> StudentCourses { get; set; }
+		public DbSet<CourseProblem> CourseProblems { get; set; }
+		public DbSet<Instructor> Instructors { get; set; }
 		public DbSet<JoinCode> JoinCodes { get; set; }
+		public DbSet<Problem> Problems { get; set; }
+		public DbSet<Solution> Solutions { get; set; }
+		public DbSet<StudentCourse> StudentCourses { get; set; }
+		public DbSet<TestCase> TestCases { get; set; }
 		public DbSet<Topic> Topics { get; set; }
+		public DbSet<TopicProblem> TopicProblems { get; set; }
 
 		private void BuildAccount (ModelBuilder builder)
 		{

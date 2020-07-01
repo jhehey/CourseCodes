@@ -8,8 +8,9 @@ namespace CourseCodesAPI.Profiles
 	{
 		public StudentCoursesProfile ()
 		{
-			CreateMap<StudentCourse, StudentCourseDto> ();
-			CreateMap<StudentCourseForCreationDto, StudentCourse> ();
+			CreateMap<StudentCourseCreateRequest, StudentCourse> ();
+
+			CreateMap<StudentCourse, StudentCourseResponse> ();
 		}
 	}
 }

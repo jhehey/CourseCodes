@@ -1,13 +1,12 @@
 using System;
+using System.Collections.Generic;
 
 namespace CourseCodesAPI.Models
 {
-	public class TopicDto
+	public class TopicCreateRequest
 	{
-		public Guid Id { get; set; }
 		public string Title { get; set; }
 		public string Description { get; set; }
-		public CourseDto Course { get; set; }
-		// TODO: include list of problems here
+		public List<Guid> ProblemIds { get; set; } = new List<Guid> ();
 	}
 }

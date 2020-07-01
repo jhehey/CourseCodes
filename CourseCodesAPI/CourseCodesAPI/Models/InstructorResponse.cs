@@ -3,8 +3,9 @@ using CourseCodesAPI.Entities;
 
 namespace CourseCodesAPI.Models
 {
-	public class StudentDto
+	public class InstructorResponse
 	{
+		public Guid AccountId { get; set; }
 		public Guid Id { get; set; }
 		public string FullName { get; set; }
 		public string Email { get; set; }

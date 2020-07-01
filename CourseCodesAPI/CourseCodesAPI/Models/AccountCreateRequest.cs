@@ -2,7 +2,7 @@ using CourseCodesAPI.Entities;
 
 namespace CourseCodesAPI.Models
 {
-	public class StudentForCreationDto
+	public class AccountCreateRequest
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }

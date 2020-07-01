@@ -3,7 +3,7 @@ using CourseCodesAPI.Entities;
 
 namespace CourseCodesAPI.Models
 {
-	public class InstructorDto
+	public class AccountResponse
 	{
 		public Guid Id { get; set; }
 		public string FullName { get; set; }

@@ -27,39 +27,42 @@ namespace CourseCodesAPI.Controllers
 				throw new System.ArgumentNullException (nameof (mapper));
 		}
 
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<TopicDto>>> GetTopics ([FromRoute] Guid courseId)
-		{
-			var topics = await _context.Topics.Include (t => t.Course).Where (t => t.CourseId == courseId).ToListAsync ();
-			return Ok (_mapper.Map<IEnumerable<TopicDto>> (topics));
-		}
-
-		[HttpGet ("{topicId:guid}")]
-		public async Task<ActionResult<TopicDto>> GetTopic ([FromRoute] Guid courseId, [FromRoute] Guid topicId)
-		{
-			var topic = await _context.Topics.Include (t => t.Course).FirstOrDefaultAsync (t => t.Id == topicId && t.CourseId == courseId);
-			if (topic == null) return NotFound ();
-			return Ok (_mapper.Map<TopicDto> (topic));
-		}
-
 		[HttpPost]
-		public async Task<ActionResult<TopicDto>> CreateTopic ([FromRoute] Guid courseId, [FromBody] TopicForCreationDto topicToCreate)
+		public async Task<ActionResult<TopicResponse>> CreateTopic ([FromRoute] Guid courseId, [FromBody] TopicCreateRequest topicToCreate)
 		{
-			// find the course we want the topic created to
+			// find course this topic is assigned
 			var course = await _context.Courses.FindAsync (courseId);
 			if (course == null) return NotFound ();
 
-			// map dto to entity
-			var topic = _mapper.Map<Topic> (topicToCreate);
+			// verify ProblemIds exists
+			var problems = await _context.Problems.Where (p => topicToCreate.ProblemIds.Contains (p.Id)).ToListAsync ();
+			if (problems == null) return NotFound ();
 
-			// save the topic
-			course.Topics.Add (topic);
+			// map request to entity
+			var topic = _mapper.Map<Topic> (topicToCreate);
+			topic.Course = course;
+			topic.TopicProblems = problems.Select (problem =>
+				new TopicProblem () { Topic = topic, Problem = problem }
+			).ToList ();
+
+			// save topic
+			_context.Topics.Add (topic);
 			await _context.SaveChangesAsync ();
 
-			// return dto at location
-			var topicToReturn = _mapper.Map<TopicDto> (topic);
+			// map entity to response
+			var topicResponse = _mapper.Map<TopicResponse> (topic);
+			return CreatedAtAction ("GetTopic", new { courseId = courseId, topicId = topicResponse.Id }, topicResponse);
+		}
 
-			return CreatedAtAction (nameof (GetTopic), new { courseId = courseId, topicId = topicToReturn.Id }, topicToReturn);
+		[HttpGet ("{topicId:guid}")]
+		public async Task<ActionResult<TopicResponse>> GetTopic ([FromRoute] Guid courseId, [FromRoute] Guid topicId)
+		{
+			var topic = await _context.Topics
+				.Include (t => t.Course)
+				.Include (t => t.TopicProblems)
+				.FirstOrDefaultAsync (t => t.CourseId == courseId && t.Id == topicId);
+			if (topic == null) return NotFound ();
+			return Ok (_mapper.Map<TopicResponse> (topic));
 		}
 	}
 }
