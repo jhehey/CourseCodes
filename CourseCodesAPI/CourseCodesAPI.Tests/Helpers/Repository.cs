@@ -18,6 +18,7 @@ namespace CourseCodesAPI.Tests.Helpers
 		public AutoFaker<ProblemCreateRequest> ProblemFaker { get; set; }
 		public AutoFaker<TestCaseCreateRequest> TestCaseFaker { get; set; }
 		public AutoFaker<TopicCreateRequest> TopicFaker { get; set; }
+		public AutoFaker<SolutionCreateRequest> SolutionFaker { get; set; }
 
 		public Repository ()
 		{
@@ -50,6 +51,9 @@ namespace CourseCodesAPI.Tests.Helpers
 			TopicFaker = new AutoFaker<TopicCreateRequest> ();
 			TopicFaker.RuleFor (dto => dto.Title, fake => fake.Lorem.Sentence ());
 			TopicFaker.RuleFor (dto => dto.Description, fake => fake.Lorem.Paragraph (1));
+
+			SolutionFaker = new AutoFaker<SolutionCreateRequest> ();
+			SolutionFaker.RuleFor (dto => dto.SourceCode, fake => fake.Lorem.Paragraphs (3));
 		}
 
 		public async Task<List<StudentResponse>> GetStudents (int count = 1)

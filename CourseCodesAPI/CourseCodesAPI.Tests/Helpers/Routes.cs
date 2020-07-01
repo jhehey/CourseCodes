@@ -14,6 +14,7 @@ namespace CourseCodesAPI.Tests.Helpers
 		public static string Courses = $"{baseUrl}/courses";
 		public static string JoinCodes = $"{baseUrl}/joincodes";
 		public static string Problems = $"{baseUrl}/problems";
+		public static string Solutions = $"{baseUrl}/solutions";
 
 		public static string Topics (this string baseUrl)
 		{

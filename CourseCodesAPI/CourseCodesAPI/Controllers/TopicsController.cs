@@ -51,7 +51,7 @@ namespace CourseCodesAPI.Controllers
 
 			// map entity to response
 			var topicResponse = _mapper.Map<TopicResponse> (topic);
-			return CreatedAtAction ("GetTopic", new { courseId = courseId, topicId = topicResponse.Id }, topicResponse);
+			return CreatedAtAction (nameof (GetTopic), new { courseId = courseId, topicId = topicResponse.Id }, topicResponse);
 		}
 
 		[HttpGet ("{topicId:guid}")]
