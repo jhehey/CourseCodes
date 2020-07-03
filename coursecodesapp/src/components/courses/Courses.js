@@ -2,10 +2,17 @@ import React from 'react';
 import { Grid, Button, Link } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { useGetCourses } from '../../hooks';
+import { Role } from '../../helpers';
+import { JoinCourse } from '../common';
 
 export const Courses = () => {
-	const instructor = useSelector((state) => state.account?.signedAccount);
-	const courses = useGetCourses({ instructorId: instructor.id });
+	const { signedAccount } = useSelector((state) => state.account);
+
+	// get courses based on type of account
+	const isStudent = signedAccount.accountRole === Role.Student;
+	const isInstructor = signedAccount.accountRole === Role.Instructor;
+	const query = isInstructor ? { instructorId: signedAccount.id } : isStudent ? { studentId: signedAccount.id } : null;
+	const courses = useGetCourses(query);
 
 	const courseList = courses?.map((course) => (
 		<React.Fragment key={course.id}>
@@ -20,9 +27,12 @@ export const Courses = () => {
 		<Grid container>
 			<Grid item xs={3}>
 				<Grid item xs={12}>
-					<Button href="/courses/create" variant="contained" color="primary">
-						Create Course
-					</Button>
+					{isInstructor && (
+						<Button href="/courses/create" variant="contained" color="primary">
+							Create Course
+						</Button>
+					)}
+					{isStudent && <JoinCourse />}
 				</Grid>
 				<Grid item xs={12}>
 					<h1>Course 2</h1>

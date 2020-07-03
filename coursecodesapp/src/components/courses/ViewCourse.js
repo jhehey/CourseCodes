@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { courseActions } from '../../redux/actions';
 import { Grid, Button, Link } from '@material-ui/core';
 import { useGetProblems } from '../../hooks';
+import { ViewJoinCode } from '../common/ViewJoinCode';
+import { Role } from '../../helpers';
 
 export const ViewCourse = () => {
 	// dispatch request to get course info
@@ -28,20 +30,41 @@ export const ViewCourse = () => {
 		</React.Fragment>
 	));
 
+	// TODO: If student, if instructor
+	// TODO: Ilagay to sa hooks
+	const signedAccount = useSelector((state) => state.account?.signedAccount);
+	const isStudent = signedAccount.accountRole === Role.Student;
+	const isInstructor = signedAccount.accountRole === Role.Instructor;
+	console.log(signedAccount, isStudent, isInstructor);
+
 	return (
 		<Grid container>
-			<Grid item xs={3}>
-				<Grid item xs={12}>
-					<Button href="#" variant="contained" color="primary">
-						View Students
-					</Button>
+			{isInstructor && (
+				<Grid item xs={3}>
+					<Grid item xs={12}>
+						<Button href="#" variant="contained" color="primary">
+							View Students
+						</Button>
+					</Grid>
+					<Grid item xs={12}>
+						<Button href={`/courses/${courseId}/topics/create`} variant="contained" color="primary">
+							Create Topic Problems
+						</Button>
+					</Grid>
+					<Grid item xs={12}>
+						<ViewJoinCode />
+					</Grid>
 				</Grid>
-				<Grid item xs={12}>
-					<Button href={`/courses/${courseId}/topics/create`} variant="contained" color="primary">
-						Create Topic Problems
-					</Button>
+			)}
+			{isStudent && (
+				<Grid item xs={3}>
+					<Grid item xs={12}>
+						<Button href="#" variant="contained" color="primary">
+							View Roster
+						</Button>
+					</Grid>
 				</Grid>
-			</Grid>
+			)}
 			<Grid item xs={9}>
 				<h1>View Course</h1>
 				<h1>Title: {course?.title}</h1>

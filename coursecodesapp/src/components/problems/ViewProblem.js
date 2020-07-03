@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { problemActions } from '../../redux/actions';
 import { Grid, Button } from '@material-ui/core';
+import { Role } from '../../helpers';
 
 export const ViewProblem = () => {
 	// dispatch request to get problem info
@@ -37,15 +38,30 @@ export const ViewProblem = () => {
 		</Grid>
 	));
 
+	const signedAccount = useSelector((state) => state.account?.signedAccount);
+	const isStudent = signedAccount.accountRole === Role.Student;
+	const isInstructor = signedAccount.accountRole === Role.Instructor;
+
 	return (
 		<Grid container>
-			<Grid item xs={3}>
-				<Grid item xs={12}>
-					<Button href="#" variant="contained" color="primary">
-						View Who answered this problem?
-					</Button>
+			{isInstructor && (
+				<Grid item xs={3}>
+					<Grid item xs={12}>
+						<Button href="#" variant="contained" color="primary">
+							View Who answered this problem?
+						</Button>
+					</Grid>
 				</Grid>
-			</Grid>
+			)}
+			{isStudent && (
+				<Grid item xs={3}>
+					<Grid item xs={12}>
+						<Button href="#" variant="contained" color="primary">
+							Solve
+						</Button>
+					</Grid>
+				</Grid>
+			)}
 			<Grid item xs={9}>
 				<h1>View Problem</h1>
 				<h1>Title: {problem?.title}</h1>

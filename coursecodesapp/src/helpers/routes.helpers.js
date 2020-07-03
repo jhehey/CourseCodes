@@ -31,6 +31,8 @@ export const pageRoutes = {
 	student: [
 		{ path: '/', component: StudentHome, isLink: true, value: 'Home' },
 		{ path: '/courses', component: Courses, isLink: true, value: 'Courses' },
+		{ path: '/courses/:courseId', component: ViewCourse, isLink: false, value: 'View Course' },
+		{ path: '/problems/:problemId', component: ViewProblem, isLink: false, value: 'Problem' },
 	],
 	instructor: [
 		{ path: '/', component: InstructorHome, isLink: true, value: 'Home' },

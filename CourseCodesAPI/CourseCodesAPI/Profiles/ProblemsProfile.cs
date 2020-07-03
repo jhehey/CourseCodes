@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using CourseCodesAPI.Entities;
 using CourseCodesAPI.Models;
@@ -10,7 +11,8 @@ namespace CourseCodesAPI.Profiles
 		{
 			CreateMap<ProblemCreateRequest, Problem> ();
 
-			CreateMap<Problem, ProblemResponse> ();
+			CreateMap<Problem, ProblemResponse> ()
+				.ForPath (dest => dest.Courses, opt => opt.MapFrom (src => src.CourseProblems.Select (cp => cp.Course)));
 		}
 	}
 }

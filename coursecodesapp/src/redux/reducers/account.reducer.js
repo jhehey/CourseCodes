@@ -11,6 +11,8 @@ export const account = (state = initialState, action) => {
 				signedIn: true,
 				signedAccount: action.account,
 				signInRedirect: true,
+				isStudent: action.isStudent,
+				isInstructor: action.isInstructor,
 			};
 		case accountConstants.SIGNIN_FAILURE:
 			return {
@@ -23,8 +25,6 @@ export const account = (state = initialState, action) => {
 			};
 		case accountConstants.LOGOUT:
 			return {
-				signedIn: false,
-				signedAccount: null,
 				loggedOut: true,
 			};
 		case accountConstants.SIGNUP_SUCCESS:

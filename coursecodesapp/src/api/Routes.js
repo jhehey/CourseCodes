@@ -11,8 +11,12 @@ const Routes = {
 		return url;
 	},
 	Authenticate: (params = {}) => `${baseUrl}/accounts/authenticate`,
-	Courses: ({ courseId = null, query = null } = {}) => {
+	Courses: ({ courseId = null, query = null, join = false } = {}) => {
 		const url = `${baseUrl}/courses`;
+
+		if (join) {
+			return `${url}/join`;
+		}
 
 		if (courseId) {
 			return `${url}/${courseId}`;
@@ -23,6 +27,15 @@ const Routes = {
 				.map((key) => `${key}=${query[key]}`)
 				.join('&');
 			return `${url}/?${queryString}`;
+		}
+
+		return url;
+	},
+	JoinCodes: (courseId, params = { generate: false }) => {
+		const url = `${baseUrl}/courses/${courseId}/joincode`;
+
+		if (params.generate) {
+			return `${url}/generate`;
 		}
 
 		return url;

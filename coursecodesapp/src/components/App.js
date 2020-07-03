@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { AlertPopup } from './common';
 import { LandingPage, StudentPage, InstructorPage } from './common';
 import { Role } from '../helpers';
+import { Redirect } from 'react-router-dom';
 
 const getHomepage = (signedIn, account) => {
 	if (!signedIn || !account) {
@@ -24,13 +25,14 @@ const getHomepage = (signedIn, account) => {
 
 export const App = () => {
 	// get the authentication details
-	const { signedIn, signedAccount } = useSelector((state) => state.account);
+	const { signedIn, signedAccount, loggedOut } = useSelector((state) => state.account);
 	const HomePage = getHomepage(signedIn, signedAccount);
 
 	return (
 		<div className="App">
 			<AlertPopup />
 			{HomePage}
+			{loggedOut && <Redirect to="/signin" />}
 		</div>
 	);
 };

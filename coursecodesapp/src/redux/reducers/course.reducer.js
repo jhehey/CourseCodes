@@ -15,6 +15,10 @@ export const course = (state = null, action) => {
 			return {
 				course: action.course,
 			};
+		case courseConstants.JOIN_COURSE_SUCCESS:
+			return {
+				studentCourse: action.studentCourse,
+			};
 		default:
 			return state;
 	}

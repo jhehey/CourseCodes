@@ -11,6 +11,8 @@ namespace CourseCodesAPI.Profiles
 			CreateMap<StudentCourseCreateRequest, StudentCourse> ();
 
 			CreateMap<StudentCourse, StudentCourseResponse> ();
+
+			CreateMap<StudentCourse, JoinCourseResponse> ();
 		}
 	}
 }

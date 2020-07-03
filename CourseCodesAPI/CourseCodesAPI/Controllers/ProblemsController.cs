@@ -63,5 +63,34 @@ namespace CourseCodesAPI.Controllers
 			if (problem == null) return NotFound ();
 			return Ok (_mapper.Map<ProblemResponse> (problem));
 		}
+
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<ProblemResponse>>> GetProblems (
+			[FromQuery] Guid authorId = default (Guid), [FromQuery] Guid courseId = default (Guid)
+		)
+		{
+			IEnumerable<Problem> problems = new List<Problem> ();
+			if (authorId != default (Guid))
+			{
+				problems = await _context.Problems
+					.Include (p => p.CourseProblems)
+					.ThenInclude (cp => cp.Course)
+					.Where (p => p.AuthorId == authorId)
+					.ToListAsync ();
+			}
+			else if (courseId != default (Guid))
+			{
+				problems = await _context.CourseProblems
+					.Include (cp => cp.Problem.TestCases)
+					.Where (cp => cp.CourseId == courseId)
+					.Select (cp => cp.Problem)
+					.ToListAsync ();
+			}
+			else
+			{
+				problems = await _context.Problems.ToListAsync ();
+			}
+			return Ok (_mapper.Map<IEnumerable<ProblemResponse>> (problems));
+		}
 	}
 }

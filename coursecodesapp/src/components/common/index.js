@@ -7,3 +7,4 @@ export * from './Logout';
 export * from './Navbar';
 export * from './BasePage';
 export * from './ChipSelect';
+export * from './JoinCourse';

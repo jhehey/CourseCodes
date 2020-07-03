@@ -49,8 +49,27 @@ const getCourses = (query = {}) => {
 	};
 };
 
+const joinCourse = (joinCourseDetails) => {
+	const joinCourseSuccess = (studentCourse) => {
+		return { type: courseConstants.JOIN_COURSE_SUCCESS, studentCourse };
+	};
+
+	return async (dispatch) => {
+		const { data: studentCourse, success, error } = await CoursesApi.joinCourse(joinCourseDetails);
+		if (success) {
+			dispatch(joinCourseSuccess(studentCourse));
+			dispatch(alertActions.success({ message: 'You have joined the course' }));
+		} else {
+			const message =
+				(error?.message && error?.message[0]) || 'There was a problem in processing your request. Try again';
+			dispatch(alertActions.error({ message }));
+		}
+	};
+};
+
 export const courseActions = {
 	createCourse,
 	getCourse,
 	getCourses,
+	joinCourse,
 };

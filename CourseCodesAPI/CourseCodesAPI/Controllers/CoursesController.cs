@@ -10,6 +10,7 @@ using CourseCodesAPI.Helpers;
 using CourseCodesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace CourseCodesAPI.Controllers
 {
@@ -28,11 +29,21 @@ namespace CourseCodesAPI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CourseResponse>> CreateCourse ([FromBody] CourseCreateRequest courseToCreate)
+		public async Task<IActionResult> CreateCourse (
+			[FromBody] CourseCreateRequest courseToCreate, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions
+		)
 		{
 			// find the instructor that wants to create the course
 			var instructor = await _context.Instructors.FindAsync (courseToCreate.InstructorId);
 			if (instructor == null) return NotFound ();
+
+			// instructor can't create course of the same title to their own courses. but 2 different instructors, can have same title
+			var duplicateTitle = await _context.Courses.AnyAsync (c => c.InstructorId == instructor.Id && c.Title == courseToCreate.Title);
+			if (duplicateTitle)
+			{
+				ModelState.AddModelError (nameof (courseToCreate.Title), $"You already have a course named {courseToCreate.Title}");
+				return apiBehaviorOptions.Value.InvalidModelStateResponseFactory (ControllerContext);
+			}
 
 			// map request to entity
 			var course = _mapper.Map<Course> (courseToCreate);
@@ -56,10 +67,74 @@ namespace CourseCodesAPI.Controllers
 			return Ok (_mapper.Map<CourseResponse> (course));
 		}
 
-		public async Task<ActionResult<IEnumerable<CourseResponse>>> GetCourses ()
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<CourseResponse>>> GetCourses (
+			[FromQuery] Guid instructorId = default (Guid), [FromQuery] Guid studentId = default (Guid)
+		)
 		{
-			var courses = await _context.Courses.ToListAsync ();
+			IEnumerable<Course> courses = new List<Course> ();
+			if (instructorId != default (Guid))
+			{
+				courses = await _context.Courses
+					.Where (c => c.InstructorId == instructorId)
+					.ToListAsync ();
+			}
+			else if (studentId != default (Guid))
+			{
+				courses = await _context.StudentCourses
+					.Include (sc => sc.Course)
+					.Where (sc => sc.StudentId == studentId)
+					.Select (sc => sc.Course)
+					.ToListAsync ();
+			}
+			else
+			{
+				courses = await _context.Courses.ToListAsync ();
+			}
 			return Ok (_mapper.Map<IEnumerable<CourseResponse>> (courses));
+		}
+
+		[HttpPost ("join")]
+		public async Task<IActionResult> JoinCourse (
+			[FromBody] JoinCourseRequest joinCourseRequest, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions
+		)
+		{
+			// find student that wants to join the course
+			var student = await _context.Students.FindAsync (joinCourseRequest.StudentId);
+			if (student == null) return NotFound ();
+
+			// find the course
+			var course = await _context.JoinCodes
+				.Include (jc => jc.Course)
+				.Where (jc => jc.Code == joinCourseRequest.Code)
+				.Select (jc => jc.Course).FirstOrDefaultAsync ();
+			if (course == null)
+			{
+				ModelState.AddModelError ("message", $"The code you entered is invalid");
+				return apiBehaviorOptions.Value.InvalidModelStateResponseFactory (ControllerContext);
+			}
+
+			// check if student already is in that course
+			var joined = await _context.StudentCourses.AnyAsync (sc => sc.StudentId == student.Id && sc.CourseId == course.Id);
+			if (joined)
+			{
+				ModelState.AddModelError ("message", $"You have already joined the course");
+				return apiBehaviorOptions.Value.InvalidModelStateResponseFactory (ControllerContext);
+			}
+
+			// create entity
+			StudentCourse studentCourse = new StudentCourse ()
+			{
+				Student = student,
+					Course = course
+			};
+
+			// save entity
+			_context.StudentCourses.Add (studentCourse);
+			await _context.SaveChangesAsync ();
+
+			// map entity to response
+			return Ok (_mapper.Map<JoinCourseResponse> (studentCourse));
 		}
 	}
 }
