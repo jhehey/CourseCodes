@@ -17,7 +17,7 @@ import { EmailTextField, RequiredTextField, CopyRight } from '../common';
 import { useForm } from 'react-hook-form';
 import { useStyles } from './useStyles';
 import { useDispatch } from 'react-redux';
-import { userActions } from '../../redux/actions';
+import { accountActions } from '../../redux/actions';
 
 export const SignIn = () => {
 	const classes = useStyles();
@@ -28,8 +28,7 @@ export const SignIn = () => {
 	// redux
 	const dispatch = useDispatch();
 	const onSubmit = (signInDetails) => {
-		// TODO: Pwede ata wala na yung dispatch dito?
-		dispatch(userActions.signIn(signInDetails));
+		dispatch(accountActions.signIn(signInDetails));
 	};
 
 	return (

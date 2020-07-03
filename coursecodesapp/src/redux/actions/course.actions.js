@@ -1,6 +1,6 @@
 import { courseConstants } from '../constants';
 import { alertActions } from './alert.actions';
-import { CourseApi } from '../../api';
+import { CoursesApi } from '../../api';
 
 const createCourse = (courseToCreate) => {
 	const createCourseSuccess = (course) => {
@@ -8,12 +8,13 @@ const createCourse = (courseToCreate) => {
 	};
 
 	return async (dispatch) => {
-		const { data: course, success } = await CourseApi.createCourse(courseToCreate);
+		const { data: course, success, error } = await CoursesApi.createCourse(courseToCreate);
 		if (success) {
 			dispatch(createCourseSuccess(course));
 			dispatch(alertActions.success({ message: 'You have created a course' }));
 		} else {
-			dispatch(alertActions.success({ message: 'There was a problem in creating the course' }));
+			const message = (error && error.Title && error.Title[0]) || 'There was an error in processing your request';
+			dispatch(alertActions.error({ message }));
 		}
 	};
 };
@@ -24,22 +25,22 @@ const getCourse = (courseId) => {
 	};
 
 	return async (dispatch) => {
-		const { data: course, success } = await CourseApi.getCourse(courseId);
+		const { data: course, success } = await CoursesApi.getCourse(courseId);
 		if (success) {
 			dispatch(getCourseSuccess(course));
 		} else {
-			console.error('There was a problem getting the course');
+			console.error('There was an error getting the course');
 		}
 	};
 };
 
-const getCoursesByInstructorId = (instructorId) => {
+const getCourses = (query = {}) => {
 	const getCoursesSuccess = (courses) => {
 		return { type: courseConstants.GET_COURSES_SUCCESS, courses };
 	};
 
 	return async (dispatch) => {
-		const { data: courses, success } = await CourseApi.getCoursesByInstructorId(instructorId);
+		const { data: courses, success } = await CoursesApi.getCourses(query);
 		if (success) {
 			dispatch(getCoursesSuccess(courses));
 		} else {
@@ -51,5 +52,5 @@ const getCoursesByInstructorId = (instructorId) => {
 export const courseActions = {
 	createCourse,
 	getCourse,
-	getCoursesByInstructorId,
+	getCourses,
 };

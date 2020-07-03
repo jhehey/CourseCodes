@@ -1,19 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Grid, Button, Link } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { courseActions } from '../../redux/actions';
+import { useSelector } from 'react-redux';
+import { useGetCourses } from '../../hooks';
 
 export const Courses = () => {
-	const dispatch = useDispatch();
-	const signedInstructor = useSelector((state) => state.instructor?.signedInstructor);
-	const courses = useSelector((state) => state.course?.courses);
-
-	// get instructor's courses, dispatch only when courses is undefined
-	useEffect(() => {
-		if (!courses) {
-			dispatch(courseActions.getCoursesByInstructorId(signedInstructor?.id));
-		}
-	}, [dispatch, signedInstructor, courses]);
+	const instructor = useSelector((state) => state.account?.signedAccount);
+	const courses = useGetCourses({ instructorId: instructor.id });
 
 	const courseList = courses?.map((course) => (
 		<React.Fragment key={course.id}>
@@ -38,8 +30,8 @@ export const Courses = () => {
 			</Grid>
 			<Grid item xs={9}>
 				<Grid item xs={12}>
-					{courseList}
 					<h1>Course List</h1>
+					{courseList}
 				</Grid>
 			</Grid>
 		</Grid>

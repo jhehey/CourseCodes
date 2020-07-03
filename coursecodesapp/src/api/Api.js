@@ -8,6 +8,7 @@ const call = async (request) => {
 		const { data, status } = await request();
 		result = { ...result, data, success: ApiHelpers.isStatusSuccess(status) };
 	} catch (error) {
+		console.log(error);
 		if (error.response) {
 			/*
 			 * The request was made and the server responded with a

@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { RequiredTextField } from '../common';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Button, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { courseActions } from '../../redux/actions';
 import { ChipSelect } from '../common';
+import { problemActions } from '../../redux/actions';
+import { useGetCourses } from '../../hooks';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	main: {
@@ -41,28 +43,26 @@ export const CreateProblem = () => {
 		setAssignedCourses(event.target.value);
 	};
 
+	// submit the problem
+	const author = useSelector((state) => state.account?.signedAccount);
 	const dispatch = useDispatch();
 	const onSubmit = (problemDetails) => {
-		const assignedCourseIds = assignedCourses.map((course) => course.id);
+		const courseIds = assignedCourses.map((course) => course.id);
 		const problemToCreate = {
 			...problemDetails,
-			assignedCourseIds,
+			courseIds,
+			authorId: author?.accountId,
 		};
 		console.log(problemToCreate);
-
-		// TODO: include courseId, or if belong to a topic? topicId
-		// const problemToCreate = {};
-		// dispatch(problemActions.createProblem(probl));
+		dispatch(problemActions.createProblem(problemToCreate));
 	};
 
-	// TODO: move me. reused from Courses.js
-	const { signedInstructor } = useSelector((state) => state.instructor);
-	const courses = useSelector((state) => state.course?.courses);
-	useEffect(() => {
-		if (!courses) {
-			dispatch(courseActions.getCoursesByInstructorId(signedInstructor?.id));
-		}
-	}, [dispatch, signedInstructor, courses]);
+	// load the courses for the chip selector
+	const instructor = useSelector((state) => state.account?.signedAccount);
+	const courses = useGetCourses({ instructorId: instructor.id });
+
+	// to determine if successful creation and redirect
+	const problemCreated = useSelector((state) => state.problem?.problemCreated);
 
 	return (
 		<Container maxWidth="md" className={classes.main}>
@@ -133,6 +133,7 @@ export const CreateProblem = () => {
 					Submit
 				</Button>
 			</form>
+			{problemCreated && <Redirect to="/problems" />}
 		</Container>
 	);
 };

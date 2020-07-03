@@ -3,7 +3,7 @@ import { SignIn, SignUp, About, LandingHome } from '../components/landing';
 import { StudentHome } from '../components/student';
 import { InstructorHome } from '../components/instructor';
 import { Courses, CreateCourse, ViewCourse, CreateTopic } from '../components/courses';
-import { Problems, CreateProblem } from '../components/problems';
+import { Problems, CreateProblem, ViewProblem } from '../components/problems';
 
 // TODO: create own component
 // const Courses = () => {
@@ -35,11 +35,12 @@ export const pageRoutes = {
 	instructor: [
 		{ path: '/', component: InstructorHome, isLink: true, value: 'Home' },
 		{ path: '/courses', component: Courses, isLink: true, value: 'Courses' },
-		{ path: '/students', component: Students, isLink: true, value: 'Students' },
+		{ path: '/students', component: Students, isLink: false, value: 'Students' },
 		{ path: '/courses/create', component: CreateCourse, isLink: false, value: 'Create Course' },
 		{ path: '/courses/:courseId', component: ViewCourse, isLink: false, value: 'View Course' },
 		{ path: '/courses/:courseId/topics/create', component: CreateTopic, isLink: false, value: 'Create Topic' },
-		{ path: '/problems', component: Problems, isLink: true, value: 'Problem' },
+		{ path: '/problems', component: Problems, isLink: true, value: 'Problemset' },
+		{ path: '/problems/:problemId', component: ViewProblem, isLink: false, value: 'Problem' },
 		{ path: '/problems/create', component: CreateProblem, isLink: false, value: 'Problem' },
 	],
 };

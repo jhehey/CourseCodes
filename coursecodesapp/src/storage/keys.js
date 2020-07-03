@@ -1,11 +1,7 @@
 import { types } from './types';
 export const keys = {
-	Authentication: {
-		key: 'AUTHENTICATION',
+	SignedAccount: {
+		key: 'SIGNED_ACCOUNT',
 		type: types.Local,
-	},
-	SignedInstructor: {
-		key: 'SIGNEDINSTRUCTOR',
-		type: types.Session,
 	},
 };

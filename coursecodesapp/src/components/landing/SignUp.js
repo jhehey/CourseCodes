@@ -22,8 +22,9 @@ import { EmailTextField, RequiredTextField, CopyRight } from '../common';
 import { useForm, Controller } from 'react-hook-form';
 import { useStyles } from './useStyles';
 import { useDispatch, useSelector } from 'react-redux';
-import { userActions } from '../../redux/actions';
+import { accountActions } from '../../redux/actions';
 import { Redirect } from 'react-router-dom';
+import { Role } from '../../helpers';
 
 export const SignUp = () => {
 	const classes = useStyles();
@@ -36,9 +37,9 @@ export const SignUp = () => {
 	// redux
 	const dispatch = useDispatch();
 	const onSubmit = (signUpDetails) => {
-		dispatch(userActions.signUp(signUpDetails));
+		dispatch(accountActions.signUp(signUpDetails));
 	};
-	const { signedUp } = useSelector((state) => state.authentication);
+	const { signedUp } = useSelector((state) => state.account);
 
 	return signedUp ? (
 		<Redirect to="/signin" />
@@ -84,8 +85,8 @@ export const SignUp = () => {
 											label="Type"
 											id="accountRole"
 										>
-											<MenuItem value={0}>Student</MenuItem>
-											<MenuItem value={1}>Instructor</MenuItem>
+											<MenuItem value={Role.Student}>Student</MenuItem>
+											<MenuItem value={Role.Instructor}>Instructor</MenuItem>
 										</Select>
 									}
 									name="accountRole"

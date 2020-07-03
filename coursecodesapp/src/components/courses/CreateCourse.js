@@ -18,7 +18,7 @@ export const CreateCourse = () => {
 	// TODO: Handle validation error sa pag create ng course
 
 	const classes = useStyles();
-	const { signedInstructor } = useSelector((state) => state.instructor);
+	const { signedAccount: signedInstructor } = useSelector((state) => state.account);
 
 	// React Hook Form
 	const { register, handleSubmit, errors } = useForm();
@@ -33,6 +33,7 @@ export const CreateCourse = () => {
 		dispatch(courseActions.createCourse(courseToCreate));
 	};
 
+	// to determine if successful creation and redirect
 	const courseCreated = useSelector((state) => state.course?.courseCreated);
 
 	return (
@@ -45,7 +46,7 @@ export const CreateCourse = () => {
 				<RequiredTextField
 					name="description"
 					register={register}
-					error={errors.title}
+					error={errors.description}
 					multiline={true}
 					rows={6}
 					rowsMax={6}

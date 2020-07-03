@@ -1,6 +1,4 @@
-const AccountRoles = {
-	Student: 0,
-	Instructor: 1,
+export const Role = {
+	Student: 1,
+	Instructor: 2,
 };
-
-export { AccountRoles };

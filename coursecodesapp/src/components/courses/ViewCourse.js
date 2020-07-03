@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions } from '../../redux/actions';
-import { Grid, Button } from '@material-ui/core';
+import { Grid, Button, Link } from '@material-ui/core';
+import { useGetProblems } from '../../hooks';
 
 export const ViewCourse = () => {
 	// dispatch request to get course info
@@ -16,6 +17,17 @@ export const ViewCourse = () => {
 		}
 	}, [dispatch, courseId, course]);
 
+	// get problems for this course
+	const problems = useGetProblems({ courseId });
+	const problemList = problems?.map((problem) => (
+		<React.Fragment key={problem.id}>
+			<Link href={`/problems/${problem.id}`} variant="h4">
+				{problem.title}
+			</Link>
+			<h4>{problem.statement}</h4>
+		</React.Fragment>
+	));
+
 	return (
 		<Grid container>
 			<Grid item xs={3}>
@@ -26,15 +38,18 @@ export const ViewCourse = () => {
 				</Grid>
 				<Grid item xs={12}>
 					<Button href={`/courses/${courseId}/topics/create`} variant="contained" color="primary">
-						Create Problem Set
+						Create Topic Problems
 					</Button>
 				</Grid>
 			</Grid>
 			<Grid item xs={9}>
+				<h1>View Course</h1>
 				<h1>Title: {course?.title}</h1>
 				<h3>Description: {course?.description}</h3>
 				<h3>Date Created: {course?.dateCreated}</h3>
 				<h1>Topics List</h1>
+				<h1>Problems List</h1>
+				{problemList}
 			</Grid>
 		</Grid>
 	);
