@@ -89,7 +89,6 @@ const Home = () => {
 			</Card>
 		</Parallax>
 		</div>
-		
 	);
 };
 
