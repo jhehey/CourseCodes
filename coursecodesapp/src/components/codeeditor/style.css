@@ -1,0 +1,12 @@
+.CodeMirror {
+	height: 80vh;
+	font-size: 13px;
+	font-family: Monaco;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-left: 0.5em;
+}
+
+.CodeMirror-linenumber {
+	font-size: 10px;
+}

@@ -3,7 +3,7 @@ import { SignIn, SignUp, About, LandingHome } from '../components/landing';
 import { StudentHome } from '../components/student';
 import { InstructorHome } from '../components/instructor';
 import { Courses, CreateCourse, ViewCourse, CreateTopic } from '../components/courses';
-import { Problems, CreateProblem, ViewProblem } from '../components/problems';
+import { Problems, CreateProblem, ViewProblem, SolveProblem } from '../components/problems';
 
 // TODO: create own component
 // const Courses = () => {
@@ -33,6 +33,7 @@ export const pageRoutes = {
 		{ path: '/courses', component: Courses, isLink: true, value: 'Courses' },
 		{ path: '/courses/:courseId', component: ViewCourse, isLink: false, value: 'View Course' },
 		{ path: '/problems/:problemId', component: ViewProblem, isLink: false, value: 'Problem' },
+		{ path: '/problems/:problemId/solve', component: SolveProblem, isLink: false, value: 'Solve Problem' },
 	],
 	instructor: [
 		{ path: '/', component: InstructorHome, isLink: true, value: 'Home' },

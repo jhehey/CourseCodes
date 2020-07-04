@@ -3,3 +3,4 @@ export * from './course.actions';
 export * from './problem.actions';
 export * from './account.actions';
 export * from './joinCode.actions';
+export * from './solution.actions';

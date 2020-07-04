@@ -3,3 +3,4 @@ export * from './course.constants';
 export * from './problem.constants';
 export * from './account.constants';
 export * from './joinCode.constants';
+export * from './solution.constants';

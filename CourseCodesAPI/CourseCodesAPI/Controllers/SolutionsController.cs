@@ -7,6 +7,8 @@ using AutoMapper;
 using CourseCodesAPI.Contexts;
 using CourseCodesAPI.Entities;
 using CourseCodesAPI.Models;
+using CourseCodesAPI.Services.CodeExecutionService;
+using CourseCodesAPI.Services.CodeExecutionService.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +20,16 @@ namespace CourseCodesAPI.Controllers
 	{
 		private readonly CourseCodesContext _context;
 		private readonly IMapper _mapper;
-		public SolutionsController (CourseCodesContext context, IMapper mapper)
+		private readonly ICodeExecutionService _codeExecutionService;
+
+		public SolutionsController (CourseCodesContext context, IMapper mapper, ICodeExecutionService codeExecutionService)
 		{
 			_context = context ??
 				throw new System.ArgumentNullException (nameof (context));
 			_mapper = mapper ??
 				throw new System.ArgumentNullException (nameof (mapper));
+			_codeExecutionService = codeExecutionService ??
+				throw new System.ArgumentNullException (nameof (codeExecutionService));
 		}
 
 		[HttpPost]
@@ -58,6 +64,29 @@ namespace CourseCodesAPI.Controllers
 				.FirstOrDefaultAsync (s => s.Id == solutionId);
 			if (solution == null) return NotFound ();
 			return Ok (_mapper.Map<SolutionResponse> (solution));
+		}
+
+		[HttpPost ("run")]
+		public async Task<ActionResult> RunSolution ([FromBody] SolutionRunRequest solutionToRun)
+		{
+			// check if student exists
+			var student = await _context.Students.FindAsync (solutionToRun.StudentId);
+			if (student == null) return NotFound ();
+
+			// check if problem exists
+			var problem = await _context.Problems
+				.Include (p => p.TestCases).FirstOrDefaultAsync (p => p.Id == solutionToRun.ProblemId);
+			if (problem == null) return NotFound ();
+
+			var codeExecutionRequest = new CodeExecutionRequest ()
+			{
+				SourceCode = solutionToRun.SourceCode,
+					TestCases = _mapper.Map<List<TestCaseRequest>> (problem.TestCases)
+			};
+
+			var results = await _codeExecutionService.ExecuteAsync (codeExecutionRequest);
+
+			return Ok (results);
 		}
 	}
 }

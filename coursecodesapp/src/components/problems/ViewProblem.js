@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { problemActions } from '../../redux/actions';
 import { Grid, Button } from '@material-ui/core';
 import { Role } from '../../helpers';
 
 export const ViewProblem = () => {
+	const location = useLocation().pathname;
+
 	// dispatch request to get problem info
 	const { problemId } = useParams();
 	const dispatch = useDispatch();
@@ -56,7 +58,7 @@ export const ViewProblem = () => {
 			{isStudent && (
 				<Grid item xs={3}>
 					<Grid item xs={12}>
-						<Button href="#" variant="contained" color="primary">
+						<Button href={`${location}/solve`} variant="contained" color="primary">
 							Solve
 						</Button>
 					</Grid>

@@ -56,8 +56,12 @@ const Routes = {
 
 		return url;
 	},
-	Solutions: ({ solutionId = null } = {}) => {
+	Solutions: ({ solutionId = null, run = false } = {}) => {
 		const url = `${baseUrl}/solutions`;
+
+		if (run) {
+			return `${url}/run`;
+		}
 
 		if (solutionId) {
 			return `${url}/${solutionId}`;

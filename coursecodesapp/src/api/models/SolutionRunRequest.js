@@ -1,0 +1,7 @@
+export class SolutionRunRequest {
+	constructor({ sourceCode, studentId, problemId }) {
+		this.sourceCode = sourceCode;
+		this.studentId = studentId;
+		this.problemId = problemId;
+	}
+}
