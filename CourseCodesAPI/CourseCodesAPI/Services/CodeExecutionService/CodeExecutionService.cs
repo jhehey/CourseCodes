@@ -141,7 +141,8 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			// return code execution result
 			return new CodeExecutionResult ()
 			{
-				TestCaseResults = testResults
+				SolutionId = request.SolutionId,
+					TestCaseResults = testResults
 			};
 
 		}

@@ -4,11 +4,11 @@ import { AccountsApi } from '../../api';
 import { keys, storage } from '../../storage/';
 
 const saveSignedAccount = (signedAccount) => {
-	storage.set(keys.SignedAccount, { signedIn: true, signedAccount });
+	storage.set(keys.SignedAccount(), { signedIn: true, signedAccount });
 };
 
 const removeSignedAccount = () => {
-	storage.remove(keys.SignedAccount);
+	storage.remove(keys.SignedAccount());
 };
 
 const signIn = (signInDetails) => {
@@ -70,8 +70,8 @@ const logOut = () => {
 	};
 
 	return (dispatch) => {
-		// remove saved account info in storage
-		removeSignedAccount();
+		// remove all from our storage wrapper (local and session storage)
+		storage.clear();
 
 		// dispatch
 		dispatch(logoutSuccess());

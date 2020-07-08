@@ -78,9 +78,24 @@ namespace CourseCodesAPI.Controllers
 				.Include (p => p.TestCases).FirstOrDefaultAsync (p => p.Id == solutionToRun.ProblemId);
 			if (problem == null) return NotFound ();
 
+			// solution doesnt exist, create. else update source code
+			var solution = await _context.Solutions.FindAsync (solutionToRun.SolutionId);
+			if (solution == null)
+			{
+				solution = _mapper.Map<Solution> (solutionToRun);
+				_context.Solutions.Add (solution);
+			}
+			else
+			{
+				solution.SourceCode = solutionToRun.SourceCode;
+			}
+
+			await _context.SaveChangesAsync ();
+
 			var codeExecutionRequest = new CodeExecutionRequest ()
 			{
-				SourceCode = solutionToRun.SourceCode,
+				SolutionId = solution.Id,
+					SourceCode = solutionToRun.SourceCode,
 					TestCases = _mapper.Map<List<TestCaseRequest>> (problem.TestCases)
 			};
 

@@ -43,7 +43,7 @@ export const pageRoutes = {
 		{ path: '/courses/:courseId', component: ViewCourse, isLink: false, value: 'View Course' },
 		{ path: '/courses/:courseId/topics/create', component: CreateTopic, isLink: false, value: 'Create Topic' },
 		{ path: '/problems', component: Problems, isLink: true, value: 'Problemset' },
+		{ path: '/problems/create', component: CreateProblem, isLink: false, value: 'Create Problem' },
 		{ path: '/problems/:problemId', component: ViewProblem, isLink: false, value: 'Problem' },
-		{ path: '/problems/create', component: CreateProblem, isLink: false, value: 'Problem' },
 	],
 };

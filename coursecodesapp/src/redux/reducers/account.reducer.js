@@ -2,7 +2,7 @@ import { accountConstants } from '../constants';
 import { keys, storage } from '../../storage';
 
 // Get the authenticated account from storage if there is any
-const initialState = storage.get(keys.SignedAccount) || { signedIn: false, signedAccount: null };
+const initialState = storage.get(keys.SignedAccount()) || { signedIn: false, signedAccount: null };
 
 export const account = (state = initialState, action) => {
 	switch (action.type) {

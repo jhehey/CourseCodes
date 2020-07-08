@@ -3,11 +3,16 @@ import { alertActions } from './alert.actions';
 import { SolutionsApi } from '../../api';
 
 const runSolution = (solutionToRun) => {
+	const runSolutionRequest = () => {
+		return { type: solutionConstants.RUN_SOLUTION_REQUEST, isTesting: true };
+	};
 	const runSolutionSuccess = (runResult) => {
 		return { type: solutionConstants.RUN_SOLUTION_SUCCESS, runResult };
 	};
 
 	return async (dispatch) => {
+		dispatch(runSolutionRequest());
+
 		const { data: runResult, success } = await SolutionsApi.runSolution(solutionToRun);
 		if (success) {
 			dispatch(runSolutionSuccess(runResult));

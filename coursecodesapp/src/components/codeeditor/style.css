@@ -10,3 +10,7 @@
 .CodeMirror-linenumber {
 	font-size: 10px;
 }
+
+.CodeMirror-hint {
+	font-size: 14px;
+}

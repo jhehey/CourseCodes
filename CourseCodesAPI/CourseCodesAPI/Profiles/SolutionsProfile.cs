@@ -9,6 +9,8 @@ namespace CourseCodesAPI.Profiles
 		public SolutionsProfile ()
 		{
 			CreateMap<SolutionCreateRequest, Solution> ();
+			CreateMap<SolutionRunRequest, Solution> ()
+				.ForMember (dest => dest.Id, opt => opt.MapFrom (src => src.SolutionId));
 
 			CreateMap<Solution, SolutionResponse> ();
 		}

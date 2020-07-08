@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { ExcludedTriggerKeys } from './ExcludedTriggerKeys';
+import React from 'react';
 import { CppReservedWords } from './ReservedWords';
 import { IntelliSenseTriggerKeys } from './IntelliSenseTriggerKeys';
 
@@ -73,10 +72,10 @@ const hintFunction = (editor, options) => {
 	return { list: list, from: Pos(cur.line, start), to: Pos(cur.line, end) };
 };
 
-export const CodeEditor = ({ onChange, onMount }) => {
+export const CodeEditor = ({ onChange, initialValue = null }) => {
 	return (
 		<CodeMirror
-			value={defaultValue}
+			value={initialValue || defaultValue}
 			autoCursor={false}
 			options={{
 				mode: 'text/x-c++src',
@@ -103,7 +102,6 @@ export const CodeEditor = ({ onChange, onMount }) => {
 				}
 			}}
 			onChange={(editor, data, value) => onChange(value)}
-			editorDidMount={(editor, value) => onMount(value)}
 		/>
 	);
 };

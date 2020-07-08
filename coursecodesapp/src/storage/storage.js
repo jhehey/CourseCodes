@@ -1,4 +1,5 @@
 import { types } from './types';
+import { keys, sessionKeys, localKeys } from './keys';
 
 const set = ({ key, type }, obj) => {
 	const json = JSON.stringify(obj);
@@ -7,7 +8,7 @@ const set = ({ key, type }, obj) => {
 	} else if (type === types.Session) {
 		sessionStorage.setItem(key, json);
 	} else {
-		console.error('Unsupported storage type');
+		console.error('SET: Unsupported storage type');
 	}
 };
 
@@ -18,7 +19,7 @@ const get = ({ key, type }) => {
 	} else if (type === types.Session) {
 		json = sessionStorage.getItem(key);
 	} else {
-		console.error('Unsupported storage type');
+		console.error('GET: Unsupported storage type');
 	}
 	return JSON.parse(json);
 };
@@ -29,12 +30,18 @@ const remove = ({ key, type }) => {
 	} else if (type === types.Session) {
 		sessionStorage.removeItem(key);
 	} else {
-		console.error('Unsupported storage type');
+		console.error('REMOVE: Unsupported storage type');
 	}
+};
+
+const clear = () => {
+	localStorage.clear();
+	sessionStorage.clear();
 };
 
 export const storage = {
 	set,
 	get,
 	remove,
+	clear,
 };

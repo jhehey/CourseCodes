@@ -32,7 +32,7 @@ const Routes = {
 		return url;
 	},
 	JoinCodes: (courseId, params = { generate: false }) => {
-		const url = `${baseUrl}/courses/${courseId}/joincode`;
+		const url = `${baseUrl}/courses/${courseId}/joincodes`;
 
 		if (params.generate) {
 			return `${url}/generate`;
