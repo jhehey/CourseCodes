@@ -20,8 +20,10 @@ const BasePage = ({ routes }) => {
 
 	return (
 		<>
-			<Navbar routes={routes} signedIn={signedIn} />
-			<Box mt={12} mb={5} ml={2} mr={2}>
+			<Box>
+				<Navbar routes={routes} signedIn={signedIn} />
+			</Box>
+			<Box style={{ height: '100%' }}>
 				<Switch>
 					{getRouteComponents(routes)}
 					<Route path="*" component={NotFoundPage} />

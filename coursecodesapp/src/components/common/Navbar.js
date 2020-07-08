@@ -44,7 +44,7 @@ export const Navbar = ({ routes, signedIn }) => {
 			<CssBaseline />
 			<AppBar position="fixed" color="default" elevation={0} className={classes.appBar}>
 				<Toolbar className={classes.toolbar}>
-					<Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
+					<Typography variant="h5" color="inherit" className={classes.toolbarTitle}>
 						CourseCodes
 					</Typography>
 					<nav>

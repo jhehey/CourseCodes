@@ -18,6 +18,7 @@ import {
 	FormHelperText,
 } from '@material-ui/core';
 import { EmailTextField, RequiredTextField, CopyRight } from '../common';
+import { Parallax } from 'react-parallax';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useStyles } from './useStyles';
@@ -44,87 +45,96 @@ export const SignUp = () => {
 	return signedUp ? (
 		<Redirect to="/signin" />
 	) : (
-		<Container component="main" maxWidth="xs">
-			<CssBaseline />
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					Sign up
-				</Typography>
-				<form className={classes.signUpForm} noValidate onSubmit={handleSubmit(onSubmit)}>
-					<Grid container spacing={2}>
-						<Grid item xs={12} sm={6}>
-							<RequiredTextField name="firstName" register={register} error={errors.firstName} autoFocus={true} />
-						</Grid>
-						<Grid item xs={12} sm={6}>
-							<RequiredTextField name="lastName" register={register} error={errors.lastName} />
-						</Grid>
-						<Grid item xs={12}>
-							<EmailTextField name="email" register={register} error={errors.email} />
-						</Grid>
-						<Grid item xs={12}>
-							<RequiredTextField name="password" register={register} error={errors.password} type="password" />
-						</Grid>
-						<Grid item xs={12}>
-							<FormControl fullWidth>
-								<InputLabel
-									id="accountRoleLabel"
-									style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }}
-									error={!!errors.accountRole}
-								>
-									Type
-								</InputLabel>
-
-								<Controller
-									as={
-										<Select
-											error={!!errors.accountRole}
-											variant={errors.accountRole ? 'outlined' : 'standard'}
-											label="Type"
-											id="accountRole"
-										>
-											<MenuItem value={Role.Student}>Student</MenuItem>
-											<MenuItem value={Role.Instructor}>Instructor</MenuItem>
-										</Select>
-									}
-									name="accountRole"
-									rules={{ required: 'This field is required' }}
-									control={control}
-									defaultValue=""
-								/>
-
-								<FormHelperText
-									style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }}
-									error={!!errors.accountRole}
-								>
-									{errors.accountRole ? errors.accountRole.message : 'Select the type of account you want to create'}
-								</FormHelperText>
-							</FormControl>
-						</Grid>
-						<Grid item xs={12}>
-							<FormControlLabel
-								control={<Checkbox value="allowExtraEmails" color="primary" />}
-								label="I want to receive inspiration, marketing promotions and updates via email."
-							/>
-						</Grid>
-					</Grid>
-					<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+		<Parallax
+			filter
+			strength={500}
+			bgImage={
+				'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80'
+			}
+			className={classes.hero2}
+		>
+			<Container component="main" maxWidth="xs" className={classes.container}>
+				<CssBaseline />
+				<div className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<LockOutlinedIcon />
+					</Avatar>
+					<Typography component="h1" variant="h5">
 						Sign Up
-					</Button>
-					<Grid container justify="flex-end">
-						<Grid item>
-							<Link href="/signin" variant="body2">
-								Already have an account? Sign in
-							</Link>
+					</Typography>
+					<form className={classes.signUpForm} noValidate onSubmit={handleSubmit(onSubmit)}>
+						<Grid container spacing={2}>
+							<Grid item xs={12} sm={6}>
+								<RequiredTextField name="firstName" register={register} error={errors.firstName} autoFocus={true} />
+							</Grid>
+							<Grid item xs={12} sm={6}>
+								<RequiredTextField name="lastName" register={register} error={errors.lastName} />
+							</Grid>
+							<Grid item xs={12}>
+								<EmailTextField name="email" register={register} error={errors.email} />
+							</Grid>
+							<Grid item xs={12}>
+								<RequiredTextField name="password" register={register} error={errors.password} type="password" />
+							</Grid>
+							<Grid item xs={12}>
+								<FormControl fullWidth>
+									<InputLabel
+										id="accountRoleLabel"
+										style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }}
+										error={!!errors.accountRole}
+									>
+										Type
+									</InputLabel>
+
+									<Controller
+										as={
+											<Select
+												error={!!errors.accountRole}
+												variant={errors.accountRole ? 'outlined' : 'standard'}
+												label="Type"
+												id="accountRole"
+											>
+												<MenuItem value={Role.Student}>Student</MenuItem>
+												<MenuItem value={Role.Instructor}>Instructor</MenuItem>
+											</Select>
+										}
+										name="accountRole"
+										rules={{ required: 'This field is required' }}
+										control={control}
+										defaultValue=""
+									/>
+
+									<FormHelperText
+										style={{ marginLeft: errors.accountRole ? '1rem' : '0rem' }}
+										error={!!errors.accountRole}
+									>
+										{errors.accountRole ? errors.accountRole.message : 'Select the type of account you want to create'}
+									</FormHelperText>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12}>
+								<FormControlLabel
+									control={<Checkbox value="allowExtraEmails" color="primary" />}
+									label="I want to receive inspiration, marketing promotions and updates via email."
+								/>
+							</Grid>
 						</Grid>
-					</Grid>
-				</form>
-			</div>
-			<Box mt={5}>
-				<CopyRight />
-			</Box>
-		</Container>
+						<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+							Sign Up
+						</Button>
+						<Grid container justify="flex-end">
+							<Grid item>
+								<Link href="/signin" variant="body2">
+									Already have an account? Sign in
+								</Link>
+							</Grid>
+						</Grid>
+					</form>
+				</div>
+				<Box mt={5}>
+					<CopyRight />
+				</Box>
+			</Container>
+		</Parallax>
 	);
 };

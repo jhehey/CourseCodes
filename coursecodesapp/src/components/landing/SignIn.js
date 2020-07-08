@@ -13,6 +13,7 @@ import {
 	Container,
 } from '@material-ui/core';
 import { EmailTextField, RequiredTextField, CopyRight } from '../common';
+import { Parallax } from 'react-parallax';
 
 import { useForm } from 'react-hook-form';
 import { useStyles } from './useStyles';
@@ -32,53 +33,62 @@ export const SignIn = () => {
 	};
 
 	return (
-		<Container component="main" maxWidth="xs">
-			<CssBaseline />
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					Sign in
-				</Typography>
-				<form className={classes.signInForm} noValidate onSubmit={handleSubmit(onSubmit)}>
-					<Grid container spacing={2}>
-						<Grid item xs={12}>
-							<EmailTextField name="email" register={register} error={errors.email} autoFocus={true} />
-						</Grid>
-						<Grid item xs={12}>
-							<RequiredTextField name="password" register={register} error={errors.password} type="password" />
-						</Grid>
-						<Grid item xs={12}>
-							<FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-						</Grid>
+		<Parallax
+			filter
+			strength={500}
+			bgImage={
+				'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80'
+			}
+			className={classes.hero2}
+		>
+			<Container component="main" maxWidth="xs" minWidth="xs" className={classes.container}>
+				<CssBaseline />
+				<div className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<LockOutlinedIcon />
+					</Avatar>
+					<Typography component="h1" variant="h5">
+						Sign In
+					</Typography>
+					<form className={classes.signInForm} noValidate onSubmit={handleSubmit(onSubmit)}>
+						<Grid container spacing={2}>
+							<Grid item xs={12}>
+								<EmailTextField name="email" register={register} error={errors.email} autoFocus={true} />
+							</Grid>
+							<Grid item xs={12}>
+								<RequiredTextField name="password" register={register} error={errors.password} type="password" />
+							</Grid>
+							<Grid item xs={12}>
+								<FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+							</Grid>
 
-						<Grid item xs={12}>
-							<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-								Sign In
-							</Button>
-						</Grid>
+							<Grid item xs={12}>
+								<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+									Sign In
+								</Button>
+							</Grid>
 
-						<Grid item xs={12}>
-							<Grid container>
-								<Grid item xs>
-									<Link href="#" variant="body2">
-										Forgot password?
-									</Link>
-								</Grid>
-								<Grid item>
-									<Link href="/signup" variant="body2">
-										{"Don't have an account? Sign Up"}
-									</Link>
+							<Grid item xs={12}>
+								<Grid container>
+									<Grid item xs>
+										<Link href="#" variant="body2">
+											Forgot password?
+										</Link>
+									</Grid>
+									<Grid item>
+										<Link href="/signup" variant="body2">
+											{"Don't have an account? Sign Up"}
+										</Link>
+									</Grid>
 								</Grid>
 							</Grid>
 						</Grid>
-					</Grid>
-				</form>
-			</div>
-			<Box mt={8}>
-				<CopyRight />
-			</Box>
-		</Container>
+					</form>
+				</div>
+				<Box mt={8}>
+					<CopyRight />
+				</Box>
+			</Container>
+		</Parallax>
 	);
 };

@@ -24,7 +24,7 @@ const Students = () => {
 export const pageRoutes = {
 	landing: [
 		{ path: '/', component: LandingHome, isLink: true, value: 'Home' },
-		{ path: '/about', component: About, isLink: true, value: 'About' },
+		{ path: '/#about', component: About, isLink: true, value: 'About' },
 		{ path: '/signin', component: SignIn, isLink: false, value: 'Sign In' },
 		{ path: '/signup', component: SignUp, isLink: false, value: 'Sign Up' },
 	],
