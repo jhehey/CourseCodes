@@ -73,9 +73,11 @@ namespace CourseCodesAPI.Contexts
 
 			// Properties
 			builder.Entity<Course> ()
-				.Property (c => c.Title).IsRequired ().HasMaxLength (100);
+				.Property (c => c.CourseName).IsRequired ().HasMaxLength (100);
 			builder.Entity<Course> ()
-				.Property (c => c.Description).IsRequired ().HasMaxLength (500);
+				.Property (c => c.Term).IsRequired ().HasMaxLength (20);
+			builder.Entity<Course> ()
+				.Property (c => c.Section).IsRequired ().HasMaxLength (10);
 			builder.Entity<Course> ()
 				.Property (c => c.InstructorId).IsRequired ();
 

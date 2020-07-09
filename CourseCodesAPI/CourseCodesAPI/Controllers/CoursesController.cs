@@ -37,11 +37,11 @@ namespace CourseCodesAPI.Controllers
 			var instructor = await _context.Instructors.FindAsync (courseToCreate.InstructorId);
 			if (instructor == null) return NotFound ();
 
-			// instructor can't create course of the same title to their own courses. but 2 different instructors, can have same title
-			var duplicateTitle = await _context.Courses.AnyAsync (c => c.InstructorId == instructor.Id && c.Title == courseToCreate.Title);
-			if (duplicateTitle)
+			// instructor can't create course of the same course name to their own courses. but 2 different instructors, can have same course name
+			var duplicateName = await _context.Courses.AnyAsync (c => c.InstructorId == instructor.Id && c.CourseName == courseToCreate.CourseName);
+			if (duplicateName)
 			{
-				ModelState.AddModelError (nameof (courseToCreate.Title), $"You already have a course named {courseToCreate.Title}");
+				ModelState.AddModelError (nameof (courseToCreate.CourseName), $"You already have a course named {courseToCreate.CourseName}");
 				return apiBehaviorOptions.Value.InvalidModelStateResponseFactory (ControllerContext);
 			}
 
@@ -72,7 +72,7 @@ namespace CourseCodesAPI.Controllers
 			[FromQuery] Guid instructorId = default (Guid), [FromQuery] Guid studentId = default (Guid)
 		)
 		{
-			IEnumerable<Course> courses = new List<Course> ();
+			IEnumerable courses;
 			if (instructorId != default (Guid))
 			{
 				courses = await _context.Courses
@@ -84,7 +84,6 @@ namespace CourseCodesAPI.Controllers
 				courses = await _context.StudentCourses
 					.Include (sc => sc.Course)
 					.Where (sc => sc.StudentId == studentId)
-					.Select (sc => sc.Course)
 					.ToListAsync ();
 			}
 			else

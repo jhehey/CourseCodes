@@ -37,8 +37,10 @@ namespace CourseCodesAPI.Tests.Helpers
 			InstructorFaker.RuleFor (dto => dto.AccountRole, fake => Role.Instructor);
 
 			CourseFaker = new AutoFaker<CourseCreateRequest> ();
-			CourseFaker.RuleFor (dto => dto.Title, fake => fake.Lorem.Sentence ());
-			CourseFaker.RuleFor (dto => dto.Description, fake => fake.Lorem.Paragraph (1));
+			CourseFaker.RuleFor (dto => dto.CourseName, fake => fake.Lorem.Sentence ());
+			CourseFaker.RuleFor (dto => dto.Term, fake => "4");
+			CourseFaker.RuleFor (dto => dto.Section, fake => "B1");
+			CourseFaker.RuleFor (dto => dto.Capacity, fake => 69);
 
 			ProblemFaker = new AutoFaker<ProblemCreateRequest> ();
 			ProblemFaker.RuleFor (dto => dto.Title, fake => fake.Lorem.Sentence ());

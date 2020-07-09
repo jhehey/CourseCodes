@@ -25,7 +25,7 @@ namespace CourseCodesAPI.Entities
 
 		public Account ()
 		{
-			DateRegistered = DateTime.UtcNow;
+			DateRegistered = DateTime.Now;
 		}
 	}
 }

@@ -73,6 +73,7 @@ namespace CourseCodesAPI.Controllers
 			if (authorId != default (Guid))
 			{
 				problems = await _context.Problems
+					.Include (p => p.TestCases)
 					.Include (p => p.CourseProblems)
 					.ThenInclude (cp => cp.Course)
 					.Where (p => p.AuthorId == authorId)

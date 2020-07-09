@@ -1,9 +1,6 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { Box, Container, Grid, Card, Typography, CardContent, CardMedia, CardActionArea } from '@material-ui/core/';
-import { Navbar, SignIn, SignUp } from './';
+import { Container, Grid, Card, Typography, CardContent, CardMedia, CardActionArea } from '@material-ui/core/';
 import { Parallax } from 'react-parallax';
-import { NotFoundPage } from '../common/';
 import { useStyles } from './useStyles';
 
 export const LandingHome = () => {

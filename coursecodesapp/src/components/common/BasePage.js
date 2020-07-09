@@ -12,7 +12,7 @@ const getRouteComponents = (routes) => {
 };
 
 const BasePage = ({ routes }) => {
-	const { signedIn, signInRedirect } = useSelector((state) => state.account);
+	const { signInRedirect } = useSelector((state) => state.account);
 
 	if (signInRedirect) {
 		accountActions.signInFinish();
@@ -20,9 +20,6 @@ const BasePage = ({ routes }) => {
 
 	return (
 		<>
-			<Box>
-				<Navbar routes={routes} signedIn={signedIn} />
-			</Box>
 			<Box style={{ height: '100%' }}>
 				<Switch>
 					{getRouteComponents(routes)}
@@ -35,13 +32,14 @@ const BasePage = ({ routes }) => {
 };
 
 export const LandingPage = () => {
-	return <BasePage routes={pageRoutes.landing} />;
-};
+	const { signedIn } = useSelector((state) => state.account);
 
-export const StudentPage = () => {
-	return <BasePage routes={pageRoutes.student} />;
-};
-
-export const InstructorPage = () => {
-	return <BasePage routes={pageRoutes.instructor} />;
+	return (
+		<>
+			<Box>
+				<Navbar routes={pageRoutes.landing} signedIn={signedIn} />
+			</Box>
+			<BasePage routes={pageRoutes.landing} />;
+		</>
+	);
 };

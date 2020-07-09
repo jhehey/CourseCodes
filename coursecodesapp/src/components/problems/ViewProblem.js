@@ -14,10 +14,10 @@ export const ViewProblem = () => {
 	return (
 		<Grid container>
 			{isInstructor && (
-				<Grid item xs={3}>
+				<Grid item xs={2}>
 					<Grid item xs={12}>
 						<Button href="#" variant="contained" color="primary">
-							View Who answered this problem?
+							edit?
 						</Button>
 					</Grid>
 				</Grid>
@@ -31,7 +31,7 @@ export const ViewProblem = () => {
 					</Grid>
 				</Grid>
 			)}
-			<Grid container item xs={7} spacing={2} direction="column">
+			<Grid container item xs={8} spacing={2} direction="column">
 				<ProblemDisplay />
 			</Grid>
 		</Grid>

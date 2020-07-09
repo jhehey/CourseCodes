@@ -18,7 +18,7 @@ namespace CourseCodesAPI.Entities
 
 		public StudentCourse ()
 		{
-			DateJoined = DateTime.UtcNow;
+			DateJoined = DateTime.Now;
 		}
 	}
 }

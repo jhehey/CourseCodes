@@ -8,6 +8,7 @@ import { ChipSelect } from '../common';
 import { problemActions } from '../../redux/actions';
 import { useGetCourses } from '../../hooks';
 import { Redirect } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	main: {
@@ -64,10 +65,13 @@ export const CreateProblem = () => {
 	// to determine if successful creation and redirect
 	const problemCreated = useSelector((state) => state.problem?.problemCreated);
 
+	const courseToView = useSelector((state) => state.course?.courseToView);
+	const courseId = courseToView.id;
+
 	return (
 		<Container maxWidth="md" className={classes.main}>
 			<form noValidate onSubmit={handleSubmit(onSubmit)}>
-				<h1>Create Problem</h1>
+				<h1>Create Assignment</h1>
 				<h1>Title</h1>
 				<RequiredTextField name="title" register={register} error={errors.title} />
 				<h1>Statement</h1>
@@ -83,7 +87,7 @@ export const CreateProblem = () => {
 				<ChipSelect
 					selectedItems={assignedCourses}
 					handleItemSelected={handleAssignCourses}
-					valueName="title"
+					valueName="courseName"
 					items={courses}
 				/>
 
@@ -133,7 +137,7 @@ export const CreateProblem = () => {
 					Submit
 				</Button>
 			</form>
-			{problemCreated && <Redirect to="/problems" />}
+			{problemCreated && <Redirect to={`/courses/${courseId}/problems`} />}
 		</Container>
 	);
 };

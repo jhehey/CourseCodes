@@ -27,7 +27,7 @@ export const ProblemDisplay = () => {
 	});
 
 	return (
-		<Grid container spacing={2}>
+		<Grid container spacing={2} direction="column">
 			<Grid item>
 				<Typography variant="h4" style={{ fontWeight: 'bold' }}>
 					{problem?.title}

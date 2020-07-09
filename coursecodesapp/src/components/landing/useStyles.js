@@ -4,12 +4,13 @@ export const useStyles = makeStyles((theme) => ({
 	container: {
 		backgroundColor: 'white',
 		width: '100%',
-		opacity: 0.92,
+		opacity: 0.9,
 		borderRadius: '20px',
 		paddingBottom: theme.spacing(5),
 		paddingRight: theme.spacing(4),
 		paddingLeft: theme.spacing(4),
 		marginBottom: theme.spacing(10),
+		minHeight: theme.spacing(10),
 	},
 	paper: {
 		marginTop: theme.spacing(12),
@@ -48,12 +49,12 @@ export const useStyles = makeStyles((theme) => ({
 		},
 	},
 	hero2: {
-		height: '100%',
+		height: '100vh',
 		width: '100%',
 		backgroundPosition: 'center',
 		backgroundSize: 'cover',
-		position: 'relative',
-		display: 'block',
+		position: 'absolute',
+		display: 'inline-block',
 	},
 	header: {
 		marginLeft: '10vw',

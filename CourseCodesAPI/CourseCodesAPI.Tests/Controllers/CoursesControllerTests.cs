@@ -45,8 +45,7 @@ namespace CourseCodesAPI.Tests.Controllers
 			courseResponse.Should ().NotBeNull ();
 			courseResponse.Id.Should ().Be (courseId);
 
-			courseResponse.Title.Should ().NotBeNullOrEmpty ();
-			courseResponse.Description.Should ().NotBeNullOrEmpty ();
+			courseResponse.CourseName.Should ().NotBeNullOrEmpty ();
 			courseResponse.Instructor.Id.Should ().Be (instructor.Id);
 		}
 	}

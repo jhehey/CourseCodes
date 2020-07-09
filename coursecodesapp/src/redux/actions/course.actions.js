@@ -1,6 +1,7 @@
 import { courseConstants } from '../constants';
 import { alertActions } from './alert.actions';
-import { CoursesApi } from '../../api';
+import { CoursesApi, StudentsApi } from '../../api';
+import { keys, storage } from '../../storage';
 
 const createCourse = (courseToCreate) => {
 	const createCourseSuccess = (course) => {
@@ -28,8 +29,6 @@ const getCourse = (courseId) => {
 		const { data: course, success } = await CoursesApi.getCourse(courseId);
 		if (success) {
 			dispatch(getCourseSuccess(course));
-		} else {
-			console.error('There was an error getting the course');
 		}
 	};
 };
@@ -43,8 +42,6 @@ const getCourses = (query = {}) => {
 		const { data: courses, success } = await CoursesApi.getCourses(query);
 		if (success) {
 			dispatch(getCoursesSuccess(courses));
-		} else {
-			console.error('There was a problem getting the courses');
 		}
 	};
 };
@@ -67,9 +64,27 @@ const joinCourse = (joinCourseDetails) => {
 	};
 };
 
+const viewCourse = (courseToView) => {
+	return async (dispatch) => {
+		storage.set(keys.CourseToView(), courseToView);
+		dispatch({ type: courseConstants.VIEW_COURSE, courseToView });
+	};
+};
+
+const getStudentsByCourseId = (courseId) => {
+	return async (dispatch) => {
+		const { data: students, success } = await StudentsApi.getStudents({ courseId });
+		if (success) {
+			dispatch({ type: courseConstants.GET_STUDENTS_BYCOURSEID_SUCCESS, students });
+		}
+	};
+};
+
 export const courseActions = {
 	createCourse,
 	getCourse,
 	getCourses,
 	joinCourse,
+	viewCourse,
+	getStudentsByCourseId,
 };

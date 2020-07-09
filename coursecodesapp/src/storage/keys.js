@@ -13,4 +13,10 @@ export const keys = {
 			type: types.Local,
 		};
 	},
+	CourseToView: () => {
+		return {
+			key: 'COURSE_TO_VIEW',
+			type: types.Session,
+		};
+	},
 };

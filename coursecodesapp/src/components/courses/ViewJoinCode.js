@@ -48,7 +48,7 @@ export const ViewJoinCode = () => {
 
 	return (
 		<div>
-			<Button variant="contained" color="primary" onClick={handleClickOpen}>
+			<Button variant="contained" color="primary" style={{ backgroundColor: '#37474f' }} onClick={handleClickOpen}>
 				View Join Code
 			</Button>
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -57,14 +57,14 @@ export const ViewJoinCode = () => {
 					<DialogContent>
 						<DialogContentText>Give this code to your students to let them join the course</DialogContentText>
 						<Typography variant="h4" className={classes.code}>
-							{joinCode || 'GENERATE CODE'}
+							{joinCode || 'Generate Join Code'}
 						</Typography>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleClose} color="primary">
 							Close
 						</Button>
-						<Button color="primary" type="submit">
+						<Button color="primary" type="submit" variant="contained">
 							Generate New Code
 						</Button>
 					</DialogActions>

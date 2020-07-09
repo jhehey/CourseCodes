@@ -19,7 +19,7 @@ namespace CourseCodesAPI.Entities
 
 		public Solution ()
 		{
-			DateSubmitted = DateTime.UtcNow;
+			DateSubmitted = DateTime.Now;
 		}
 	}
 }

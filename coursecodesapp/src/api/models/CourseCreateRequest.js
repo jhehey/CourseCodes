@@ -1,7 +1,9 @@
 export class CourseCreateRequest {
-	constructor({ instructorId, title, description }) {
+	constructor({ instructorId, courseName, term, section, capacity }) {
 		this.instructorId = instructorId;
-		this.title = title;
-		this.description = description;
+		this.courseName = courseName;
+		this.term = term;
+		this.section = section.toUpperCase();
+		this.capacity = parseInt(capacity);
 	}
 }

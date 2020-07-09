@@ -17,14 +17,6 @@ import { Pos, showHint } from 'codemirror';
 
 import './style.css';
 
-const defaultValue = `\
-#include <iostream>
-
-int main() {
-	std::cout << "Hello World" << std::endl;
-}
-`;
-
 const hintFunction = (editor, options) => {
 	const keywords = CppReservedWords;
 	const WORD = /\b[^\d\W][\w]*(?=([^"]*"[^"]*")*[^"]*$)(?=([^']*'[^']*')*[^']*$)(?=([^`]*`[^`]*`)*[^`]*$)\b/;
@@ -75,7 +67,7 @@ const hintFunction = (editor, options) => {
 export const CodeEditor = ({ onChange, initialValue = null }) => {
 	return (
 		<CodeMirror
-			value={initialValue || defaultValue}
+			value={initialValue}
 			autoCursor={false}
 			options={{
 				mode: 'text/x-c++src',

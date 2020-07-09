@@ -3,7 +3,7 @@ import { Grid, Button, Link } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { useGetCourses } from '../../hooks';
 import { Role } from '../../helpers';
-import { JoinCourse } from '../common';
+import { JoinCourse, CourseList } from './';
 
 export const Courses = () => {
 	const { signedAccount } = useSelector((state) => state.account);
@@ -23,27 +23,29 @@ export const Courses = () => {
 		</React.Fragment>
 	));
 
-	return (
-		<Grid container>
-			<Grid item xs={3}>
-				<Grid item xs={12}>
-					{isInstructor && (
-						<Button href="/courses/create" variant="contained" color="primary">
-							Create Course
-						</Button>
-					)}
-					{isStudent && <JoinCourse />}
-				</Grid>
-				<Grid item xs={12}>
-					<h1>Course 2</h1>
-				</Grid>
-			</Grid>
-			<Grid item xs={9}>
-				<Grid item xs={12}>
-					<h1>Course List</h1>
-					{courseList}
-				</Grid>
-			</Grid>
-		</Grid>
-	);
+	return <CourseList />;
+
+	// return (
+	// 	<Grid container>
+	// 		<Grid item xs={3}>
+	// 			<Grid item xs={12}>
+	// 				{isInstructor && (
+	// 					<Button href="/courses/create" variant="contained" color="primary">
+	// 						Create Course
+	// 					</Button>
+	// 				)}
+	// 				{isStudent && <JoinCourse />}
+	// 			</Grid>
+	// 			<Grid item xs={12}>
+	// 				<h1>Course 2</h1>
+	// 			</Grid>
+	// 		</Grid>
+	// 		<Grid item xs={9}>
+	// 			<Grid item xs={12}>
+	// 				<h1>Course List</h1>
+	// 				{courseList}
+	// 			</Grid>
+	// 		</Grid>
+	// 	</Grid>
+	// );
 };

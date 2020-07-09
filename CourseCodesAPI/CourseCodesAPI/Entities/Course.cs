@@ -6,8 +6,10 @@ namespace CourseCodesAPI.Entities
 	public class Course
 	{
 		public Guid Id { get; set; }
-		public string Title { get; set; }
-		public string Description { get; set; }
+		public string CourseName { get; set; }
+		public string Term { get; set; }
+		public string Section { get; set; }
+		public int Capacity { get; set; }
 		public DateTime DateCreated { get; set; }
 
 		// A Course has a JoinCode
@@ -28,7 +30,7 @@ namespace CourseCodesAPI.Entities
 
 		public Course ()
 		{
-			DateCreated = DateTime.UtcNow;
+			DateCreated = DateTime.Now;
 		}
 	}
 }

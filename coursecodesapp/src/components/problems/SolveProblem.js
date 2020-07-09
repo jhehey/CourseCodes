@@ -5,24 +5,36 @@ import { Grid, IconButton, Paper, Tooltip } from '@material-ui/core';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrow';
 import CodeIcon from '@material-ui/icons/Code';
 import FormatListBulletedOutlinedIcon from '@material-ui/icons/FormatListBulletedOutlined';
-import { green } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 import { CodeEditor } from '../codeeditor';
 import { solutionActions } from '../../redux/actions';
 import { ProblemDisplay, ResultsDisplay } from './';
 import { keys, storage } from '../../storage';
 
+const defaultValue = `\
+#include <iostream>
+
+int main() {
+	std::cout << "Hello Worldss" << std::endl;
+}
+`;
+
 export const SolveProblem = () => {
 	const { problemId } = useParams();
 	const dispatch = useDispatch();
+	const isTesting = useSelector((state) => state.solution?.isTesting);
 
 	// run
-	const [sourceCode, setSourceCode] = useState('');
+	const [sourceCode, setSourceCode] = useState(defaultValue);
 	const signedAccount = useSelector((state) => state.account?.signedAccount);
 	const studentId = signedAccount?.id;
 	const solutionId = useSelector((state) => state.solution?.runResult?.solutionId);
 	const handleRun = () => {
 		// Go to results display
 		setDisplay('results');
+		if (isTesting) {
+			return;
+		}
 
 		console.log('RUN');
 		const solutionToRun = {
@@ -61,48 +73,42 @@ export const SolveProblem = () => {
 
 	return (
 		<Grid container spacing={1} style={{ height: '90vh' }}>
-			<Grid container item xs={6} spacing={0}>
-				<Grid container item xs={1} justify="center">
+			<Grid container item xs={6} spacing={0} direction="column">
+				<Grid container item direction="row">
 					<Paper variant="outlined" style={{ width: '100%' }}>
-						<Grid item>
-							<Tooltip title="Code" aria-label="code" placement="right">
-								<IconButton onClick={() => setDisplay('problem')}>
-									<CodeIcon />
-								</IconButton>
-							</Tooltip>
-						</Grid>
-						<Grid item>
-							<Tooltip title="Results" aria-label="results" placement="right">
-								<IconButton onClick={() => setDisplay('results')}>
-									<FormatListBulletedOutlinedIcon />
-								</IconButton>
-							</Tooltip>
-						</Grid>
+						<Tooltip title="Code" aria-label="code" placement="right">
+							<IconButton onClick={() => setDisplay('problem')}>
+								<CodeIcon />
+							</IconButton>
+						</Tooltip>
+						<Tooltip title="Results" aria-label="results" placement="right">
+							<IconButton onClick={() => setDisplay('results')}>
+								<FormatListBulletedOutlinedIcon />
+							</IconButton>
+						</Tooltip>
 					</Paper>
 				</Grid>
-				<Grid container item xs={10}>
+				<Grid container item>
 					<Paper variant="outlined" style={{ width: '100%', padding: '2em' }}>
 						{display === 'problem' && <ProblemDisplay />}
 						{display === 'results' && <ResultsDisplay />}
 					</Paper>
 				</Grid>
 			</Grid>
-			<Grid container item xs={6} spacing={1}>
-				<Grid container direction="column">
-					<Grid item>
-						<Paper variant="outlined">
-							<Tooltip title="Run" aria-label="run">
-								<IconButton onClick={handleRun}>
-									<PlayArrowRoundedIcon style={{ color: green['A700'] }} />
-								</IconButton>
-							</Tooltip>
-						</Paper>
-					</Grid>
-					<Grid item>
-						<Paper variant="outlined" style={{ height: '90vh' }}>
-							<CodeEditor onChange={handleCodeChanged} initialValue={sourceCode} />
-						</Paper>
-					</Grid>
+			<Grid container item xs={6} spacing={0} direction="column">
+				<Grid item>
+					<Paper variant="outlined">
+						<Tooltip title="Run" aria-label="run">
+							<IconButton onClick={handleRun}>
+								<PlayArrowRoundedIcon style={{ color: isTesting ? red['A700'] : green['A700'] }} />
+							</IconButton>
+						</Tooltip>
+					</Paper>
+				</Grid>
+				<Grid item>
+					<Paper variant="outlined" style={{ height: '90vh' }}>
+						<CodeEditor onChange={handleCodeChanged} initialValue={sourceCode} />
+					</Paper>
 				</Grid>
 			</Grid>
 		</Grid>

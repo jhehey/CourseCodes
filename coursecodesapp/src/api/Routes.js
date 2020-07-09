@@ -1,6 +1,7 @@
 const baseUrl = `${process.env.REACT_APP_API}`;
 
 // TODO: lagay ng routes lagyan ng query
+// TODO: helper function to create query string
 const Routes = {
 	Accounts: ({ accountId = null } = {}) => {
 		const url = `${baseUrl}/accounts`;
@@ -11,6 +12,18 @@ const Routes = {
 		return url;
 	},
 	Authenticate: (params = {}) => `${baseUrl}/accounts/authenticate`,
+	Students: ({ query = null } = {}) => {
+		const url = `${baseUrl}/students`;
+
+		if (query) {
+			const queryString = Object.keys(query)
+				.map((key) => `${key}=${query[key]}`)
+				.join('&');
+			return `${url}/?${queryString}`;
+		}
+
+		return url;
+	},
 	Courses: ({ courseId = null, query = null, join = false } = {}) => {
 		const url = `${baseUrl}/courses`;
 

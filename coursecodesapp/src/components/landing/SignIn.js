@@ -41,7 +41,7 @@ export const SignIn = () => {
 			}
 			className={classes.hero2}
 		>
-			<Container component="main" maxWidth="xs" minWidth="xs" className={classes.container}>
+			<Container component="main" maxWidth="xs" className={classes.container}>
 				<CssBaseline />
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>

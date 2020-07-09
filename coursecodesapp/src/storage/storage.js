@@ -1,5 +1,4 @@
 import { types } from './types';
-import { keys, sessionKeys, localKeys } from './keys';
 
 const set = ({ key, type }, obj) => {
 	const json = JSON.stringify(obj);

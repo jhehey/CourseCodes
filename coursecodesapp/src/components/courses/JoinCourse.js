@@ -1,9 +1,10 @@
 import React from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
-import { RequiredTextField } from './';
+import { RequiredTextField } from '../common';
 import { courseActions } from '../../redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 export const JoinCourse = () => {
 	const [open, setOpen] = React.useState(false);
@@ -32,12 +33,20 @@ export const JoinCourse = () => {
 
 	return (
 		<div>
-			<Button variant="contained" color="primary" onClick={handleClickOpen}>
+			<Button
+				variant="contained"
+				color="primary"
+				style={{ background: '#37474f' }}
+				startIcon={<AddCircleIcon />}
+				onClick={handleClickOpen}
+			>
 				Join Course
 			</Button>
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 				<form noValidate onSubmit={handleSubmit(onSubmit)}>
-					<DialogTitle id="form-dialog-title">Join a Course</DialogTitle>
+					<DialogTitle style={{ background: '#37474f', color: '#eceff1', padding: '10px' }} id="form-dialog-title">
+						Join a Course
+					</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
 							To join a course, please enter the join code provided by your instructor
@@ -48,7 +57,7 @@ export const JoinCourse = () => {
 						<Button onClick={handleClose} color="primary">
 							Cancel
 						</Button>
-						<Button color="primary" type="submit">
+						<Button color="primary" type="submit" style={{ background: '#37474f' }} variant="contained">
 							Join
 						</Button>
 					</DialogActions>
