@@ -153,9 +153,9 @@ namespace CourseCodesAPI.Contexts
 
 		private void BuildCourseProblem (ModelBuilder builder)
 		{
-			// Join Entity Composite Key
+			// Primary Key
 			builder.Entity<CourseProblem> ()
-				.HasKey (cp => new { cp.CourseId, cp.ProblemId });
+				.HasKey (cp => cp.Id);
 
 			// Course - CourseProblem (1 to many)
 			builder.Entity<CourseProblem> ()
@@ -205,11 +205,11 @@ namespace CourseCodesAPI.Contexts
 				.WithMany (s => s.Solutions)
 				.HasForeignKey (s => s.StudentId);
 
-			// Problem - Solution (1 to many)
+			// CourseProblem - Solution (1 to many)
 			builder.Entity<Solution> ()
-				.HasOne (s => s.Problem)
-				.WithMany (p => p.Solutions)
-				.HasForeignKey (s => s.ProblemId);
+				.HasOne (s => s.CourseProblem)
+				.WithMany (cp => cp.Solutions)
+				.HasForeignKey (s => s.CourseProblemId);
 		}
 
 		private void BuildTopic (ModelBuilder builder)

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, IconButton, Paper, Tooltip } from '@material-ui/core';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrow';
@@ -7,9 +7,10 @@ import CodeIcon from '@material-ui/icons/Code';
 import FormatListBulletedOutlinedIcon from '@material-ui/icons/FormatListBulletedOutlined';
 import { green, red } from '@material-ui/core/colors';
 import { CodeEditor } from '../codeeditor';
-import { solutionActions } from '../../redux/actions';
+import { solutionActions, alertActions } from '../../redux/actions';
 import { ProblemDisplay, ResultsDisplay } from './';
 import { keys, storage } from '../../storage';
+import PublishIcon from '@material-ui/icons/Publish';
 
 const defaultValue = `\
 #include <iostream>
@@ -20,6 +21,7 @@ int main() {
 `;
 
 export const SolveProblem = () => {
+	const history = useHistory();
 	const { problemId } = useParams();
 	const dispatch = useDispatch();
 	const isTesting = useSelector((state) => state.solution?.isTesting);
@@ -28,7 +30,10 @@ export const SolveProblem = () => {
 	const [sourceCode, setSourceCode] = useState(defaultValue);
 	const signedAccount = useSelector((state) => state.account?.signedAccount);
 	const studentId = signedAccount?.id;
-	const solutionId = useSelector((state) => state.solution?.runResult?.solutionId);
+	const runResult =
+		useSelector((state) => state.solution?.runResult) || storage.get(keys.SavedResults(studentId, problemId));
+	const solutionId = runResult?.solutionId;
+	const courseProblemId = useSelector((state) => state.problem?.problem?.courseProblemId);
 	const handleRun = () => {
 		// Go to results display
 		setDisplay('results');
@@ -40,22 +45,24 @@ export const SolveProblem = () => {
 		const solutionToRun = {
 			solutionId,
 			sourceCode,
-			problemId,
+			courseProblemId,
 			studentId,
 		};
 		console.log(solutionToRun);
+		dispatch(alertActions.info({ message: 'Testing your solution' }));
 		dispatch(solutionActions.runSolution(solutionToRun));
 	};
 
+	const solution = useSelector((state) => state.solution?.solution);
+	const submitted = solution?.status === 1;
+
+	const passed = runResult?.passed;
+	if (passed && !submitted) {
+		dispatch(alertActions.success({ message: 'Congratulations! You completed the problem. You may now submit it' }));
+	}
 	const handleCodeChanged = (value) => {
 		console.log('On change');
 		setSourceCode(value);
-
-		// TODO: Maybe set the id? para alam kung same nung problem na sinesave
-		// TODO: Ausin yung pag save ng source code
-		// Dapat kapag, nag refresh, close, re-open, logout, basta kapag nagbago na, dapat yun na yon, hindi mawala ung code.
-		// Kapag nag run, and submit. hindi rin dapat mawala
-		console.log(keys.SavedSolutions(problemId, studentId));
 		storage.set(keys.SavedSolutions(problemId, studentId), { sourceCode: value });
 	};
 
@@ -64,12 +71,26 @@ export const SolveProblem = () => {
 		if (problemId && studentId) {
 			const locallySavedSolution = storage.get(keys.SavedSolutions(problemId, studentId));
 			setSourceCode(locallySavedSolution?.sourceCode || sourceCode);
-			console.log('GET SOURCE CODE', problemId, studentId);
-			console.log(locallySavedSolution);
 		}
 	}, [problemId, studentId, sourceCode]);
 
 	const [display, setDisplay] = useState('problem');
+
+	const handleSubmit = () => {
+		if (!passed) {
+			dispatch(alertActions.error({ message: 'You must pass all test cases to submit your solution' }));
+		} else {
+			dispatch(alertActions.info({ message: 'Submitting your solution' }));
+			console.log('SUBMIT', solutionId);
+			// TODO: SEND REQUEST TO API, give solutionId, then update status to submitted
+			dispatch(solutionActions.submitSolution(solutionId));
+		}
+	};
+
+	const courseId = useSelector((state) => state.course?.courseToView?.id);
+	if (submitted) {
+		history.push(`/courses/${courseId}/problems`);
+	}
 
 	return (
 		<Grid container spacing={1} style={{ height: '90vh' }}>
@@ -101,6 +122,11 @@ export const SolveProblem = () => {
 						<Tooltip title="Run" aria-label="run">
 							<IconButton onClick={handleRun}>
 								<PlayArrowRoundedIcon style={{ color: isTesting ? red['A700'] : green['A700'] }} />
+							</IconButton>
+						</Tooltip>
+						<Tooltip title="Submit" aria-label="submit">
+							<IconButton onClick={handleSubmit}>
+								<PublishIcon style={{ color: !passed ? red['A700'] : green['A700'] }} />
 							</IconButton>
 						</Tooltip>
 					</Paper>

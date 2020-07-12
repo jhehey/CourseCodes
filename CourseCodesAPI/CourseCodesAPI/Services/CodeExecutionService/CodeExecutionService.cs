@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CourseCodesAPI.Services.CodeExecutionService.Factories;
 using CourseCodesAPI.Services.CodeExecutionService.Models;
@@ -139,10 +140,12 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			// TODO: Cleanup - just delete the whole solution directory recursively
 
 			// return code execution result
+			bool passed = testResults.All (t => t.Status == TestCaseStatus.Passed);
 			return new CodeExecutionResult ()
 			{
 				SolutionId = request.SolutionId,
-					TestCaseResults = testResults
+					TestCaseResults = testResults,
+					Passed = passed
 			};
 
 		}

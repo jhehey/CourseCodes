@@ -1,11 +1,11 @@
 import React from 'react';
 import { Grid, Typography, TextField } from '@material-ui/core';
-import { stringHelpers } from '../../helpers';
+import { toSentenceCase } from '../../helpers';
 
 export const TestCaseItem = ({ name = '', value = '', rows = 5 }) => (
 	<>
 		<Typography variant="overline" style={{ fontWeight: 'bold' }}>
-			{stringHelpers.toSentenceCase(name)}
+			{toSentenceCase(name)}
 		</Typography>
 		<TextField
 			name={name}

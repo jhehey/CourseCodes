@@ -3,11 +3,23 @@ import { useSelector } from 'react-redux';
 import { Grid, Typography } from '@material-ui/core';
 import { TestCaseContainer } from './TestCase';
 import { TestCaseStatus } from '../../helpers';
+import { keys, storage } from '../../storage';
+import { useParams } from 'react-router-dom';
 
 export const ResultsDisplay = () => {
-	const testCaseResults = useSelector((state) => state.solution?.runResult?.testCaseResults);
+	const { problemId } = useParams();
+	const signedAccount = useSelector((state) => state.account?.signedAccount);
+	const studentId = signedAccount?.id;
 	const isTesting = useSelector((state) => state.solution?.isTesting);
-	console.log(testCaseResults);
+
+	const runResult =
+		useSelector((state) => state.solution?.runResult) || storage.get(keys.SavedResults(studentId, problemId));
+	const testCaseResults = runResult?.testCaseResults;
+
+	if (runResult) {
+		storage.set(keys.SavedResults(studentId, problemId), runResult);
+	}
+	console.log(runResult);
 
 	const totalTests = testCaseResults?.length;
 	const testPassedCount = testCaseResults?.filter((testCase) => testCase.status === TestCaseStatus.Passed).length;
@@ -48,14 +60,14 @@ export const ResultsDisplay = () => {
 			</Grid>
 			<Grid container item>
 				<Typography>
-					Status: {testCaseResults && `Passed ${testPassedCount} out of ${totalTests} Test Cases`}
+					Status: {!isTesting && testCaseResults && `Passed ${testPassedCount} out of ${totalTests} Test Cases`}
 				</Typography>
 			</Grid>
 			<Grid container item>
 				<Typography>Test Cases</Typography>
 			</Grid>
 			<Grid container item spacing={2}>
-				{resultsComponent}
+				{!isTesting && resultsComponent}
 			</Grid>
 		</Grid>
 	);

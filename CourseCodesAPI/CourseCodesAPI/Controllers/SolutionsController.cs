@@ -32,38 +32,66 @@ namespace CourseCodesAPI.Controllers
 				throw new System.ArgumentNullException (nameof (codeExecutionService));
 		}
 
-		[HttpPost]
-		public async Task<ActionResult<SolutionResponse>> CreateSolution ([FromBody] SolutionCreateRequest solutionToCreate)
-		{
-			// verify student exists
-			var student = await _context.Students.Include (s => s.Account).FirstOrDefaultAsync (s => s.Id == solutionToCreate.StudentId);
-			if (student == null) return NotFound ();
+		// [HttpPost]
+		// public async Task<ActionResult<SolutionResponse>> CreateSolution ([FromBody] SolutionCreateRequest solutionToCreate)
+		// {
+		// 	// verify student exists
+		// 	var student = await _context.Students.Include (s => s.Account).FirstOrDefaultAsync (s => s.Id == solutionToCreate.StudentId);
+		// 	if (student == null) return NotFound ();
 
-			// verify problem exists
-			var problem = await _context.Problems.Include (p => p.TestCases).FirstOrDefaultAsync (p => p.Id == solutionToCreate.ProblemId);
-			if (problem == null) return NotFound ();
+		// 	// verify problem exists
+		// 	var problem = await _context.Problems.Include (p => p.TestCases).FirstOrDefaultAsync (p => p.Id == solutionToCreate.ProblemId);
+		// 	if (problem == null) return NotFound ();
 
-			// map request to entity
-			var solution = _mapper.Map<Solution> (solutionToCreate);
+		// 	// map request to entity
+		// 	var solution = _mapper.Map<Solution> (solutionToCreate);
 
-			// save solution
-			_context.Solutions.Add (solution);
-			await _context.SaveChangesAsync ();
+		// 	// save solution
+		// 	_context.Solutions.Add (solution);
+		// 	await _context.SaveChangesAsync ();
 
-			// map entity to response
-			var solutionResponse = _mapper.Map<SolutionResponse> (solution);
-			return CreatedAtAction ("GetSolution", new { solutionId = solutionResponse.Id }, solutionResponse);
-		}
+		// 	// map entity to response
+		// 	var solutionResponse = _mapper.Map<SolutionResponse> (solution);
+		// 	return CreatedAtAction ("GetSolution", new { solutionId = solutionResponse.Id }, solutionResponse);
+		// }
 
 		[HttpGet ("{solutionId:guid}")]
 		public async Task<ActionResult<SolutionResponse>> GetSolution ([FromRoute] Guid solutionId)
 		{
 			var solution = await _context.Solutions
 				.Include (s => s.Student).ThenInclude (s => s.Account)
-				.Include (s => s.Problem).ThenInclude (p => p.TestCases)
+				// .Include (s => s.Problem).ThenInclude (p => p.TestCases) TODO: CourseProblem
 				.FirstOrDefaultAsync (s => s.Id == solutionId);
 			if (solution == null) return NotFound ();
 			return Ok (_mapper.Map<SolutionResponse> (solution));
+		}
+
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<SolutionResponse>>> GetSolutions (
+			[FromQuery] Guid studentId = default (Guid), [FromQuery] Guid courseId = default (Guid)
+		)
+		{
+			IEnumerable<Solution> solutions;
+			if (studentId != default (Guid) && courseId != default (Guid))
+			{
+				solutions = await _context.Solutions
+					.Where (s => s.StudentId == studentId && s.CourseProblem.CourseId == courseId)
+					.Include (s => s.CourseProblem).ThenInclude (cp => cp.Problem)
+					.ToListAsync ();
+			}
+			else if (courseId != default (Guid) && studentId == default (Guid))
+			{
+				solutions = await _context.Solutions
+					.Where (s => s.CourseProblem.CourseId == courseId)
+					.Include (s => s.Student).ThenInclude (s => s.Account)
+					.Include (s => s.CourseProblem).ThenInclude (cp => cp.Problem)
+					.ToListAsync ();
+			}
+			else
+			{
+				solutions = await _context.Solutions.ToListAsync ();
+			}
+			return Ok (_mapper.Map<IEnumerable<SolutionResponse>> (solutions));
 		}
 
 		[HttpPost ("run")]
@@ -74,9 +102,11 @@ namespace CourseCodesAPI.Controllers
 			if (student == null) return NotFound ();
 
 			// check if problem exists
-			var problem = await _context.Problems
-				.Include (p => p.TestCases).FirstOrDefaultAsync (p => p.Id == solutionToRun.ProblemId);
-			if (problem == null) return NotFound ();
+			var courseProblem = await _context.CourseProblems
+				.Include (cp => cp.Problem)
+				.ThenInclude (p => p.TestCases)
+				.FirstOrDefaultAsync (p => p.Id == solutionToRun.CourseProblemId);
+			if (courseProblem == null) return NotFound ();
 
 			// solution doesnt exist, create. else update source code
 			var solution = await _context.Solutions.FindAsync (solutionToRun.SolutionId);
@@ -96,12 +126,24 @@ namespace CourseCodesAPI.Controllers
 			{
 				SolutionId = solution.Id,
 					SourceCode = solutionToRun.SourceCode,
-					TestCases = _mapper.Map<List<TestCaseRequest>> (problem.TestCases)
+					TestCases = _mapper.Map<List<TestCaseRequest>> (courseProblem.Problem.TestCases)
 			};
 
 			var results = await _codeExecutionService.ExecuteAsync (codeExecutionRequest);
 
 			return Ok (results);
+		}
+
+		[HttpPost]
+		public async Task<ActionResult> SubmitSolution ([FromBody] SolutionSubmitRequest solutionToSubmit)
+		{
+			var solution = await _context.Solutions.FindAsync (solutionToSubmit.SolutionId);
+			if (solution == null) return NotFound ();
+
+			solution.Status = 1; // submitted
+			await _context.SaveChangesAsync ();
+
+			return Ok (_mapper.Map<SolutionResponse> (solution));
 		}
 	}
 }

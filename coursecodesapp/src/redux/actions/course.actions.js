@@ -7,6 +7,9 @@ const createCourse = (courseToCreate) => {
 	const createCourseSuccess = (course) => {
 		return { type: courseConstants.CREATE_COURSE_SUCCESS, course };
 	};
+	const createCourseFailed = () => {
+		return { type: courseConstants.CREATE_COURSE_FAILED };
+	};
 
 	return async (dispatch) => {
 		const { data: course, success, error } = await CoursesApi.createCourse(courseToCreate);
@@ -14,8 +17,10 @@ const createCourse = (courseToCreate) => {
 			dispatch(createCourseSuccess(course));
 			dispatch(alertActions.success({ message: 'You have created a course' }));
 		} else {
-			const message = (error && error.Title && error.Title[0]) || 'There was an error in processing your request';
+			const message =
+				(error && error.CourseName && error.CourseName[0]) || 'There was an error in processing your request';
 			dispatch(alertActions.error({ message }));
+			dispatch(createCourseFailed());
 		}
 	};
 };
@@ -50,6 +55,9 @@ const joinCourse = (joinCourseDetails) => {
 	const joinCourseSuccess = (studentCourse) => {
 		return { type: courseConstants.JOIN_COURSE_SUCCESS, studentCourse };
 	};
+	const joinCourseFailed = (studentCourse) => {
+		return { type: courseConstants.JOIN_COURSE_FAILED };
+	};
 
 	return async (dispatch) => {
 		const { data: studentCourse, success, error } = await CoursesApi.joinCourse(joinCourseDetails);
@@ -60,6 +68,7 @@ const joinCourse = (joinCourseDetails) => {
 			const message =
 				(error?.message && error?.message[0]) || 'There was a problem in processing your request. Try again';
 			dispatch(alertActions.error({ message }));
+			dispatch(joinCourseFailed());
 		}
 	};
 };
@@ -80,6 +89,18 @@ const getStudentsByCourseId = (courseId) => {
 	};
 };
 
+const enableFormOpen = () => {
+	return async (dispatch) => {
+		return dispatch({ type: courseConstants.ENABLE_FORM_OPEN });
+	};
+};
+
+const enableJoin = () => {
+	return async (dispatch) => {
+		return dispatch({ type: courseConstants.ENABLE_JOIN });
+	};
+};
+
 export const courseActions = {
 	createCourse,
 	getCourse,
@@ -87,4 +108,6 @@ export const courseActions = {
 	joinCourse,
 	viewCourse,
 	getStudentsByCourseId,
+	enableFormOpen,
+	enableJoin,
 };

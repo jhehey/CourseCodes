@@ -54,32 +54,49 @@ namespace CourseCodesAPI.Controllers
 		}
 
 		[HttpGet ("{problemId:guid}")]
-		public async Task<ActionResult<ProblemResponse>> GetProblem ([FromRoute] Guid problemId)
+		public async Task<ActionResult<ProblemResponse>> GetProblem (
+			[FromRoute] Guid problemId, [FromQuery] Guid courseId = default (Guid)
+		)
 		{
-			var problem = await _context.Problems
-				.Include (p => p.Author)
-				.Include (p => p.TestCases)
-				.FirstOrDefaultAsync (p => p.Id == problemId);
-			if (problem == null) return NotFound ();
-			return Ok (_mapper.Map<ProblemResponse> (problem));
+			if (courseId != default (Guid))
+			{
+				var courseProblem = await _context.CourseProblems
+					.Include (cp => cp.Problem)
+					.ThenInclude (p => p.Author)
+					.Include (cp => cp.Problem)
+					.ThenInclude (p => p.TestCases)
+					.FirstOrDefaultAsync (cp => cp.ProblemId == problemId && cp.CourseId == courseId);
+				return Ok (_mapper.Map<ProblemResponse> (courseProblem));
+			}
+			else
+			{
+				var problem = await _context.Problems
+					.Include (p => p.Author)
+					.Include (p => p.TestCases)
+					.FirstOrDefaultAsync (p => p.Id == problemId);
+				if (problem == null) return NotFound ();
+				return Ok (_mapper.Map<ProblemResponse> (problem));
+			}
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<ProblemResponse>>> GetProblems (
+		public async Task<IActionResult> GetProblems (
 			[FromQuery] Guid authorId = default (Guid), [FromQuery] Guid courseId = default (Guid)
 		)
 		{
 			IEnumerable<Problem> problems = new List<Problem> ();
-			if (authorId != default (Guid))
-			{
-				problems = await _context.Problems
-					.Include (p => p.TestCases)
-					.Include (p => p.CourseProblems)
-					.ThenInclude (cp => cp.Course)
-					.Where (p => p.AuthorId == authorId)
-					.ToListAsync ();
-			}
-			else if (courseId != default (Guid))
+			// TODO: Problems created by authorId for specific courseId
+			// if (authorId != default (Guid))
+			// {
+			// 	problems = await _context.Problems
+			// 		.Include (p => p.TestCases)
+			// 		.Include (p => p.CourseProblems)
+			// 		.ThenInclude (cp => cp.Course)
+			// 		.Where (p => p.AuthorId == authorId)
+			// 		.ToListAsync ();
+			// }
+			// else
+			if (courseId != default (Guid))
 			{
 				problems = await _context.CourseProblems
 					.Include (cp => cp.Problem.TestCases)
@@ -93,5 +110,45 @@ namespace CourseCodesAPI.Controllers
 			}
 			return Ok (_mapper.Map<IEnumerable<ProblemResponse>> (problems));
 		}
+
+		[HttpPost ("submitCount")]
+		public async Task<IActionResult> GetProblemSubmitCounts ([FromBody] ProblemSubmitCountRequest request)
+		{
+			var courseExists = await _context.Courses.AnyAsync (c => c.Id == request.CourseId);
+			if (!courseExists) return NotFound ();
+
+			int studentCount = await _context.StudentCourses
+				.Where (sc => sc.CourseId == request.CourseId)
+				.CountAsync ();
+
+			var response = await _context.CourseProblems
+				.Where (cp => cp.CourseId == request.CourseId && request.ProblemIds.Contains (cp.ProblemId))
+				.Select (cp => new
+				{
+					ProblemId = cp.ProblemId,
+						SubmitCount = _context.Solutions
+						.Where (s => s.CourseProblem.ProblemId == cp.ProblemId)
+						.Select (s => s.Status)
+						.Where (status => status == 1)
+						.Count (),
+						StudentCount = studentCount
+				}).ToListAsync ();
+
+			// var response = await _context.Solutions
+			// 	.Include (s => s.CourseProblem)
+			// 	.Where (s => s.CourseProblem.CourseId == request.CourseId)
+			// 	.Select (s => new { ProblemId = s.CourseProblem.ProblemId, Submitted = s.Status })
+			// 	.ToListAsync ();
+			// .ToLookup (s => s.CourseProblem.ProblemId, s => s.Status)
+			// .Select (l => new ProblemSubmitCountResponse ()
+			// {
+			// 	ProblemId = l.Key,
+			// 		SubmitCount = l.FirstOrDefault (),
+			// 		StudentCount = studentCount
+			// });
+
+			return Ok (response);
+		}
+
 	}
 }

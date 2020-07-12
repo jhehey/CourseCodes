@@ -12,7 +12,9 @@ namespace CourseCodesAPI.Profiles
 			CreateMap<SolutionRunRequest, Solution> ()
 				.ForMember (dest => dest.Id, opt => opt.MapFrom (src => src.SolutionId));
 
-			CreateMap<Solution, SolutionResponse> ();
+			CreateMap<Solution, SolutionResponse> ()
+				.ForPath (dest => dest.Problem, opt => opt.MapFrom (src => src.CourseProblem.Problem))
+				.ForPath (dest => dest.Course, opt => opt.MapFrom (src => src.CourseProblem.Course));
 		}
 
 	}

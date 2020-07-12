@@ -9,7 +9,7 @@ namespace CourseCodesAPI.Validators
 		{
 			RuleFor (x => x.SourceCode).NotEmpty ();
 			RuleFor (x => x.StudentId).NotEmpty ();
-			RuleFor (x => x.ProblemId).NotEmpty ();
+			RuleFor (x => x.CourseProblemId).NotEmpty ();
 		}
 	}
 }

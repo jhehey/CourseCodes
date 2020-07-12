@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { courseActions } from '../../redux/actions';
 import { Role } from '../../helpers';
 import { useGetCourses } from '../../hooks';
+import { toDateString } from '../../helpers';
 
 export const CoursesTable = () => {
 	const location = useLocation();
@@ -17,22 +18,18 @@ export const CoursesTable = () => {
 	const isInstructor = signedAccount.accountRole === Role.Instructor;
 	const query = isInstructor ? { instructorId: signedAccount.id } : isStudent ? { studentId: signedAccount.id } : null;
 	const courses = useGetCourses(query);
-	console.log('COURSES TABLE');
-	console.log(courses);
 
 	React.useEffect(() => {
-		const data = courses?.map((course) => {
-			return {
-				...course,
-				dateCreated: new Date(course.dateCreated).toDateString('').slice(4),
-				dateJoined: isStudent ? new Date(course.dateJoined).toDateString('').slice(4) : course.dateJoined,
-			};
+		const data = courses?.map((course) => ({
+			...course,
+			dateCreated: toDateString(course.dateCreated),
+			dateJoined: isStudent ? toDateString(course.dateJoined) : course.dateJoined,
+			instructorName: isStudent && course.instructor.fullName,
+		}));
+
+		setTableState((prevState) => {
+			return { ...prevState, data };
 		});
-		if (courses) {
-			setTableState((prevState) => {
-				return { ...prevState, data };
-			});
-		}
 	}, [courses, isStudent]);
 
 	const instructorColumns = [
@@ -46,6 +43,7 @@ export const CoursesTable = () => {
 		{ title: 'Course Name', field: 'courseName' },
 		{ title: 'Term', field: 'term' },
 		{ title: 'Section', field: 'section' },
+		{ title: 'Instructor', field: 'instructorName' },
 		{ title: 'Date Joined', field: 'dateJoined' },
 	];
 

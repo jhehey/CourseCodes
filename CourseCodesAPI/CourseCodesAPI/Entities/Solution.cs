@@ -13,9 +13,9 @@ namespace CourseCodesAPI.Entities
 		public Guid StudentId { get; set; }
 		public Student Student { get; set; }
 
-		// A Solution has a Problem
-		public Guid ProblemId { get; set; }
-		public Problem Problem { get; set; }
+		// A Solution has a CourseProblem
+		public Guid CourseProblemId { get; set; }
+		public CourseProblem CourseProblem { get; set; }
 
 		public Solution ()
 		{

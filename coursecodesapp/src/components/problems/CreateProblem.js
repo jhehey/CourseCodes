@@ -8,7 +8,6 @@ import { ChipSelect } from '../common';
 import { problemActions } from '../../redux/actions';
 import { useGetCourses } from '../../hooks';
 import { Redirect } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	main: {

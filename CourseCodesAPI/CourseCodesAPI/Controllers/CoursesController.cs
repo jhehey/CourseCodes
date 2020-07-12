@@ -38,10 +38,15 @@ namespace CourseCodesAPI.Controllers
 			if (instructor == null) return NotFound ();
 
 			// instructor can't create course of the same course name to their own courses. but 2 different instructors, can have same course name
-			var duplicateName = await _context.Courses.AnyAsync (c => c.InstructorId == instructor.Id && c.CourseName == courseToCreate.CourseName);
-			if (duplicateName)
+			var duplicateCourse = await _context.Courses.AnyAsync (c =>
+				c.InstructorId == instructor.Id &&
+				c.CourseName.ToUpper () == courseToCreate.CourseName.ToUpper () &&
+				c.Term.ToUpper () == courseToCreate.Term.ToUpper () &&
+				c.Section.ToUpper () == courseToCreate.Section.ToUpper ()
+			);
+			if (duplicateCourse)
 			{
-				ModelState.AddModelError (nameof (courseToCreate.CourseName), $"You already have a course named {courseToCreate.CourseName}");
+				ModelState.AddModelError (nameof (courseToCreate.CourseName), $"Error! Duplicate Course Exists...");
 				return apiBehaviorOptions.Value.InvalidModelStateResponseFactory (ControllerContext);
 			}
 
@@ -82,7 +87,7 @@ namespace CourseCodesAPI.Controllers
 			else if (studentId != default (Guid))
 			{
 				courses = await _context.StudentCourses
-					.Include (sc => sc.Course)
+					.Include (sc => sc.Course).ThenInclude (c => c.Instructor).ThenInclude (i => i.Account)
 					.Where (sc => sc.StudentId == studentId)
 					.ToListAsync ();
 			}

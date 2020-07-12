@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
-import { stringHelpers } from '../../helpers';
+import { toSentenceCase } from '../../helpers';
 
 export const RequiredTextField = ({
 	name,
@@ -19,7 +19,7 @@ export const RequiredTextField = ({
 			inputRef={register({ required: 'This field is required' })}
 			error={!!error}
 			helperText={error ? error.message : ''}
-			label={label || stringHelpers.toSentenceCase(name)}
+			label={label || toSentenceCase(name)}
 			autoComplete="off"
 			variant="outlined"
 			fullWidth

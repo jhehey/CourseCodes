@@ -16,6 +16,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { useStyles } from './useStyles';
+import { useSelector } from 'react-redux';
 
 export const AppBarDrawer = ({ itemsList = [] }) => {
 	const classes = useStyles();
@@ -27,6 +28,8 @@ export const AppBarDrawer = ({ itemsList = [] }) => {
 	const handleDrawerClose = () => {
 		setOpen(false);
 	};
+
+	const courseToView = useSelector((state) => state.course?.courseToView);
 
 	return (
 		<>
@@ -42,7 +45,7 @@ export const AppBarDrawer = ({ itemsList = [] }) => {
 						<MenuIcon />
 					</IconButton>
 					<Typography component="h1" variant="h6" noWrap className={classes.title}>
-						Dashboard
+						Dashboard{courseToView && ` - ${courseToView.courseName}`}
 					</Typography>
 				</Toolbar>
 			</AppBar>

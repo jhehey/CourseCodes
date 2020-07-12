@@ -1,5 +1,10 @@
 const baseUrl = `${process.env.REACT_APP_API}`;
 
+const toQueryString = (query) =>
+	Object.keys(query)
+		.map((key) => `${key}=${query[key]}`)
+		.join('&');
+
 // TODO: lagay ng routes lagyan ng query
 // TODO: helper function to create query string
 const Routes = {
@@ -16,10 +21,7 @@ const Routes = {
 		const url = `${baseUrl}/students`;
 
 		if (query) {
-			const queryString = Object.keys(query)
-				.map((key) => `${key}=${query[key]}`)
-				.join('&');
-			return `${url}/?${queryString}`;
+			return `${url}/?${toQueryString(query)}`;
 		}
 
 		return url;
@@ -36,10 +38,7 @@ const Routes = {
 		}
 
 		if (query) {
-			const queryString = Object.keys(query)
-				.map((key) => `${key}=${query[key]}`)
-				.join('&');
-			return `${url}/?${queryString}`;
+			return `${url}/?${toQueryString(query)}`;
 		}
 
 		return url;
@@ -53,23 +52,28 @@ const Routes = {
 
 		return url;
 	},
-	Problems: ({ problemId = null, query = null } = {}) => {
+	Problems: ({ problemId = null, query = null, params = null } = {}) => {
 		const url = `${baseUrl}/problems`;
+
+		if (problemId && query) {
+			return `${url}/${problemId}/?${toQueryString(query)}`;
+		}
 
 		if (problemId) {
 			return `${url}/${problemId}`;
 		}
 
 		if (query) {
-			const queryString = Object.keys(query)
-				.map((key) => `${key}=${query[key]}`)
-				.join('&');
-			return `${url}/?${queryString}`;
+			return `${url}/?${toQueryString(query)}`;
+		}
+
+		if (params) {
+			return `${url}/${params}`;
 		}
 
 		return url;
 	},
-	Solutions: ({ solutionId = null, run = false } = {}) => {
+	Solutions: ({ solutionId = null, run = false, query = null } = {}) => {
 		const url = `${baseUrl}/solutions`;
 
 		if (run) {
@@ -79,6 +83,11 @@ const Routes = {
 		if (solutionId) {
 			return `${url}/${solutionId}`;
 		}
+
+		if (query) {
+			return `${url}/?${toQueryString(query)}`;
+		}
+
 		return url;
 	},
 	Topics: (courseId, { topicId = null } = {}) => {

@@ -64,12 +64,13 @@ const hintFunction = (editor, options) => {
 	return { list: list, from: Pos(cur.line, start), to: Pos(cur.line, end) };
 };
 
-export const CodeEditor = ({ onChange, initialValue = null }) => {
+export const CodeEditor = ({ onChange = null, initialValue = null, readOnly = false }) => {
 	return (
 		<CodeMirror
 			value={initialValue}
 			autoCursor={false}
 			options={{
+				readOnly,
 				mode: 'text/x-c++src',
 				theme: 'dracula',
 				tabSize: '2',
@@ -93,7 +94,7 @@ export const CodeEditor = ({ onChange, initialValue = null }) => {
 					showHint(editor);
 				}
 			}}
-			onChange={(editor, data, value) => onChange(value)}
+			onChange={(editor, data, value) => onChange && onChange(value)}
 		/>
 	);
 };

@@ -6,6 +6,6 @@ namespace CourseCodesAPI.Models
 	{
 		public string SourceCode { get; set; }
 		public Guid StudentId { get; set; }
-		public Guid ProblemId { get; set; }
+		public Guid CourseProblemId { get; set; }
 	}
 }

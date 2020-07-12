@@ -19,9 +19,6 @@ namespace CourseCodesAPI.Entities
 		// A Problem has a Collection of TestCases (Problem has many TestCases)
 		public ICollection<TestCase> TestCases { get; set; } = new List<TestCase> ();
 
-		// A Problem has a Collection of Solutions (Problem has many Solutions)
-		public ICollection<Solution> Solutions { get; set; } = new List<Solution> ();
-
 		// A Problem has a Collection of TopicProblems (Problem has many TopicProblems)
 		public ICollection<TopicProblem> TopicProblems { get; set; } = new List<TopicProblem> ();
 	}

@@ -19,4 +19,16 @@ export const keys = {
 			type: types.Session,
 		};
 	},
+	SavedResults: (studentId, problemId) => {
+		return {
+			key: `SAVED_RESULTS-${studentId}-${problemId}`,
+			type: types.Local,
+		};
+	},
+	AssignmentSolutions: () => {
+		return {
+			key: 'ASSIGNMENT_SOLUTIONS',
+			type: types.Session,
+		};
+	},
 };

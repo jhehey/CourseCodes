@@ -11,6 +11,12 @@ export const course = (state = initialState, action) => {
 			return {
 				...state,
 				courseCreated: action.course,
+				closeForm: true,
+			};
+		case courseConstants.CREATE_COURSE_FAILED:
+			return {
+				...state,
+				closeForm: false,
 			};
 		case courseConstants.GET_COURSES_SUCCESS:
 			return {
@@ -24,7 +30,14 @@ export const course = (state = initialState, action) => {
 			};
 		case courseConstants.JOIN_COURSE_SUCCESS:
 			return {
+				...state,
 				studentCourse: action.studentCourse,
+				joinedCourse: true,
+			};
+		case courseConstants.JOIN_COURSE_FAILED:
+			return {
+				...state,
+				joinedCourse: false,
 			};
 		case courseConstants.VIEW_COURSE:
 			return {
@@ -35,6 +48,16 @@ export const course = (state = initialState, action) => {
 			return {
 				...state,
 				students: action.students,
+			};
+		case courseConstants.ENABLE_FORM_OPEN:
+			return {
+				...state,
+				closeForm: false,
+			};
+		case courseConstants.ENABLE_JOIN:
+			return {
+				...state,
+				joinedCourse: false,
 			};
 		default:
 			return state;

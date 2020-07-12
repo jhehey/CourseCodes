@@ -1,6 +1,6 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { AppBar, Toolbar, Typography, Divider, IconButton, Container } from '@material-ui/core/';
+import { AppBar, Toolbar, Typography, IconButton, Container } from '@material-ui/core/';
 import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import HomeIcon from '@material-ui/icons/Home';
 import { CoursesTable } from './CoursesTable';
@@ -12,8 +12,6 @@ import { JoinCourse } from './';
 import { useStyles } from './useStyles';
 
 export const CourseList = () => {
-	// TODO: if student, join course form
-	// TODO: if instructor create course form
 	const { signedAccount } = useSelector((state) => state.account);
 	const isStudent = signedAccount.accountRole === Role.Student;
 	const isInstructor = signedAccount.accountRole === Role.Instructor;

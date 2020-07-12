@@ -3,15 +3,17 @@ using System;
 using CourseCodesAPI.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CourseCodesAPI.Migrations
 {
     [DbContext(typeof(CourseCodesContext))]
-    partial class CourseCodesContextModelSnapshot : ModelSnapshot
+    [Migration("20200711003653_SolutionToCourseProblemMigration")]
+    partial class SolutionToCourseProblemMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

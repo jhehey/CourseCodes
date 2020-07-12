@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core/';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core/';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { RequiredTextField } from '../common';
 import { useForm } from 'react-hook-form';
@@ -31,9 +31,10 @@ export default function CreateCourseForm() {
 		dispatch(courseActions.createCourse(courseToCreate));
 	};
 
-	const courseCreated = useSelector((state) => state.course?.courseCreated);
-	if (courseCreated && open) {
+	const closeForm = useSelector((state) => state.course?.closeForm);
+	if (closeForm && open) {
 		handleClose();
+		dispatch(courseActions.enableFormOpen());
 	}
 
 	return (

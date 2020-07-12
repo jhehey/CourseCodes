@@ -10,5 +10,6 @@ namespace CourseCodesAPI.Models
 		public DateTime DateSubmitted { get; set; }
 		public StudentResponse Student { get; set; }
 		public ProblemResponse Problem { get; set; }
+		public CourseResponse Course { get; set; }
 	}
 }

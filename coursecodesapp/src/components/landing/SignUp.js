@@ -4,8 +4,6 @@ import {
 	Avatar,
 	Button,
 	CssBaseline,
-	FormControlLabel,
-	Checkbox,
 	Link,
 	Grid,
 	Box,

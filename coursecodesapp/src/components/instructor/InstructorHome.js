@@ -5,7 +5,7 @@ import { pageRoutes } from '../../helpers';
 import { RouteComponents } from '../common';
 import { AppBarDrawer } from '../navigation';
 import { useStyles } from './useStyles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -38,7 +38,7 @@ export const InstructorHome = () => {
 		{ text: 'Home', icon: <HomeIcon />, href: `/courses/${courseId}` },
 		{ text: 'Students', icon: <GroupIcon />, href: `/courses/${courseId}/students` },
 		{ text: 'Assignments', icon: <AssignmentIcon />, href: `/courses/${courseId}/problems` },
-		{ text: 'Solution', icon: <PlaylistAddCheckIcon /> },
+		{ text: 'Solution', icon: <PlaylistAddCheckIcon />, href: `/courses/${courseId}/solutions` },
 	];
 
 	const location = useLocation();

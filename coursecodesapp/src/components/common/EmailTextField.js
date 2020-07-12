@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
-import { stringHelpers } from '../../helpers';
+import { toSentenceCase } from '../../helpers';
 
 export const EmailTextField = ({ name, register, error, id = '', autoFocus = false }) => {
 	return (
@@ -16,7 +16,7 @@ export const EmailTextField = ({ name, register, error, id = '', autoFocus = fal
 			})}
 			error={!!error}
 			helperText={error ? error.message : ''}
-			label={stringHelpers.toSentenceCase(name)}
+			label={toSentenceCase(name)}
 			autoComplete="off"
 			variant="outlined"
 			fullWidth

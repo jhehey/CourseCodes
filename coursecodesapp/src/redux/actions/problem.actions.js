@@ -18,13 +18,13 @@ const createProblem = (problemToCreate) => {
 	};
 };
 
-const getProblem = (problemId) => {
+const getProblem = (problemId, query) => {
 	const getProblemSuccess = (problem) => {
 		return { type: problemConstants.GET_PROBLEMSBYID_SUCCESS, problem };
 	};
 
 	return async (dispatch) => {
-		const { data: problem, success } = await ProblemsApi.getProblem(problemId);
+		const { data: problem, success } = await ProblemsApi.getProblem(problemId, query);
 		if (success) {
 			dispatch(getProblemSuccess(problem));
 		} else {
@@ -48,8 +48,31 @@ const getProblems = (query = {}) => {
 	};
 };
 
+const getProblemSubmitCounts = (problemSubmitRequest) => {
+	const getProblemSubmitCountsSuccess = (problemSubmitCounts) => {
+		return { type: problemConstants.GET_PROBLEMSUBMITCOUNTS_SUCCESS, problemSubmitCounts };
+	};
+
+	return async (dispatch) => {
+		const { data: problemSubmitCounts, success } = await ProblemsApi.getProblemSubmitCounts(problemSubmitRequest);
+		if (success) {
+			dispatch(getProblemSubmitCountsSuccess(problemSubmitCounts));
+		} else {
+			console.error('There was a problem getting the problems');
+		}
+	};
+};
+
+const setProblemToView = (problem) => {
+	return async (dispatch) => {
+		dispatch({ type: problemConstants.SET_PROBLEM_TOVIEW, problem });
+	};
+};
+
 export const problemActions = {
 	createProblem,
 	getProblem,
 	getProblems,
+	getProblemSubmitCounts,
+	setProblemToView,
 };

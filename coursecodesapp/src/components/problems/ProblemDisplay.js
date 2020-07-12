@@ -10,12 +10,11 @@ export const ProblemDisplay = () => {
 	const { problemId } = useParams();
 	const dispatch = useDispatch();
 	const problem = useSelector((state) => state.problem?.problem);
+	const courseToView = useSelector((state) => state.course?.courseToView);
 
 	useEffect(() => {
-		if (!problem) {
-			dispatch(problemActions.getProblem(problemId));
-		}
-	}, [dispatch, problemId, problem]);
+		dispatch(problemActions.getProblem(problemId, { courseId: courseToView.id }));
+	}, [dispatch, problemId, courseToView]);
 
 	const testCases = problem?.testCases.map((testCase) => {
 		const testCaseModel = {
