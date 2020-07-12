@@ -7,8 +7,9 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Commands
 	{
 		public static string Compile (SolutionInfo solutionInfo)
 		{
-			return $"cd {solutionInfo.SolutionName} && " +
-				$"g++ --static {solutionInfo.ProgramFilename} -o {solutionInfo.ProgramName}";
+			return $"cd {solutionInfo.SolutionName}"; // && " +
+			// $"echo tite";
+			// $"g++ --static {solutionInfo.ProgramFilename} -o {solutionInfo.ProgramName}";
 		}
 
 		public static string Run (SolutionInfo solutionInfo, int selectedInput)

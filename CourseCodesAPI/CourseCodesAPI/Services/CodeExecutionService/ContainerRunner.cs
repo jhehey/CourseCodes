@@ -18,6 +18,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 		public async Task<BufferedCommandResult> StartAsync ()
 		{
 			string command = DockerCommands.Run (this);
+			Console.WriteLine (command);
 
 			BufferedCommandResult result = await Cli.Wrap (ContainerConfiguration.DefaultShell)
 				.WithArguments (command)
@@ -30,6 +31,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 		{
 			string compileCommand = CppCommands.Compile (solutionInfo);
 			string command = DockerCommands.Exec (this, compileCommand);
+			Console.WriteLine (command);
 
 			BufferedCommandResult result = await Cli.Wrap (ContainerConfiguration.DefaultShell)
 				.WithArguments (command)
@@ -47,6 +49,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 
 			string runCommand = CppCommands.Run (solutionInfo, selectedInput);
 			string command = DockerCommands.Exec (this, runCommand);
+			Console.WriteLine (command);
 
 			BufferedCommandResult result = await Cli.Wrap (ContainerConfiguration.DefaultShell)
 				.WithArguments (command)
@@ -59,6 +62,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 		{
 			string containers = String.Join (" ", containerNames);
 			string command = DockerCommands.Stop (containers);
+			Console.WriteLine (command);
 
 			BufferedCommandResult result = await Cli.Wrap (ContainerConfiguration.DefaultShell)
 				.WithArguments (command)

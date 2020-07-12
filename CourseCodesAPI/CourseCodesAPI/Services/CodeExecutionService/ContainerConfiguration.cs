@@ -7,7 +7,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 	{
 		public static string BaseContainerMountedDirectory { get; } // C:/.../tmp/data (windows)
 		public static string BaseContainerWorkingDirectory { get; } // /tmp/data (linux)
-		public static string DefaultShell { get; } = "powershell";
+		public static string DefaultShell { get; } = "docker"; //"powershell";
 
 		static ContainerConfiguration ()
 		{

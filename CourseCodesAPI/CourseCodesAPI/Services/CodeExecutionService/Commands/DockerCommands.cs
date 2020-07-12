@@ -4,24 +4,25 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Commands
 	{
 		public static string Run (ContainerRunner containerRunner)
 		{
-			return "docker run --rm -t -d " +
-				$"-v '{containerRunner.MountedDirectory}:{containerRunner.WorkingDirectory}' " +
-				$"--name '{containerRunner.ContainerName}' " +
-				$"'{containerRunner.ImageName}' " +
+			return "run --rm -t -d " +
+				$"-v {containerRunner.MountedDirectory}:{containerRunner.WorkingDirectory} " +
+				$"--name {containerRunner.ContainerName} " +
+				$"{containerRunner.ImageName} " +
 				"/bin/sh";
 		}
 
 		public static string Exec (ContainerRunner containerRunner, string command)
 		{
-			return $"\"docker exec " +
-				$"-w '{containerRunner.WorkingDirectory}' " +
-				$"-t '{containerRunner.ContainerName}' " +
-				$"/bin/sh -c '{command}'\"";
+			return $"exec " +
+				$"-w {containerRunner.WorkingDirectory} " +
+				$"-t {containerRunner.ContainerName} " +
+				$"/bin/sh -c \"{command}\"";
+			// $"/bin/sh -c \"echo tite\"";
 		}
 
 		public static string Stop (string containers)
 		{
-			return $"docker stop {containers}";
+			return $"stop {containers}";
 		}
 	}
 }
