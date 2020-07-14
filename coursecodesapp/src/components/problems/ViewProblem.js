@@ -43,17 +43,8 @@ const StudentViewProblem = () => {
 
 const InstructorViewProblem = () => {
 	return (
-		<Grid container>
-			<Grid item xs={2}>
-				<Grid item xs={12}>
-					<Button href="#" variant="contained" color="primary">
-						edit?
-					</Button>
-				</Grid>
-			</Grid>
-			<Grid container item xs={8} spacing={2} direction="column">
-				<ProblemDisplay />
-			</Grid>
+		<Grid container item style={{ margin: '2em' }} spacing={2} direction="column">
+			<ProblemDisplay />
 		</Grid>
 	);
 };

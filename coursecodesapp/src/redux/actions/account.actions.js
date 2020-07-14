@@ -39,7 +39,7 @@ const signIn = (signInDetails) => {
 					dispatch(alertActions.error({ message: 'Invalid email/password' }));
 				}
 			}
-		}, 600);
+		}, 200);
 	};
 };
 
@@ -52,6 +52,8 @@ const signUp = (signUpDetails) => {
 	};
 
 	return async (dispatch) => {
+		dispatch(alertActions.info({ message: 'Signing Up...' }));
+
 		const { success, error } = await AccountsApi.createAccount(signUpDetails);
 		if (success) {
 			dispatch(signUpSuccess());

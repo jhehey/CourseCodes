@@ -67,10 +67,12 @@ const hintFunction = (editor, options) => {
 	return { list: list, from: Pos(cur.line, start), to: Pos(cur.line, end) };
 };
 
-export const CodeEditor = ({ readOnly = false, onRun = null }) => {
+export const CodeEditor = ({ readOnly = false, onRun = null, initialValue = null }) => {
 	const dispatch = useDispatch();
 	const sourceCode = useSelector((state) => state.solution?.sourceCode);
-	onRun.current.sourceCode = sourceCode;
+	if (onRun && onRun.current) {
+		onRun.current.sourceCode = sourceCode;
+	}
 
 	const signedAccount = useSelector((state) => state.account?.signedAccount);
 	const studentId = signedAccount?.id;
@@ -84,18 +86,19 @@ export const CodeEditor = ({ readOnly = false, onRun = null }) => {
 	};
 
 	React.useEffect(() => {
-		dispatch(solutionActions.getInitialSourceCode(studentId, problemId));
-	}, [dispatch, studentId, problemId]);
+		if (!readOnly) {
+			dispatch(solutionActions.getInitialSourceCode(studentId, problemId));
+		}
+	}, [dispatch, studentId, problemId, readOnly]);
 
 	const currentSolution = useSelector((state) => state.solution?.currentSolution);
-	if (currentSolution) {
+	if (!readOnly && currentSolution) {
 		handleOnChange(true, currentSolution?.sourceCode);
 	}
-	console.log({ currentSolution }, currentSolution?.sourceCode);
 
 	return (
 		<CodeMirror
-			value={sourceCode}
+			value={readOnly ? initialValue : sourceCode}
 			autoCursor={false}
 			options={{
 				readOnly,

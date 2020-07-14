@@ -36,7 +36,7 @@ export const StudentHome = () => {
 		{ text: 'Home', icon: <HomeIcon />, href: `/courses/${courseId}` },
 		{ text: 'Roster', icon: <GroupIcon />, href: `/courses/${courseId}/students` },
 		{ text: 'Assignments', icon: <AssignmentIcon />, href: `/courses/${courseId}/problems` },
-		{ text: 'Solution', icon: <PlaylistAddCheckIcon />, href: `/courses/${courseId}/solutions` },
+		{ text: 'Solutions', icon: <PlaylistAddCheckIcon />, href: `/courses/${courseId}/solutions` },
 	];
 
 	const location = useLocation();
