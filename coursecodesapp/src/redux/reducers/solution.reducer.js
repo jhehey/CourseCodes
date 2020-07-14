@@ -1,7 +1,9 @@
 import { solutionConstants } from '../constants';
 import { storage, keys } from '../../storage';
 
-const initialState = { solutions: storage.get(keys.AssignmentSolutions()) || null };
+const initialState = {
+	solutions: storage.get(keys.AssignmentSolutions()) || null,
+};
 
 export const solution = (state = initialState, action) => {
 	switch (action.type) {
@@ -16,11 +18,6 @@ export const solution = (state = initialState, action) => {
 				isTesting: false,
 				runResult: action.runResult,
 			};
-		case solutionConstants.SOLUTION_SOURCECODE_CHANGED:
-			return {
-				...state,
-				sourceCode: action.sourceCode,
-			};
 		case solutionConstants.GET_SOLUTIONBYID_SUCCESS:
 			return {
 				...state,
@@ -31,10 +28,20 @@ export const solution = (state = initialState, action) => {
 				...state,
 				solutions: action.solutions,
 			};
+		case solutionConstants.GET_CURRENT_SOLUTION:
+			return {
+				...state,
+				currentSolution: action.currentSolution,
+			};
 		case solutionConstants.SUBMIT_SOLUTION_SUCCESS:
 			return {
 				...state,
 				solution: action.solution,
+			};
+		case solutionConstants.CODEEDITOR_ONCHANGE:
+			return {
+				...state,
+				sourceCode: action.sourceCode,
 			};
 		default:
 			return state;

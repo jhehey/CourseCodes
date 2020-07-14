@@ -8,5 +8,6 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Models
 		public Guid SolutionId { get; set; }
 		public List<TestCaseResult> TestCaseResults { get; set; }
 		public bool Passed { get; set; }
+		public string CompilationError { get; set; }
 	}
 }

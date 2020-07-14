@@ -1,28 +1,18 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, TextField } from '@material-ui/core';
 import { TestCaseContainer } from './TestCase';
 import { TestCaseStatus } from '../../helpers';
-import { keys, storage } from '../../storage';
-import { useParams } from 'react-router-dom';
 
 export const ResultsDisplay = () => {
-	const { problemId } = useParams();
-	const signedAccount = useSelector((state) => state.account?.signedAccount);
-	const studentId = signedAccount?.id;
 	const isTesting = useSelector((state) => state.solution?.isTesting);
 
-	const runResult =
-		useSelector((state) => state.solution?.runResult) || storage.get(keys.SavedResults(studentId, problemId));
+	const runResult = useSelector((state) => state.solution?.runResult);
 	const testCaseResults = runResult?.testCaseResults;
-
-	if (runResult) {
-		storage.set(keys.SavedResults(studentId, problemId), runResult);
-	}
-	console.log(runResult);
-
 	const totalTests = testCaseResults?.length;
 	const testPassedCount = testCaseResults?.filter((testCase) => testCase.status === TestCaseStatus.Passed).length;
+
+	console.log(runResult);
 
 	const resultsComponent = testCaseResults?.map((result, index) => {
 		const resultModel = {
@@ -60,8 +50,37 @@ export const ResultsDisplay = () => {
 			</Grid>
 			<Grid container item>
 				<Typography>
-					Status: {!isTesting && testCaseResults && `Passed ${testPassedCount} out of ${totalTests} Test Cases`}
+					Status:{' '}
+					{(!isTesting && testCaseResults && `Passed ${testPassedCount} out of ${totalTests} Test Cases`) ||
+						(runResult?.compilationError && 'Compilation Error')}
 				</Typography>
+				{runResult?.compilationError && (
+					<>
+						<TextField
+							name="compilationError"
+							value={runResult?.compilationError.replace(
+								/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+								''
+							)}
+							variant="outlined"
+							fullWidth
+							aria-readonly="true"
+							type="text"
+							multiline={true}
+							rows={12}
+							rowsMax={20}
+							inputProps={{
+								style: {
+									fontFamily: 'monospace',
+									fontSize: '12px',
+									whiteSpace: 'nowrap',
+									overflowX: 'scroll',
+									wordWrap: '-moz-initial',
+								},
+							}}
+						/>
+					</>
+				)}
 			</Grid>
 			<Grid container item>
 				<Typography>Test Cases</Typography>

@@ -9,5 +9,10 @@ namespace CourseCodesAPI.Helpers
 		{
 			return Encoding.UTF8.GetString (Convert.FromBase64String (encodedString));
 		}
+
+		public static string ToBase64String (this string plainText)
+		{
+			return Convert.ToBase64String (Encoding.UTF8.GetBytes (plainText));
+		}
 	}
 }

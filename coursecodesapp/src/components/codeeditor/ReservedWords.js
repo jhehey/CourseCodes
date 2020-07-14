@@ -18,6 +18,7 @@ export const CppReservedWords = [
 	'char8_t',
 	'char16_t',
 	'char32_t',
+	'cin',
 	'class',
 	'compl',
 	'concept',

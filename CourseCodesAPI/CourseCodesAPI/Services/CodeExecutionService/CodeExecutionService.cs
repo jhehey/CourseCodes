@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using CourseCodesAPI.Helpers;
 using CourseCodesAPI.Services.CodeExecutionService.Factories;
 using CourseCodesAPI.Services.CodeExecutionService.Models;
 
@@ -54,101 +56,80 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 
 		public async Task<CodeExecutionResult> ExecuteAsync (CodeExecutionRequest request)
 		{
-			// TODO: OPTIMIZE MEEEEEEEEEEEE
+			// TODO: Just spawn extra containers?
 			if (AvailableContainers.Count <= 0)
 			{
 				Console.WriteLine ("There are no available contianer runners, try again later");
 				return null;
 			}
 
+			// get a new SolutionInfo
+			var solutionInfo = SolutionInfoFactory.CreateSolutionInfo (request);
+			List<TestCaseResult> testResults = new List<TestCaseResult> ();
+
 			// get available ContainerRunner
 			var containerRunner = AvailableContainers.Pop ();
 			BusyContainers.Add (containerRunner);
-
-			// get a new SolutionInfo
-			var solutionInfo = SolutionInfoFactory.CreateSolutionInfo (InputCount: request.TestCases.Count);
-
-			// create solution directory
-			var solutionDirectory = Path.Join (containerRunner.MountedDirectory, solutionInfo.SolutionName);
-			_containerFileSystem.CreateDirectory (solutionDirectory);
-
-			// create stdin directory
-			var stdinDirectory = Path.Join (solutionDirectory, solutionInfo.StandardInputDirectory);
-			_containerFileSystem.CreateDirectory (stdinDirectory);
-
-			// write the source code
-			var fullProgramFilename = Path.Join (solutionDirectory, solutionInfo.ProgramFilename);
-			await _containerFileSystem.WriteFileAsync (fullProgramFilename, request.SourceCode);
-
-			// compile the program
-			var compileResult = await containerRunner.CompileAsync (solutionInfo);
-			if (compileResult.ExitCode != 0)
+			try
 			{
-				Console.WriteLine (compileResult.StandardError);
-				Console.WriteLine (compileResult.StandardOutput);
-				return null;
-			}
 
-			// foreach(sample input)
-			List<TestCaseResult> testResults = new List<TestCaseResult> ();
-			for (int i = 0; i < request.TestCases.Count; i++)
-			{
-				// get the test case
-				var testCase = request.TestCases[i];
+				// run
+				var runResult = await containerRunner.RunAsync (solutionInfo);
 
-				// initialize TestResult
-				var testResult = new TestCaseResult ()
+				Console.WriteLine ("Exit Code");
+				Console.WriteLine (runResult.ExitCode);
+				Console.WriteLine ("StandardOutput");
+				Console.WriteLine (runResult.StandardOutput);
+				Console.WriteLine ("StandardError");
+				Console.WriteLine (runResult.StandardError);
+
+				if (runResult.ExitCode != 0)
 				{
-					SampleInput = testCase.SampleInput,
-						ExpectedOutput = testCase.ExpectedOutput,
-						Status = TestCaseStatus.Testing
-				};
-				testResults.Add (testResult);
-
-				// write sample input to file to stdin directory
-				var stdinFilename = solutionInfo.StandardInputFilenames[i];
-				var fullStdinFilename = Path.Join (stdinDirectory, stdinFilename);
-				await _containerFileSystem.WriteFileAsync (fullStdinFilename, testCase.SampleInput);
-
-				// execute given sample input
-				var runResult = await containerRunner.RunAsync (solutionInfo, i);
-
-				Console.WriteLine ($"TestCase {i}: {runResult.RunTime.TotalSeconds}s");
-
-				if (runResult.ExitCode == 0)
-				{
-					// program ran successfully
-					testResult.ActualOutput = runResult.StandardOutput.Trim ();
-
-					// check the outputs if it passed
-					// TODO: Convert yung mga Newline to same format
-					testResult.Status = testResult.ExpectedOutput.Equals (testResult.ActualOutput) ?
-						TestCaseStatus.Passed : TestCaseStatus.Failed;
+					Console.WriteLine ("HINDI ZERO EXIT CODE");
+					return new CodeExecutionResult ()
+					{
+						SolutionId = request.SolutionId,
+							Passed = false,
+							CompilationError = runResult.StandardOutput
+					};
 				}
-				else
+
+				var outputs = runResult.StandardOutput.Split ("\n")
+					.Select (x => x.FromBase64ToString ().Trim ()).ToList ();
+
+				for (int i = 0; i < request.TestCases.Count; i++)
 				{
-					testResult.Status = TestCaseStatus.Error;
-					testResult.ErrorMessage = runResult.StandardError;
+					var testCase = request.TestCases[i];
+
+					var testResult = new TestCaseResult ()
+					{
+						SampleInput = testCase.SampleInput,
+							ExpectedOutput = testCase.ExpectedOutput,
+							ActualOutput = outputs[i],
+							Status = testCase.ExpectedOutput.Equals (outputs[i]) ?
+							TestCaseStatus.Passed : TestCaseStatus.Failed
+					};
+					testResults.Add (testResult);
 				}
 			}
-			// TODO: Execute these in parallel
+			catch (Exception e)
+			{
+				Console.WriteLine ("MAY EXCEPTION TANGINA");
+				Console.WriteLine (e.Message);
+			}
+			finally
+			{
+				BusyContainers.Remove (containerRunner);
+				AvailableContainers.Push (containerRunner);
+			}
 
-			// containerRunner finished
-			BusyContainers.Remove (containerRunner);
-			AvailableContainers.Push (containerRunner);
-
-			// TODO: Cleanup - just delete the whole solution directory recursively
-
-			// return code execution result
-			bool passed = testResults.All (t => t.Status == TestCaseStatus.Passed);
+			bool passed = testResults.Count > 0 && testResults.All (t => t.Status == TestCaseStatus.Passed);
 			return new CodeExecutionResult ()
 			{
 				SolutionId = request.SolutionId,
 					TestCaseResults = testResults,
 					Passed = passed
 			};
-
 		}
-
 	}
 }

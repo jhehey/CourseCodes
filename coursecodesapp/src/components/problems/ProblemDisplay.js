@@ -13,8 +13,10 @@ export const ProblemDisplay = () => {
 	const courseToView = useSelector((state) => state.course?.courseToView);
 
 	useEffect(() => {
-		dispatch(problemActions.getProblem(problemId, { courseId: courseToView.id }));
-	}, [dispatch, problemId, courseToView]);
+		if (problem?.id !== problemId) {
+			dispatch(problemActions.getProblem(problemId, { courseId: courseToView.id }));
+		}
+	}, [dispatch, problemId, courseToView, problem]);
 
 	const testCases = problem?.testCases.map((testCase) => {
 		const testCaseModel = {

@@ -17,6 +17,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			var relativeMountedDirectory = Environment.GetEnvironmentVariable ("BASE_CONTAINERMOUNTED_DIRECTORY");
 			if (relativeMountedDirectory == null) throw new ArgumentNullException (nameof (relativeMountedDirectory));
 			BaseContainerMountedDirectory = Path.GetFullPath (relativeMountedDirectory);
+			Console.WriteLine ($"BaseContainerMountedDirectory: {BaseContainerMountedDirectory}");
 
 			BaseContainerWorkingDirectory = Environment.GetEnvironmentVariable ("BASE_CONTAINERWORKING_DIRECTORY");
 			if (BaseContainerWorkingDirectory == null) throw new ArgumentNullException (nameof (BaseContainerWorkingDirectory));

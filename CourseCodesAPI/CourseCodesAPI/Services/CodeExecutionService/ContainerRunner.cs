@@ -27,32 +27,15 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			return result;
 		}
 
-		public async Task<BufferedCommandResult> CompileAsync (SolutionInfo solutionInfo)
+		public async Task<BufferedCommandResult> RunAsync (SolutionInfo solutionInfo)
 		{
-			string compileCommand = CppCommands.Compile (solutionInfo);
-			string command = DockerCommands.Exec (this, compileCommand);
-			Console.WriteLine (command);
-
-			BufferedCommandResult result = await Cli.Wrap (ContainerConfiguration.DefaultShell)
-				.WithArguments (command)
-				.ExecuteBufferedAsync ();
-
-			return result;
-		}
-
-		public async Task<BufferedCommandResult> RunAsync (SolutionInfo solutionInfo, int selectedInput)
-		{
-			if (selectedInput < 0 || selectedInput > solutionInfo.StandardInputFilenames.Count)
-			{
-				throw new ArgumentOutOfRangeException (nameof (selectedInput));
-			}
-
-			string runCommand = CppCommands.Run (solutionInfo, selectedInput);
+			string runCommand = CppCommands.Run (solutionInfo);
 			string command = DockerCommands.Exec (this, runCommand);
 			Console.WriteLine (command);
 
 			BufferedCommandResult result = await Cli.Wrap (ContainerConfiguration.DefaultShell)
 				.WithArguments (command)
+				.WithValidation (CommandResultValidation.None)
 				.ExecuteBufferedAsync ();
 
 			return result;

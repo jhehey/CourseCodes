@@ -7,6 +7,12 @@ export const keys = {
 			type: types.Local,
 		};
 	},
+	SavedSolution: () => {
+		return {
+			key: `SAVED_SOLUTION`,
+			type: types.Local,
+		};
+	},
 	SavedSolutions: (problemId, studentId) => {
 		return {
 			key: `SAVED_SOLUTIONS-${problemId}-${studentId}`,
@@ -17,12 +23,6 @@ export const keys = {
 		return {
 			key: 'COURSE_TO_VIEW',
 			type: types.Session,
-		};
-	},
-	SavedResults: (studentId, problemId) => {
-		return {
-			key: `SAVED_RESULTS-${studentId}-${problemId}`,
-			type: types.Local,
 		};
 	},
 	AssignmentSolutions: () => {

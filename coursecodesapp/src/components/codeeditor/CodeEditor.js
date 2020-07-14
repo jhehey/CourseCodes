@@ -1,6 +1,9 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { CppReservedWords } from './ReservedWords';
 import { IntelliSenseTriggerKeys } from './IntelliSenseTriggerKeys';
+import { useDispatch, useSelector } from 'react-redux';
+import { solutionActions } from '../../redux/actions';
 
 // Code Mirror
 import { UnControlled as CodeMirror } from 'react-codemirror2';
@@ -64,10 +67,35 @@ const hintFunction = (editor, options) => {
 	return { list: list, from: Pos(cur.line, start), to: Pos(cur.line, end) };
 };
 
-export const CodeEditor = ({ onChange = null, initialValue = null, readOnly = false }) => {
+export const CodeEditor = ({ readOnly = false, onRun = null }) => {
+	const dispatch = useDispatch();
+	const sourceCode = useSelector((state) => state.solution?.sourceCode);
+	onRun.current.sourceCode = sourceCode;
+
+	const signedAccount = useSelector((state) => state.account?.signedAccount);
+	const studentId = signedAccount?.id;
+	const { problemId } = useParams();
+
+	const handleOnChange = (data, value) => {
+		// data represents change in the editor
+		if (data) {
+			dispatch(solutionActions.handleCodeEditorChanged(value, studentId, problemId));
+		}
+	};
+
+	React.useEffect(() => {
+		dispatch(solutionActions.getInitialSourceCode(studentId, problemId));
+	}, [dispatch, studentId, problemId]);
+
+	const currentSolution = useSelector((state) => state.solution?.currentSolution);
+	if (currentSolution) {
+		handleOnChange(true, currentSolution?.sourceCode);
+	}
+	console.log({ currentSolution }, currentSolution?.sourceCode);
+
 	return (
 		<CodeMirror
-			value={initialValue}
+			value={sourceCode}
 			autoCursor={false}
 			options={{
 				readOnly,
@@ -94,7 +122,7 @@ export const CodeEditor = ({ onChange = null, initialValue = null, readOnly = fa
 					showHint(editor);
 				}
 			}}
-			onChange={(editor, data, value) => onChange && onChange(value)}
+			onChange={(editor, data, value) => handleOnChange(data, value)}
 		/>
 	);
 };

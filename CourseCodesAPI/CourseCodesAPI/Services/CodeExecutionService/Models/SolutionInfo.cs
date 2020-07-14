@@ -9,6 +9,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Models
 		public List<string> StandardInputFilenames { get; set; }
 		public string ProgramFilename { get; set; }
 		public string ProgramName { get; set; }
-
+		public string SourceCode { get; set; }
+		public List<string> SampleInputs { get; set; }
 	}
 }

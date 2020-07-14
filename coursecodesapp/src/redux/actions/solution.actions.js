@@ -1,6 +1,7 @@
 import { solutionConstants } from '../constants';
 import { alertActions } from './alert.actions';
 import { SolutionsApi } from '../../api';
+import { keys, storage } from '../../storage';
 
 const runSolution = (solutionToRun) => {
 	const runSolutionRequest = () => {
@@ -19,14 +20,6 @@ const runSolution = (solutionToRun) => {
 		} else {
 			dispatch(alertActions.error({ message: 'There was an error in processing your request' }));
 		}
-	};
-};
-
-const updateSourceCode = (sourceCode) => {
-	return (dispatch) => {
-		console.log('SOURCE CODE');
-		console.log(sourceCode);
-		dispatch({ type: solutionConstants.SOLUTION_SOURCECODE_CHANGED, sourceCode });
 	};
 };
 
@@ -75,10 +68,43 @@ const submitSolution = (solutionId) => {
 	};
 };
 
+const handleCodeEditorChanged = (sourceCode, studentId, problemId) => {
+	return async (dispatch) => {
+		storage.set(keys.SavedSolutions(problemId, studentId), { sourceCode });
+		dispatch({ type: solutionConstants.CODEEDITOR_ONCHANGE, sourceCode });
+	};
+};
+
+const getCurrentSolution = (query) => {
+	return async (dispatch) => {
+		const { data: currentSolution, success } = await SolutionsApi.getSolutions(query);
+		if (success) {
+			dispatch({ type: solutionConstants.GET_CURRENT_SOLUTION, currentSolution });
+		} else {
+			console.error('There was a problem getting the current solution');
+		}
+	};
+};
+
+const getInitialSourceCode = (studentId, problemId) => {
+	const defaultSourceCode = `\
+#include <iostream>
+
+int main() {
+	std::cout << "Hello World" << std::endl;
+}
+`;
+
+	const sourceCode = storage.get(keys.SavedSolutions(problemId, studentId))?.sourceCode || defaultSourceCode;
+	return handleCodeEditorChanged(sourceCode, studentId, problemId);
+};
+
 export const solutionActions = {
 	runSolution,
-	updateSourceCode,
 	getSolution,
 	getSolutions,
 	submitSolution,
+	handleCodeEditorChanged,
+	getInitialSourceCode,
+	getCurrentSolution,
 };

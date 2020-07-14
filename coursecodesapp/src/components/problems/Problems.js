@@ -37,6 +37,8 @@ const InstructorProblems = () => {
 				courseId,
 				problemIds,
 			};
+
+			setTableState((prevState) => ({ ...prevState, data: problems }));
 			dispatch(problemActions.getProblemSubmitCounts(problemSubmitRequest));
 		}
 	}, [problems, dispatch, courseId]);
@@ -110,6 +112,10 @@ const StudentProblems = () => {
 	});
 
 	React.useEffect(() => {
+		if (problems) {
+			setTableState((prevState) => ({ ...prevState, data: problems }));
+		}
+
 		if (problems && solutions) {
 			storage.set(keys.AssignmentSolutions(), solutions);
 
@@ -119,6 +125,7 @@ const StudentProblems = () => {
 					...problem,
 					status: solution?.status,
 					submitted: (solution?.status === 1 && 'Submitted') || 'Not Submitted',
+					solutionId: solution?.id,
 				};
 			});
 
@@ -129,6 +136,10 @@ const StudentProblems = () => {
 
 	const handleRowClick = (event, problem) => {
 		const problemUrl = `${location.pathname}/${problem.id}`;
+		console.log('VIEW PROBLEM');
+		console.log({ problem });
+		// TODO: ETO, LAGYAN NG STATE? YUNG problem.solutionId dapat maibigay kay SolveProblem.
+		// para mag update lang ung solutionId, hindi laging undefined pag nag refresh
 		history.push(problemUrl);
 	};
 

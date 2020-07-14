@@ -67,8 +67,8 @@ namespace CourseCodesAPI.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<SolutionResponse>>> GetSolutions (
-			[FromQuery] Guid studentId = default (Guid), [FromQuery] Guid courseId = default (Guid)
+		public async Task<IActionResult> GetSolutions (
+			[FromQuery] Guid studentId = default (Guid), [FromQuery] Guid courseId = default (Guid), [FromQuery] Guid courseProblemId = default (Guid)
 		)
 		{
 			IEnumerable<Solution> solutions;
@@ -86,6 +86,13 @@ namespace CourseCodesAPI.Controllers
 					.Include (s => s.Student).ThenInclude (s => s.Account)
 					.Include (s => s.CourseProblem).ThenInclude (cp => cp.Problem)
 					.ToListAsync ();
+			}
+			else if (studentId != default (Guid) && courseProblemId != default (Guid) && courseId == default (Guid))
+			{
+				var solution = await _context.Solutions
+					.FirstOrDefaultAsync (s => s.CourseProblemId == courseProblemId && s.StudentId == studentId);
+				if (solution == null) return NotFound ();
+				return Ok (_mapper.Map<SolutionResponse> (solution));
 			}
 			else
 			{

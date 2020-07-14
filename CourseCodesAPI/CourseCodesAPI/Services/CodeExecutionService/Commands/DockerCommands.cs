@@ -17,7 +17,6 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Commands
 				$"-w {containerRunner.WorkingDirectory} " +
 				$"-t {containerRunner.ContainerName} " +
 				$"/bin/sh -c \"{command}\"";
-			// $"/bin/sh -c \"echo tite\"";
 		}
 
 		public static string Stop (string containers)

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, IconButton, Paper, Tooltip } from '@material-ui/core';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrow';
@@ -9,31 +9,32 @@ import { green, red } from '@material-ui/core/colors';
 import { CodeEditor } from '../codeeditor';
 import { solutionActions, alertActions } from '../../redux/actions';
 import { ProblemDisplay, ResultsDisplay } from './';
-import { keys, storage } from '../../storage';
 import PublishIcon from '@material-ui/icons/Publish';
-
-const defaultValue = `\
-#include <iostream>
-
-int main() {
-	std::cout << "Hello Worldss" << std::endl;
-}
-`;
 
 export const SolveProblem = () => {
 	const history = useHistory();
-	const { problemId } = useParams();
 	const dispatch = useDispatch();
 	const isTesting = useSelector((state) => state.solution?.isTesting);
 
 	// run
-	const [sourceCode, setSourceCode] = useState(defaultValue);
 	const signedAccount = useSelector((state) => state.account?.signedAccount);
 	const studentId = signedAccount?.id;
-	const runResult =
-		useSelector((state) => state.solution?.runResult) || storage.get(keys.SavedResults(studentId, problemId));
-	const solutionId = runResult?.solutionId;
+	const runResult = useSelector((state) => state.solution?.runResult);
+	let solutionId = runResult?.solutionId;
 	const courseProblemId = useSelector((state) => state.problem?.problem?.courseProblemId);
+
+	// get current solution
+	const currentSolution = useSelector((state) => state.solution?.currentSolution);
+	React.useEffect(() => {
+		if (studentId && courseProblemId) {
+			dispatch(solutionActions.getCurrentSolution({ studentId, courseProblemId }));
+		}
+	}, [dispatch, studentId, courseProblemId]);
+	if (currentSolution) {
+		solutionId = currentSolution.id;
+	}
+
+	const onRun = React.useRef({ sourceCode: null });
 	const handleRun = () => {
 		// Go to results display
 		setDisplay('results');
@@ -44,7 +45,7 @@ export const SolveProblem = () => {
 		console.log('RUN');
 		const solutionToRun = {
 			solutionId,
-			sourceCode,
+			sourceCode: onRun.current.sourceCode,
 			courseProblemId,
 			studentId,
 		};
@@ -60,19 +61,6 @@ export const SolveProblem = () => {
 	if (passed && !submitted) {
 		dispatch(alertActions.success({ message: 'Congratulations! You completed the problem. You may now submit it' }));
 	}
-	const handleCodeChanged = (value) => {
-		console.log('On change');
-		setSourceCode(value);
-		storage.set(keys.SavedSolutions(problemId, studentId), { sourceCode: value });
-	};
-
-	// get the saved source code in session storage. so that when user refresh, their code is not gone.
-	React.useEffect(() => {
-		if (problemId && studentId) {
-			const locallySavedSolution = storage.get(keys.SavedSolutions(problemId, studentId));
-			setSourceCode(locallySavedSolution?.sourceCode || sourceCode);
-		}
-	}, [problemId, studentId, sourceCode]);
 
 	const [display, setDisplay] = useState('problem');
 
@@ -133,7 +121,7 @@ export const SolveProblem = () => {
 				</Grid>
 				<Grid item>
 					<Paper variant="outlined" style={{ height: '90vh' }}>
-						<CodeEditor onChange={handleCodeChanged} initialValue={sourceCode} />
+						<CodeEditor onRun={onRun} />
 					</Paper>
 				</Grid>
 			</Grid>
