@@ -1,7 +1,7 @@
 #! /bin/sh
 echo "Stopping Services..."
-docker-compose down
-docker-compose ps
+sudo docker-compose down
+sudo docker-compose ps
 echo "Stopping Containers..."
-docker stop $(docker ps -q)
-docker ps
+sudo docker stop $(docker ps -q)
+sudo docker ps
