@@ -74,36 +74,6 @@ export const CoursesTable = () => {
 			columns={tableState.columns}
 			data={tableState.data}
 			onRowClick={handleRowClick}
-			editable={
-				isInstructor
-					? {
-							onRowUpdate: (newData, oldData) =>
-								new Promise((resolve) => {
-									setTimeout(() => {
-										resolve();
-										if (oldData) {
-											setTableState((prevState) => {
-												const data = [...prevState.data];
-												data[data.indexOf(oldData)] = newData;
-												return { ...prevState, data };
-											});
-										}
-									}, 600);
-								}),
-							onRowDelete: (oldData) =>
-								new Promise((resolve) => {
-									setTimeout(() => {
-										resolve();
-										setTableState((prevState) => {
-											const data = [...prevState.data];
-											data.splice(data.indexOf(oldData), 1);
-											return { ...prevState, data };
-										});
-									}, 600);
-								}),
-					  }
-					: {}
-			}
 		/>
 	);
 };

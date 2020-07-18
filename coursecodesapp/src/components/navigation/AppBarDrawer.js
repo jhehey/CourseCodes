@@ -45,7 +45,7 @@ export const AppBarDrawer = ({ itemsList = [] }) => {
 						<MenuIcon />
 					</IconButton>
 					<Typography component="h1" variant="h6" noWrap className={classes.title}>
-						Dashboard{courseToView && ` - ${courseToView.courseName}`}
+						Dashboard
 					</Typography>
 				</Toolbar>
 			</AppBar>

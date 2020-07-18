@@ -1,0 +1,62 @@
+version: "3.0"
+
+services:
+  webapp:
+    container_name: coursecodesapp
+    build:
+      context: ./coursecodesapp
+      dockerfile: Dockerfile.prod
+    restart: always
+    ports:
+      - 3000:80
+    environment:
+      - HOST=0.0.0.0
+      - REACT_APP_API=https://0.0.0.0:5000/api
+    depends_on:
+      - api
+    networks:
+      - web
+  api:
+    container_name: coursecodesapi
+    build:
+      context: ./CourseCodesAPI/CourseCodesAPI
+      dockerfile: Dockerfile
+    ports:
+      - 5000:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__CourseCodesConnection=User ID=postgres;Password=S2MognJhsZUnwY8LY8neenn2yUKmXMyLD5QTH9mFWhU;Server=db;Port=5432;Database=CourseCodesDB;Integrated Security=true;Pooling=true;
+      - BASE_CONTAINERMOUNTED_DIRECTORY=/tmp/data
+      - BASE_CONTAINERWORKING_DIRECTORY=/var/coursecodes/cpp
+    depends_on:
+      - db
+    networks:
+      - internal
+      - web
+    volumes:
+      - ~/.aspnet/https:/https:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./CourseCodesAPI/tmp/data:/tmp/data
+  db:
+    container_name: coursecodesdb
+    image: postgres:latest
+    restart: always
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=S2MognJhsZUnwY8LY8neenn2yUKmXMyLD5QTH9mFWhU
+      - POSTGRES_DB=CourseCodesDB
+    volumes:
+      - database_data:/var/lib/postgresql/data
+      - ./scripts/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - internal
+
+volumes:
+  database_data:
+    driver: local
+
+networks:
+  internal:
+  web:

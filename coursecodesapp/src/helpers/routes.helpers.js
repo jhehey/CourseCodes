@@ -1,9 +1,11 @@
+import React from 'react';
 import { SignIn, SignUp, About, LandingHome } from '../components/landing';
 import { StudentDashboard } from '../components/student';
 import { InstructorDashboard, StudentList } from '../components/instructor';
 import { CourseList, CreateCourse, ViewCourse, CreateTopic } from '../components/courses';
 import { Problems, CreateProblem, ViewProblem, SolveProblem } from '../components/problems';
 import { SignOut } from '../components/common/SignOut';
+import { UserProfile } from '../components/common/UserProfile';
 import { SolutionList, ViewSolution } from '../components/solutions';
 
 export const pageRoutes = {
@@ -23,6 +25,7 @@ export const pageRoutes = {
 		{ path: '/courses/:courseId/students', component: StudentList },
 		{ path: '/courses/:courseId/solutions', component: SolutionList },
 		{ path: '/courses/:courseId/solutions/:solutionId', component: ViewSolution },
+		{ path: '/profile', component: UserProfile },
 		{ path: '/signout', component: SignOut },
 	],
 	instructor: [
@@ -37,6 +40,7 @@ export const pageRoutes = {
 		{ path: '/courses/:courseId/students', component: StudentList },
 		{ path: '/courses/:courseId/solutions', component: SolutionList },
 		{ path: '/courses/:courseId/solutions/:solutionId', component: ViewSolution },
+		{ path: '/profile', component: UserProfile },
 		{ path: '/signout', component: SignOut },
 	],
 };

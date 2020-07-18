@@ -10,3 +10,4 @@ export * from './ChipSelect';
 export * from './RouteComponents';
 export * from './SignOut';
 export * from './Announcement';
+export * from './UserProfile';
