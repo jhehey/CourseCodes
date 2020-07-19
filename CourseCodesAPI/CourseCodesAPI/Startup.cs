@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,8 @@ namespace CourseCodesAPI
 			{
 				options.AddPolicy (name: MyAllowSpecificOrigins, builder =>
 				{
-					builder.WithOrigins ("http://localhost:3000")
+					builder
+						.AllowAnyOrigin ()
 						.AllowAnyHeader ()
 						.AllowAnyMethod ();
 				});
@@ -106,6 +108,11 @@ namespace CourseCodesAPI
 					await context.Response.WriteAsync (result);
 				}));
 			}
+
+			// app.UseForwardedHeaders (new ForwardedHeadersOptions
+			// {
+			// 	ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+			// });
 
 			app.UseHttpsRedirection ();
 
