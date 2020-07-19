@@ -20,7 +20,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 	{
 		private readonly IContainerFileSystemService _containerFileSystem;
 
-		public int MaxContainers { get; } = 100;
+		public int MaxContainers { get; } = 50;
 		public List<ContainerRunner> BusyContainers { get; } = new List<ContainerRunner> ();
 		public Stack<ContainerRunner> AvailableContainers { get; } = new Stack<ContainerRunner> ();
 
@@ -33,7 +33,6 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 		public async Task StartContainerRunnersAsync ()
 		{
 			Console.WriteLine ($"{nameof(CodeExecutionService)}: {nameof(StartContainerRunnersAsync)}");
-			var startTasks = new List<Task> ();
 
 			for (int i = 0; i < MaxContainers; i++)
 			{
@@ -46,11 +45,11 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 
 				// initialize container runner
 				Console.WriteLine ($"{nameof(CodeExecutionService)}: {containerRunner.ContainerName} starting...");
-				startTasks.Add (containerRunner.StartAsync ());
+				await containerRunner.StartAsync ();
+				Console.WriteLine ($"{nameof(CodeExecutionService)}: {containerRunner.ContainerName} started...");
 			}
 
 			// Finish this task only when all containerRunners have started up
-			await Task.WhenAll (startTasks).ConfigureAwait (false);
 			Console.WriteLine ($"{nameof(CodeExecutionService)}: Containers started...");
 		}
 
