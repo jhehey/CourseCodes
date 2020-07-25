@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { problemActions } from '../../redux/actions';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, TextField } from '@material-ui/core';
 import { TestCaseContainer } from './TestCase';
 
 export const ProblemDisplay = () => {
@@ -35,7 +35,17 @@ export const ProblemDisplay = () => {
 				</Typography>
 			</Grid>
 			<Grid item>
-				<Typography variant="body1"> {problem?.statement}</Typography>
+				<TextField
+					value={problem?.statement}
+					autoComplete="off"
+					variant="outlined"
+					fullWidth
+					aria-readonly="true"
+					type="text"
+					multiline={true}
+					rowsMax={20}
+					rows={3}
+				/>
 			</Grid>
 			<Grid item>
 				<Typography variant="h6"> Test Cases</Typography>

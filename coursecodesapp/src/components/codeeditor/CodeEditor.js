@@ -91,11 +91,6 @@ export const CodeEditor = ({ readOnly = false, onRun = null, initialValue = null
 		}
 	}, [dispatch, studentId, problemId, readOnly]);
 
-	const currentSolution = useSelector((state) => state.solution?.currentSolution);
-	if (!readOnly && currentSolution) {
-		handleOnChange(true, currentSolution?.sourceCode);
-	}
-
 	return (
 		<CodeMirror
 			value={readOnly ? initialValue : sourceCode}

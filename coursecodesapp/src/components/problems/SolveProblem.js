@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, IconButton, Paper, Tooltip } from '@material-ui/core';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrow';
@@ -15,6 +15,7 @@ export const SolveProblem = () => {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const isTesting = useSelector((state) => state.solution?.isTesting);
+	const { problemId } = useParams();
 
 	// run
 	const signedAccount = useSelector((state) => state.account?.signedAccount);
@@ -29,9 +30,14 @@ export const SolveProblem = () => {
 		if (studentId && courseProblemId) {
 			dispatch(solutionActions.getCurrentSolution({ studentId, courseProblemId }));
 		}
-	}, [dispatch, studentId, courseProblemId]);
+	}, [dispatch, studentId, courseProblemId, isTesting]);
 	if (currentSolution) {
 		solutionId = currentSolution.id;
+
+		// TODO: Check also if viewing solution changes
+		if (!isTesting && !runResult) {
+			dispatch(solutionActions.handleCodeEditorChanged(currentSolution.sourceCode, studentId, problemId));
+		}
 	}
 
 	const onRun = React.useRef({ sourceCode: null });

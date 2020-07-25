@@ -20,7 +20,7 @@ const StudentSolutionList = () => {
 			const data = solutions.map((solution) => ({
 				...solution,
 				problemTitle: solution.problem.title,
-				status: solution.status === 1 ? 'Submitted' : 'Not Submitted',
+				status: solution.status === 1 ? 'Completed' : 'Not Completed',
 				dateSubmitted: toDateString(solution.dateSubmitted),
 			}));
 			setTableState((prevState) => ({
