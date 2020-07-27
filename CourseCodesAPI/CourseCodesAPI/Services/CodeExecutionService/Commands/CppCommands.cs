@@ -15,7 +15,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Commands
 				$"g++ --static {solutionInfo.ProgramFilename} -o {solutionInfo.ProgramName}; STATUS=$?; if [[ $STATUS == 0 ]]; then " + // compile
 				$"for sampleInput in {String.Join(" ", solutionInfo.SampleInputs.Select(x => x.ToBase64String()))};" + // for each sample input
 				"do echo \\`$sampleInput\\` | base64 -d | " + // redirect stdin
-				$"./{solutionInfo.ProgramName} | base64; " + // run program and encode output
+				$"./{solutionInfo.ProgramName} | base64; echo -n :;" + // run program and encode output
 				$"done; fi; rm -rf ../{solutionInfo.SolutionName}; exit $STATUS"; // cleanup
 		}
 	}

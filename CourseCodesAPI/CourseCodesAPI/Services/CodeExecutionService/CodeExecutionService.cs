@@ -93,8 +93,8 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 					};
 				}
 
-				var outputs = runResult.StandardOutput.Split ("\n")
-					.Select (x => x.FromBase64ToString ().Trim ()).ToList ();
+				var outputs = runResult.StandardOutput.Split (":")
+					.Select (x => Regex.Replace (x, @"\t|\n|\r", "").FromBase64ToString ().Trim ()).ToList ();
 
 				for (int i = 0; i < request.TestCases.Count; i++)
 				{
