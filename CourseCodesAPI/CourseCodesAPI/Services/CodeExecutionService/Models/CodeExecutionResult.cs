@@ -9,5 +9,6 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Models
 		public List<TestCaseResult> TestCaseResults { get; set; }
 		public bool Passed { get; set; }
 		public string CompilationError { get; set; }
+		public bool TimedOut { get; set; }
 	}
 }

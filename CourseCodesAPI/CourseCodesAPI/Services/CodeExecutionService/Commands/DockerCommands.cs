@@ -5,6 +5,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Commands
 		public static string Run (ContainerRunner containerRunner)
 		{
 			return "run --rm -t -d " +
+				$"--restart=always " + //new
 				$"-v {containerRunner.MountedDirectory}:{containerRunner.WorkingDirectory} " +
 				$"--name {containerRunner.ContainerName} " +
 				$"{containerRunner.ImageName} " +

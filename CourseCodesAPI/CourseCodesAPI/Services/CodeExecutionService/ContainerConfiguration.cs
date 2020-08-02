@@ -8,6 +8,8 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 		public static string BaseContainerMountedDirectory { get; } // C:/.../tmp/data (windows)
 		public static string BaseContainerWorkingDirectory { get; } // /tmp/data (linux)
 		public static string DefaultShell { get; } = "docker"; //"powershell";
+		public static int ProgramTimeoutSeconds { get; } = 10;
+		public static int ProcessTimeoutSeconds { get; } = 60; // unsure about time
 
 		static ContainerConfiguration ()
 		{

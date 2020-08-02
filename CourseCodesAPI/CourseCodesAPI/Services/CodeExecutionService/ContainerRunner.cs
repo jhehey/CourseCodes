@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CliWrap;
 using CliWrap.Buffered;
+using CourseCodesAPI.Services.CodeExecutionService;
 using CourseCodesAPI.Services.CodeExecutionService.Commands;
 using CourseCodesAPI.Services.CodeExecutionService.Models;
 
@@ -33,10 +35,15 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			string command = DockerCommands.Exec (this, runCommand);
 			Console.WriteLine (command);
 
+			using var cts = new CancellationTokenSource ();
+			cts.CancelAfter (TimeSpan.FromSeconds (ContainerConfiguration.ProcessTimeoutSeconds));
+
 			BufferedCommandResult result = await Cli.Wrap (ContainerConfiguration.DefaultShell)
 				.WithArguments (command)
 				.WithValidation (CommandResultValidation.None)
-				.ExecuteBufferedAsync ();
+				.ExecuteBufferedAsync (cts); // cts
+
+			// throws OperationCanceledException
 
 			return result;
 		}

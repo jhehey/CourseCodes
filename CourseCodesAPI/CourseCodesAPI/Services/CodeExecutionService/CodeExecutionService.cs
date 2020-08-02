@@ -66,6 +66,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			// get a new SolutionInfo
 			var solutionInfo = SolutionInfoFactory.CreateSolutionInfo (request);
 			List<TestCaseResult> testResults = new List<TestCaseResult> ();
+			bool timedOut = false;
 
 			// get available ContainerRunner
 			var containerRunner = AvailableContainers.Pop ();
@@ -112,10 +113,18 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 					testResults.Add (testResult);
 				}
 			}
+			catch (OperationCanceledException op)
+			{
+				Console.WriteLine ("Code Execution Timed Out");
+				Console.WriteLine (op.Message);
+				timedOut = true;
+			}
 			catch (Exception e)
 			{
-				Console.WriteLine ("MAY EXCEPTION TANGINA");
+				Console.WriteLine ("MAY EXCEPTION");
 				Console.WriteLine (e.Message);
+				// TODO: Catch OperationCanceledException
+				// add property in result. TimedOut? if timedout, return result. your code timeout after t seconds
 			}
 			finally
 			{
@@ -128,7 +137,8 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			{
 				SolutionId = request.SolutionId,
 					TestCaseResults = testResults,
-					Passed = passed
+					Passed = passed,
+					TimedOut = timedOut
 			};
 		}
 	}

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CourseCodesAPI.Helpers;
+using CourseCodesAPI.Services.CodeExecutionService;
 using CourseCodesAPI.Services.CodeExecutionService.Models;
 
 namespace CourseCodesAPI.Services.CodeExecutionService.Commands
@@ -15,7 +16,8 @@ namespace CourseCodesAPI.Services.CodeExecutionService.Commands
 				$"g++ --static {solutionInfo.ProgramFilename} -o {solutionInfo.ProgramName}; STATUS=$?; if [[ $STATUS == 0 ]]; then " + // compile
 				$"for sampleInput in {String.Join(" ", solutionInfo.SampleInputs.Select(x => x.ToBase64String()))};" + // for each sample input
 				"do echo \\`$sampleInput\\` | base64 -d | " + // redirect stdin
-				$"./{solutionInfo.ProgramName} | base64; echo -n :;" + // run program and encode output
+				$"timeout {ContainerConfiguration.ProgramTimeoutSeconds} ./{solutionInfo.ProgramName} | base64; echo -n :;" + // run program and encode output with timeout
+				// $"./{solutionInfo.ProgramName} | base64; echo -n :;" + // run program and encode output
 				$"done; fi; rm -rf ../{solutionInfo.SolutionName}; exit $STATUS"; // cleanup
 		}
 	}
