@@ -16,6 +16,10 @@ const call = async (request) => {
 			result.status = error.response.status;
 			result.error = error.response.data.errors;
 			console.log(result.error);
+
+			if(result.status == 504) {
+				result.error = { message: "Gateway Timed Out"}
+			}
 		} else {
 			result.error = error;
 		}
