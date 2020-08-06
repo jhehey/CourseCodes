@@ -41,7 +41,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 			BufferedCommandResult result = await Cli.Wrap (ContainerConfiguration.DefaultShell)
 				.WithArguments (command)
 				.WithValidation (CommandResultValidation.None)
-				.ExecuteBufferedAsync (cts); // cts
+				.ExecuteBufferedAsync (cts.Token); // cts
 
 			// throws OperationCanceledException
 
