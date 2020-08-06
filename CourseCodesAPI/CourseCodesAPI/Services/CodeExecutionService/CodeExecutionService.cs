@@ -21,7 +21,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 	{
 		private readonly IContainerFileSystemService _containerFileSystem;
 
-		public int MaxContainers { get; } = 20;
+		public int MaxContainers { get; } = 100;
 		public List<ContainerRunner> BusyContainers { get; } = new List<ContainerRunner> ();
 		public Stack<ContainerRunner> AvailableContainers { get; } = new Stack<ContainerRunner> ();
 
@@ -45,9 +45,9 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 				_containerFileSystem.CreateDirectory (containerRunner.MountedDirectory);
 
 				// initialize container runner
-				Console.WriteLine ($"{nameof(CodeExecutionService)}: {containerRunner.ContainerName} starting...");
+				Console.WriteLine ($"{i} - {nameof(CodeExecutionService)}: {containerRunner.ContainerName} starting...");
 				await containerRunner.StartAsync ();
-				Console.WriteLine ($"{nameof(CodeExecutionService)}: {containerRunner.ContainerName} started...");
+				Console.WriteLine ($"{i} - {nameof(CodeExecutionService)}: {containerRunner.ContainerName} started...");
 			}
 
 			// Finish this task only when all containerRunners have started up

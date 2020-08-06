@@ -80,6 +80,9 @@ export const ResultsDisplay = () => {
 							}}
 						/>
 					</>
+				) || 
+				runResult?.timedOut && (
+					<TextField name="timedOutError" value="Your code timed out"/>
 				)}
 			</Grid>
 			<Grid container item>
