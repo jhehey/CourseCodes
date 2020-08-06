@@ -125,6 +125,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 				Console.WriteLine (e.Message);
 				// TODO: Catch OperationCanceledException
 				// add property in result. TimedOut? if timedout, return result. your code timeout after t seconds
+				timedOut = true;
 			}
 			finally
 			{
