@@ -21,7 +21,7 @@ namespace CourseCodesAPI.Services.CodeExecutionService
 	{
 		private readonly IContainerFileSystemService _containerFileSystem;
 
-		public int MaxContainers { get; } = 100;
+		public int MaxContainers { get; } = 5;
 		public List<ContainerRunner> BusyContainers { get; } = new List<ContainerRunner> ();
 		public Stack<ContainerRunner> AvailableContainers { get; } = new Stack<ContainerRunner> ();
 
